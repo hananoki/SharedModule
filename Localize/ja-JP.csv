@@ -1,0 +1,79 @@
+OK	OK
+Cancel	キャンセル
+Apply	適用する
+Confirm	確認
+Continue	続ける
+
+Clear	クリア
+Copy	コピー
+Copy to clipboard	クリップボードにコピー
+Language	言語
+Preferences	環境設定
+Experimental	実験的
+Please select a directory	ディレクトリを選択してください
+Is it OK?	よろしいですか?
+Directory	ディレクトリ
+
+Deprecated	非推奨
+Warning	警告
+Info	情報
+
+Input	入力
+Tags and Layers	タグとレイヤー
+Audio	オーディオ
+Time	時間
+Player	プレイヤー
+Physics	物理
+Physics 2D	物理2D
+Quality	クオリティ
+Graphics	グラフィック
+Network	ネットワーク
+Editor	エディタ
+Script Execution Order	スクリプト優先
+
+
+# EditorToolbar
+Project Settings	プロジェクト設定
+Open Output Folder	出力フォルダを開く
+Reload Scene	シーンをリロード
+There are no scenes registered in the build settings	ビルドセッティングに登録されたシーンがありません
+File not found	ファイルが見つかりません
+Requires SwitchActiveBuildTarget	プラットフォーム切り替えが発生します
+
+Project Settings Provider	プロジェクト設定で表示する
+GameView ScreenShot	ゲーム画面のスクリーンショットを撮る
+Open Asset Store	アセットストアを開く
+Open C# Project	C#プロジェクトを開く
+Open Settings	設定を開く
+Open Build Settings	ビルド設定を開く
+
+Enable Ping Object	オブジェクトをPingする
+Record Object Count	履歴可能な最大オブジェクト数
+
+
+
+# CustomHierarchy
+Enable	有効にする
+Show toggle to toggle game object active	ゲームオブジェクトのアクティブを切り替えるトグルを表示する
+Display prefab status with icons	プレハブの状態をアイコンで表示する
+Change color for each row	行ごとに色を変える
+Row color	行の色
+Move up one level	上の階層に移動する
+Ping a scene file by clicking the scene icon	シーンアイコンクリックでシーンファイルをPingする
+Display tag name and layer name	タグ名とレイヤー名を表示する
+
+# CustomProjectBrowser
+Show Extension	拡張子を表示する
+Back Color	背景の色
+Text Color	テキストの色
+Context Menu With Icon Click	アイコンクリックでコンテキストメニュー
+Open In New Inspector	新しくインスペクタで開く
+Duplicate Asset	アセットを複製する
+
+# SceneViewTools
+TimeScaleSlider	タイムスケールスライダー
+Execute even with multiple scene views	シーンビューが複数でも実行する
+Sync scene camera to game camera	シーンカメラをゲームカメラに同期する
+Match GameView	GameViewに合わせる
+Toggle Orthographic	トグル Orthographic
+

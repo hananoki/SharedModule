@@ -1,0 +1,16 @@
+{
+    "name": "Hananoki.Shared.Editor",
+    "references": [
+        "Hananoki.Shared"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": []
+}
