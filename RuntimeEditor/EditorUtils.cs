@@ -6,7 +6,7 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
-namespace HananokiEditor {
+namespace Hananoki {
 	public static class EditorUtils {
 
 		private static Type typeFoldoutTitlebar;

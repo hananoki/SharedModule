@@ -1,6 +1,7 @@
 OK	OK
 Cancel	キャンセル
 Apply	適用する
+Revert	元に戻す
 Confirm	確認
 Continue	続ける
 
@@ -17,6 +18,14 @@ Directory	ディレクトリ
 Deprecated	非推奨
 Warning	警告
 Info	情報
+
+Enable	有効にする
+Row color	行の色
+Context Menu With Icon Click	アイコンクリックでコンテキストメニュー
+Change color for each row	行ごとに色を変える
+Open In New Inspector	新しくインスペクタで開く
+Back Color	背景の色
+Text Color	テキストの色
 
 Input	入力
 Tags and Layers	タグとレイヤー
@@ -52,28 +61,9 @@ Record Object Count	履歴可能な最大オブジェクト数
 
 
 
-# CustomHierarchy
-Enable	有効にする
-Show toggle to toggle game object active	ゲームオブジェクトのアクティブを切り替えるトグルを表示する
-Display prefab status with icons	プレハブの状態をアイコンで表示する
-Change color for each row	行ごとに色を変える
-Row color	行の色
-Move up one level	上の階層に移動する
-Ping a scene file by clicking the scene icon	シーンアイコンクリックでシーンファイルをPingする
-Display tag name and layer name	タグ名とレイヤー名を表示する
 
-# CustomProjectBrowser
-Show Extension	拡張子を表示する
-Back Color	背景の色
-Text Color	テキストの色
-Context Menu With Icon Click	アイコンクリックでコンテキストメニュー
-Open In New Inspector	新しくインスペクタで開く
-Duplicate Asset	アセットを複製する
 
-# SceneViewTools
-TimeScaleSlider	タイムスケールスライダー
-Execute even with multiple scene views	シーンビューが複数でも実行する
-Sync scene camera to game camera	シーンカメラをゲームカメラに同期する
-Match GameView	GameViewに合わせる
-Toggle Orthographic	トグル Orthographic
+
+
+
 

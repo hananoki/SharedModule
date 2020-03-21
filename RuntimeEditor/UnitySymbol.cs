@@ -2,7 +2,7 @@
 using System.Linq;
 using UnityEditor;
 
-namespace HananokiEditor {
+namespace Hananoki {
 	public static class UnitySymbol {
 		static List<string> s_lst;
 

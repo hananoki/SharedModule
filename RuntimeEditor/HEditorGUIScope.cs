@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEngine;
 
 
-namespace HananokiEditor {
+namespace Hananoki {
 
 	public class HandlesGUIScope : IDisposable {
 		public HandlesGUIScope() {

@@ -3,7 +3,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace HananokiEditor {
+namespace Hananoki {
 	public static class SceneViewUtils {
 #if UNITY_2019_1_OR_NEWER
 		public static void AddGUI( System.Action<SceneView> func ) {

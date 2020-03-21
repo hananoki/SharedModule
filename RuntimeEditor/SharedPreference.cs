@@ -1,8 +1,7 @@
 ﻿
 using Hananoki.Reflection;
-using Hananoki.Shared.Localize;
-using HananokiEditor;
-using HananokiEditor.Localize;
+//using Hananoki.Shared;
+using Hananoki;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,18 +9,13 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
-using Pref = Hananoki.Shared.SharedPreference;
+using Pref = Hananoki.SharedModule.SharedPreference;
 
 
-namespace Hananoki.Shared {
+namespace Hananoki.SharedModule {
 	[InitializeOnLoad]
 	[System.Serializable]
 	public class SharedPreference {
-		public const string PACKAGE_NAME = "Shared";
-		public const string PREF_NAME = "Hananoki.Shared";
-		public static string VER {
-			get { return "0.1.0-preview"; }
-		}
 		public string language;
 		//public static HEditorLocalize s_localize;
 
@@ -40,7 +34,7 @@ namespace Hananoki.Shared {
 
 		public static void Load() {
 			if( i != null ) return;
-			i = EditorPrefJson<Pref>.Get( PREF_NAME );
+			i = EditorPrefJson<Pref>.Get( Package.editorPrefName );
 			s_localizeEvent = null;
 			LoadLocalize();
 		}
@@ -48,7 +42,7 @@ namespace Hananoki.Shared {
 
 
 		public static void Save() {
-			EditorPrefJson<Pref>.Set( PREF_NAME, i );
+			EditorPrefJson<Pref>.Set( Package.editorPrefName, i );
 		}
 
 		static List<MethodInfo>  s_localizeEvent;
@@ -56,16 +50,21 @@ namespace Hananoki.Shared {
 		
 
 		public static void LoadLocalize() {
-			EditorLocalize.Load( SharedPreference.PACKAGE_NAME, i.language, "2ca67e52d0e4c5a439729c95e8bf5e45" );
+			EditorLocalize.Load( Package.name, i.language, "2ca67e52d0e4c5a439729c95e8bf5e45" );
 
 			if( s_localizeEvent == null ) {
 				s_localizeEvent = new List<MethodInfo>();
 				var t = typeof( EditorLocalizeClass );
 				foreach( Assembly assembly in AppDomain.CurrentDomain.GetAssemblies() ) {
 					foreach( Type type in assembly.GetTypes() ) {
-						if( type.GetCustomAttribute( t ) == null ) continue;
-						var mm = R.Methods( typeof( EditorLocalizeMethod ), type.FullName, assembly.FullName.Split( ',' )[ 0 ] );
-						s_localizeEvent.AddRange( mm );
+						try {
+							if( type.GetCustomAttribute( t ) == null ) continue;
+							var mm = R.Methods( typeof( EditorLocalizeMethod ), type.FullName, assembly.FullName.Split( ',' )[ 0 ] );
+							s_localizeEvent.AddRange( mm );
+						}
+						catch(Exception ee) {
+							Debug.LogException(ee);
+						}
 					}
 				}
 			}
@@ -84,7 +83,7 @@ namespace Hananoki.Shared {
 
 		public static void Open() {
 			var window = GetWindow<SharedPreferenceWindow>();
-			window.SetTitle( new GUIContent( Pref.PACKAGE_NAME, Icon.Get( "SettingsIcon" ) ) );
+			window.SetTitle( new GUIContent( Package.name, Icon.Get( "SettingsIcon" ) ) );
 		}
 
 		void OnEnable() {
@@ -134,7 +133,7 @@ namespace Hananoki.Shared {
 
 #if UNITY_2018_3_OR_NEWER && !ENABLE_LEGACY_PREFERENCE
 		static void titleBarGuiHandler() {
-			GUILayout.Label( $"{Pref.VER}", EditorStyles.miniLabel );
+			GUILayout.Label( $"{Package.version}", EditorStyles.miniLabel );
 		}
 		[SettingsProvider]
 		public static SettingsProvider PreferenceView() {

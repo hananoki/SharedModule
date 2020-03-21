@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.Animations;
 
-namespace HananokiEditor {
+namespace Hananoki {
 
 	public static class AnimatorControllerHelper {
 		public static void DefaultStatePosition( AnimatorController controller ) {

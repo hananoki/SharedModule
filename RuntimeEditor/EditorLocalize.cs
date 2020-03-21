@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 
-namespace HananokiEditor.Localize {
+namespace Hananoki {
 	public static class EditorLocalize {
 		public static Dictionary<string, EditorLocalizeDictionary> s_dic;
 
@@ -28,7 +28,7 @@ namespace HananokiEditor.Localize {
 		}
 
 		public static string GetLocalizeName() {
-			return GUIDUtils.GetAssetPath( Hananoki.Shared.SharedPreference.i.language ).FileName();
+			return GUIDUtils.GetAssetPath( Hananoki.SharedModule.SharedPreference.i.language ).FileName();
 		}
 
 		public static string Tr( EditorLocalizeDictionary _localize, string s ) {

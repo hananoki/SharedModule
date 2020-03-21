@@ -11,7 +11,7 @@ using Hananoki.Extensions;
 using UnityObject = UnityEngine.Object;
 using Hananoki.Reflection;
 
-namespace HananokiEditor {
+namespace Hananoki {
 	public static class HEditorStyles {
 		public static GUIStyle s_IconButton;
 		public static GUIStyle iconButton {

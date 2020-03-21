@@ -1,7 +1,7 @@
 {
-    "name": "Hananoki.Shared.Editor",
+    "name": "Hananoki.SharedModule.RuntimeEditor",
     "references": [
-        "Hananoki.Shared"
+        "Hananoki.SharedModule.Runtime"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [

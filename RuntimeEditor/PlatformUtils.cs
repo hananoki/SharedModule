@@ -7,13 +7,13 @@
 
 using Hananoki;
 using Hananoki.Reflection;
-using Hananoki.Shared.Localize;
+using Hananoki.SharedModule;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using System.Collections;
 
-namespace HananokiEditor {
+namespace Hananoki {
 	public static class PlatformUtils  {
 
 		static List<BuildTargetGroup> s_buildTargetGroup;

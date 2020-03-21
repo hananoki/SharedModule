@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using System;
 
-namespace HananokiEditor {
+namespace Hananoki {
 	public class EditorPrefJson<T> where T : new() {
 		[Serializable]
 		public class Serialization {

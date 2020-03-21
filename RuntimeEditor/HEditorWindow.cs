@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-namespace HananokiEditor {
+namespace Hananoki {
 	public class HEditorWindow : EditorWindow {
 		protected Action drawGUI;
 

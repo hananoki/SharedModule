@@ -1,4 +1,10 @@
 # Shared Module
 
+## [1.0.0] - 2020-03-21
+
+### Changed
+- Namespace refactoring
+- Split editor localization string
+
 ## [0.1.0] - 2020-03-16
 - First release

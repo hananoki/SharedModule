@@ -1,6 +1,6 @@
 ﻿using UnityEditor;
 
-namespace HananokiEditor {
+namespace Hananoki {
 	public static partial class UnityEditorMenu {
 
 		public static void File_Build_Settings() {

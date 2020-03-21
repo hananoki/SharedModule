@@ -18,7 +18,7 @@ using Hananoki;
 using Hananoki.Extensions;
 using System.Text.RegularExpressions;
 using Hananoki.Reflection;
-using Hananoki.Shared.Localize;
+using Hananoki.Shared;
 
 using UnityObject = UnityEngine.Object;
 using UnityRandom = UnityEngine.Random;
@@ -369,9 +369,12 @@ namespace Hananoki {
 		/// <returns></returns>
 		public static bool HasMouseClick( Rect rc, EventMouseButton type = EventMouseButton.L ) {
 			var ev = Event.current;
-			var pos = ev.mousePosition;
+			//var pos = ev.mousePosition;
 			if( ev.type == EventType.MouseDown && ev.button == (int)type ) {
-				if( rc.x < pos.x && pos.x < rc.max.x && rc.y < pos.y && pos.y < rc.max.y ) {
+				//if( rc.x < pos.x && pos.x < rc.max.x && rc.y < pos.y && pos.y < rc.max.y ) {
+				//	return true;
+				//}
+				if( rc.Contains( ev.mousePosition ) ) {
 					return true;
 				}
 			}

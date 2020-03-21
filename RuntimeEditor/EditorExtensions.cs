@@ -9,7 +9,7 @@ using System.Linq;
 
 using Hananoki;
 
-namespace HananokiEditor {
+namespace Hananoki {
 	
 	public static class EditorExtensions {
 
