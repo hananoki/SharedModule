@@ -6,6 +6,7 @@ using UnityEditor;
 using UnityEditorInternal;
 using System.Reflection;
 using Hananoki.Extensions;
+using System.Collections.Generic;
 
 namespace Hananoki {
 	public class HReorderableList {
@@ -16,11 +17,34 @@ namespace Hananoki {
 
 		string m_headerName = "";
 
+		//public static HReorderableList CreateInstance() {
+		//}
+
 		public static HReorderableList CreateInstance( SerializedObject serializedObject, string propertyName, int heightNum = 1, string headerName = "" ) {
 			var s = new HReorderableList();
 			s.Create( serializedObject, propertyName, heightNum, headerName );
 			return s;
 		}
+
+		//public void Create<T>( List<T> list, int heightNum = 1, string headerName = "" ) where T : class, new() {
+		//	m_headerName = headerName;
+		//	m_lst = new ReorderableList( list, typeof( T ) );
+
+		//	m_lst.drawHeaderCallback = ( rect ) => {
+		//		EditorGUI.LabelField( rect, headerName );
+		//	};
+
+		//	m_lst.onAddCallback = ( rect ) => {
+		//		if( list.Count == 0 ) {
+		//			list.Add( new T() );
+		//		}
+		//		else {
+		//			list.Add( list[ m_lst.count - 1 ]  );
+		//		}
+		//	};
+		//}
+
+
 
 		public void Create( SerializedObject serializedObject, string propertyName, int heightNum = 1, string headerName = "" ) {
 			m_serializedObject = serializedObject;

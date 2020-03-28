@@ -537,6 +537,8 @@ namespace Hananoki {
 		/// <param name="autoRefresh">AssetDataBaseにリフレッシュを呼び出すかどうか</param>
 		/// <param name="utf8bom">UTF8のbomをつけるかどうか</param>
 		public static void WriteFile( string fname, Action<StringBuilder> func, bool autoRefresh = true, bool utf8bom=true ) {
+			if( fname.IsEmpty() ) return;
+
 			var builder = new StringBuilder();
 
 			func( builder );

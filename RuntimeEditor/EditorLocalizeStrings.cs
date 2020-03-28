@@ -34,6 +34,8 @@ namespace Hananoki.SharedModule {
 		public static string _OpenInNewInspector => L.Tr( "Open In New Inspector" );
 		public static string _BackColor => L.Tr( "Back Color" );
 		public static string _TextColor => L.Tr( "Text Color" );
+		public static string _Font => L.Tr( "Font" );
+		public static string _FontStyle => L.Tr( "Font Style" );
 		public static string _Input => L.Tr( "Input" );
 		public static string _TagsandLayers => L.Tr( "Tags and Layers" );
 		public static string _Audio => L.Tr( "Audio" );

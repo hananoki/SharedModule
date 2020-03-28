@@ -10,10 +10,10 @@
 
 ## Installation
 - Add following lines to the `dependencies` section of the `Packages/manifest.json`.
-```json
+```js
 "dependencies": {
   "com.hananoki.shared-module": "https://github.com/hananoki/SharedModule.git",
-  ...etc
+  ...
 }
 ```
 

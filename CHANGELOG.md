@@ -1,5 +1,13 @@
 # Shared Module
 
+## [1.0.1] - 2020-03-28
+
+### Added
+- Added a method to ReflectionUtils
+
+### Changed
+- Refactoring, etc.
+
 ## [1.0.0] - 2020-03-21
 
 ### Changed

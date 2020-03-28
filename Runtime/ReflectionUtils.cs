@@ -12,8 +12,26 @@ namespace Hananoki.Reflection {
 
 		static Dictionary<string, PropertyInfo> s_properties = new Dictionary<string, PropertyInfo>();
 
+
+		public static Assembly LoadAssembly( string dllName = "UnityEditor.dll" ) {
+			try {
+				return Assembly.Load( dllName );
+			}
+			catch( System.IO.FileNotFoundException ) {
+			}
+			catch( Exception e ) {
+				Debug.LogException( e );
+			}
+			return null;
+		}
+
 		public static Type Type( string typeName, string dllName = "UnityEditor.dll" ) {
 			return Assembly.Load( dllName ).GetType( typeName );
+		}
+
+		public static EventInfo Event( string methodName, string typeName, string dllName = "UnityEditor.dll" ) {
+			var type = Assembly.Load( dllName ).GetType( typeName );
+			return type.GetEvent( methodName, AllMembers );
 		}
 
 		public static MethodInfo Method( string methodName, string typeName, string dllName = "UnityEditor.dll" ) {
@@ -41,11 +59,11 @@ namespace Hananoki.Reflection {
 		public static MethodInfo Method( string methodName, Type t ) {
 			return t.GetMethod( methodName, AllMembers );
 		}
-		public static T Method<T>( this object obj, string propertyName ) {
+		public static T Method<T>( this object obj, string propertyName, params object[] args ) {
 			if( obj == null ) throw new ArgumentNullException( "obj" );
 			var t = obj.GetType();
 			var p = t.GetMethod( propertyName, InstanceMembers );
-			return (T) p.Invoke( obj, null );
+			return (T) p.Invoke( obj, args );
 		}
 
 
@@ -110,7 +128,7 @@ namespace Hananoki.Reflection {
 		}
 
 		public static T Property<T>( string name, string typeName, string dllName = "UnityEditor.dll" ) {
-			return (T) Property( name,  typeName,  dllName ).GetValue( null, null );
+			return (T) Property( name, typeName, dllName ).GetValue( null, null );
 		}
 
 		//public static PropertyInfo FindProperty( this Type type, string propertyName, BindingFlags flags = FULL_BINDING ) {
