@@ -1,5 +1,11 @@
 # Shared Module
 
+## [1.0.2] - 2020-04-02
+
+### Changed
+- HSettingsEditorWindow: SettingsProvider drawing has been improved to work
+- Updated embedded resources.
+
 ## [1.0.1] - 2020-03-28
 
 ### Added

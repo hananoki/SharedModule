@@ -215,6 +215,9 @@ namespace Hananoki {
 				buttonAction?.Invoke();
 			}
 
+			var rr = lastRect.AlignCenter( 12, 12 );
+			//rr.y -= 1;
+			GUI.DrawTexture( rr, Shared.Icon.Get( "$icondropdown" ), ScaleMode.ScaleToFit );
 			//EditorGUI.DrawRect( lastRect, new Color( 0, 0, 1, 0.5f ) );
 			return false;
 		}

@@ -102,18 +102,23 @@ namespace Hananoki.Reflection {
 		public static MethodInfo[] Methods( Type atbType, string typeName, Assembly assembly ) {
 			if( assembly == null ) throw new Exception( "assembly null" );
 
-			var type = assembly.GetType( typeName );
-			List<MethodInfo> lst = new List<MethodInfo>();
+			try {
+				var type = assembly.GetType( typeName );
+				List<MethodInfo> lst = new List<MethodInfo>();
 
-			foreach( var method in type.GetMethods( AllMembers ) ) {
-				var attributes = method.GetCustomAttributes( atbType, true );
-				if( attributes.Length <= 0 ) continue;
-				foreach( var attr in attributes ) {
-					if( attr.GetType().Name != atbType.Name ) continue;
-					lst.Add( method );
+				foreach( var method in type.GetMethods( AllMembers ) ) {
+					var attributes = method.GetCustomAttributes( atbType, true );
+					if( attributes.Length <= 0 ) continue;
+					foreach( var attr in attributes ) {
+						if( attr.GetType().Name != atbType.Name ) continue;
+						lst.Add( method );
+					}
 				}
+				return lst.ToArray();
 			}
-			return lst.ToArray();
+			catch(Exception e) {
+			}
+			return new MethodInfo[0];
 		}
 
 

@@ -244,7 +244,7 @@ namespace Hananoki {
 
 
 			public static void Dirty( UnityEngine.Object obj, System.Action ff ) {
-			Undo.RecordObject( obj, "obj" );
+			Undo.RecordObject( obj, obj.name );
 			ff.Call();
 			EditorUtility.SetDirty( obj );
 		}
