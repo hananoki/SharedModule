@@ -1,19 +1,16 @@
 ﻿
-using UnityEngine;
-using UnityEditor.SceneManagement;
-using UnityEditor;
-using System.Reflection;
-using System.IO;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using UnityEditor;
+using UnityEngine;
 
-using Hananoki;
+namespace Hananoki.Extensions {
 
-namespace Hananoki {
-	
 	public static class EditorExtensions {
 
-		
+
 
 
 		#region string
@@ -60,7 +57,7 @@ namespace Hananoki {
 			return EditorHelper.TempContent( s, s );
 		}
 
-		
+
 
 		public static string FileNameWithoutExtension( this string s ) {
 			return Path.GetFileNameWithoutExtension( s );
@@ -80,16 +77,19 @@ namespace Hananoki {
 
 		#endregion
 
-		
+
 
 
 		public static T ToCast<T>( this object obj ) {
 			return (T) obj;
 		}
+		public static int ToInt( this object obj ) {
+			return obj.ToCast<int>();
+		}
 
-		public static Rect AddW( this Rect r,float f ) {
+		public static Rect AddW( this Rect r, float f ) {
 			r.x -= f;
-			r.width += (f*2);
+			r.width += ( f * 2 );
 			return r;
 		}
 
@@ -106,7 +106,7 @@ namespace Hananoki {
 			return r;
 		}
 		public static Rect AlignCenterH( this Rect r, float height ) {
-			r.y += (r.height*0.5f);
+			r.y += ( r.height * 0.5f );
 			r.y -= ( height * 0.5f );
 			r.height = height;
 			return r;
@@ -116,16 +116,18 @@ namespace Hananoki {
 			r.x += ( r.width * 0.5f );
 			r.x -= ( width * 0.5f );
 			r.width = width;
-			
+
 			r.y += ( r.height * 0.5f );
 			r.y -= ( height * 0.5f );
 			r.height = height;
 			return r;
 		}
 
-		public static Rect PopupRect( this Rect r ) {
-			return EditorHelper.PopupRect( r );
+		public static Rect PopupRect( this Rect rc ) {
+			return new Rect( rc.x, rc.y + 6, rc.width, 12 );
 		}
+
+
 
 		#region GenericMenu
 
@@ -207,11 +209,11 @@ namespace Hananoki {
 			return "<color=" + s + ">" + s + "</color>";
 		}
 
-		
 
-		
 
-		
+
+
+
 
 		//public static string GUID2Path( this string guid ) {
 		//	return AssetDatabase.GUIDToAssetPath( guid );
@@ -248,15 +250,40 @@ namespace Hananoki {
 			return int.Parse( s );
 		}
 
-		
-			
+
+
 		public static float toRealTime( this AnimationClip clip ) {
 			return clip.frameRate * clip.length;
 		}
 
 
-		
 
 
+
+	}
+
+	public static class IEnumerableExtensions {
+		private sealed class CommonSelector<T, TKey> : IEqualityComparer<T> {
+			private Func<T, TKey> m_selector;
+
+			public CommonSelector( Func<T, TKey> selector ) {
+				m_selector = selector;
+			}
+
+			public bool Equals( T x, T y ) {
+				return m_selector( x ).Equals( m_selector( y ) );
+			}
+
+			public int GetHashCode( T obj ) {
+				return m_selector( obj ).GetHashCode();
+			}
+		}
+
+		public static IEnumerable<T> Distinct<T, TKey>(
+				this IEnumerable<T> source,
+				Func<T, TKey> selector
+		) {
+			return source.Distinct( new CommonSelector<T, TKey>( selector ) );
+		}
 	}
 }

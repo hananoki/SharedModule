@@ -1,10 +1,8 @@
 ﻿
 #if UNITY_EDITOR
 
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
 
 namespace Hananoki {
 
@@ -86,14 +84,14 @@ namespace Hananoki {
 	class SessionStateBoolDrawer : PropertyDrawer {
 
 		public override void OnGUI( Rect rc, SerializedProperty property, GUIContent label ) {
-			
+
 			var nameProp = property.FindPropertyRelative( "__name" );
 			var labelProp = property.FindPropertyRelative( "__label" );
 
 			EditorGUI.DrawRect( rc, new Color( 0f, 1f, 0f, 0.25f ) );
 			GUI.changed = false;
-			
-			bool value = EditorGUI.Toggle( rc, ObjectNames.NicifyVariableName(labelProp.stringValue), SessionState.GetBool( nameProp.stringValue, false ) );
+
+			bool value = EditorGUI.Toggle( rc, ObjectNames.NicifyVariableName( labelProp.stringValue ), SessionState.GetBool( nameProp.stringValue, false ) );
 
 			if( GUI.changed ) {
 				SessionState.SetBool( nameProp.stringValue, value );

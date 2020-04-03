@@ -1,7 +1,6 @@
 ﻿
 using Hananoki.Reflection;
-//using Hananoki.Shared;
-using Hananoki;
+using Hananoki.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,21 +13,15 @@ using Pref = Hananoki.SharedModule.SharedPreference;
 
 namespace Hananoki.SharedModule {
 	[InitializeOnLoad]
-	[System.Serializable]
+	[Serializable]
 	public class SharedPreference {
 		public string language;
-		//public static HEditorLocalize s_localize;
 
 		public static Pref i;
 
 
 		static SharedPreference() {
 			Load();
-			//EditorApplication.playModeStateChanged += state => {
-			//	if( state == PlayModeStateChange.EnteredEditMode ) {
-			//		//Icon.inited = false;
-			//	}
-			//};
 		}
 
 
@@ -45,9 +38,9 @@ namespace Hananoki.SharedModule {
 			EditorPrefJson<Pref>.Set( Package.editorPrefName, i );
 		}
 
-		static List<MethodInfo>  s_localizeEvent;
+		static List<MethodInfo> s_localizeEvent;
 
-		
+
 
 		public static void LoadLocalize() {
 			EditorLocalize.Load( Package.name, i.language, "2ca67e52d0e4c5a439729c95e8bf5e45" );
@@ -62,8 +55,8 @@ namespace Hananoki.SharedModule {
 							var mm = R.Methods( typeof( EditorLocalizeMethod ), type.FullName, assembly.FullName.Split( ',' )[ 0 ] );
 							s_localizeEvent.AddRange( mm );
 						}
-						catch(Exception ee) {
-							Debug.LogException(ee);
+						catch( Exception ee ) {
+							Debug.LogException( ee );
 						}
 					}
 				}
@@ -132,15 +125,12 @@ namespace Hananoki.SharedModule {
 
 
 #if UNITY_2018_3_OR_NEWER && !ENABLE_LEGACY_PREFERENCE
-		static void titleBarGuiHandler() {
-			GUILayout.Label( $"{Package.version}", EditorStyles.miniLabel );
-		}
 		[SettingsProvider]
 		public static SettingsProvider PreferenceView() {
 			var provider = new SettingsProvider( $"Preferences/Hananoki", SettingsScope.User ) {
 				label = $"Hananoki",
 				guiHandler = PreferencesGUI,
-				titleBarGuiHandler = titleBarGuiHandler,
+				titleBarGuiHandler = () => GUILayout.Label( $"{Package.version}", EditorStyles.miniLabel ),
 			};
 			return provider;
 		}
@@ -165,7 +155,7 @@ namespace Hananoki.Shared {
 			if( icons == null ) {
 				icons = new Dictionary<string, Texture2D>();
 			}
-			bool load  = false;
+			bool load = false;
 			if( !icons.ContainsKey( s ) ) load = true;
 			else if( icons[ s ] == null ) load = true;
 			if( load ) {

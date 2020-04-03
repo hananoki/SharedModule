@@ -4,6 +4,8 @@ using UnityEditor;
 using System.IO;
 
 namespace Hananoki {
+	using Extensions;
+
 	public static class GUIDUtils {
 		public static T LoadAssetAtGUID<T>( string guid ) where T : UnityEngine.Object {
 			var path = UnityEditor.AssetDatabase.GUIDToAssetPath( guid );
@@ -12,7 +14,6 @@ namespace Hananoki {
 		}
 
 		
-
 		public static string GetAssetPath( string guid ) {
 			return AssetDatabase.GUIDToAssetPath( guid );
 		}
@@ -23,11 +24,13 @@ namespace Hananoki {
 			return b;
 		}
 
+
 		public static string ToGUID( UnityEngine.Object obj ) {
 			var a = AssetDatabase.GetAssetPath( obj );
 			var b = AssetDatabase.AssetPathToGUID( a );
 			return b;
 		}
+
 
 		public static string AdjustDirectoryGUID( this string guid ) {
 			var path = GUIDUtils.GetAssetPath( guid );

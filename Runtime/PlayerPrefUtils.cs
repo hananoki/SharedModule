@@ -36,7 +36,7 @@ namespace Hananoki {
 		string name = "";
 		string initValue;
 
-		public PlayerPrefsString( string name, string initValue = "" ) { 
+		public PlayerPrefsString( string name, string initValue = "" ) {
 			this.name = name;
 			this.initValue = initValue;
 		}

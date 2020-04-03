@@ -76,7 +76,7 @@ namespace Hananoki {
 			float fval = 0.00f;
 			float fadd = 1.00f / states.Length;
 
-			
+
 			for( int i = states.Length - 1; 0 <= i; i-- ) {
 				fval += fadd;
 				var c = states[ i ];

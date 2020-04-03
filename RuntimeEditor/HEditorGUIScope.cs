@@ -4,7 +4,6 @@ using System;
 using UnityEditor;
 using UnityEngine;
 
-
 namespace Hananoki {
 
 	public class HandlesGUIScope : IDisposable {

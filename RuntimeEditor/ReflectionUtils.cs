@@ -116,9 +116,9 @@ namespace Hananoki.Reflection {
 				}
 				return lst.ToArray();
 			}
-			catch(Exception e) {
+			catch( Exception ) {
 			}
-			return new MethodInfo[0];
+			return new MethodInfo[ 0 ];
 		}
 
 

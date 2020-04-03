@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
 
 namespace Hananoki {
 	public class HEditorWindow : EditorWindow {

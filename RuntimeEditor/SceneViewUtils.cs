@@ -36,7 +36,7 @@ namespace Hananoki {
 			try {
 				foreach( SceneView p in SceneView.sceneViews ) p.Repaint();
 			}
-			catch(System.Exception ) {
+			catch( System.Exception ) {
 			}
 		}
 	}

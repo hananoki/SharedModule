@@ -43,12 +43,13 @@ namespace Hananoki {
 					.Select( c => c.Replace( "\\", "/" ) )
 					.ToArray();
 		}
+
 		public static string Prettyfy( string dir ) {
 			return dir.Replace( "\\", "/" ).TrimEnd( '/' );
 		}
 
 		public static string[] GetFileGUIDs( string path, string searchPattern ) {
-			var ss = GetFiles( path,  searchPattern );
+			var ss = GetFiles( path, searchPattern );
 			for( int i = 0; i < ss.Length; i++ ) {
 				ss[ i ] = AssetDatabase.AssetPathToGUID( ss[ i ] );
 			}
@@ -83,12 +84,12 @@ namespace Hananoki {
 		}
 		public static void rm( string path, bool recursive = false ) {
 			//try {
-				if( Directory.Exists( path ) ) {
-					Directory.Delete( path, recursive );
-				}
-				else if( File.Exists( path ) ) {
-					File.Delete( path );
-				}
+			if( Directory.Exists( path ) ) {
+				Directory.Delete( path, recursive );
+			}
+			else if( File.Exists( path ) ) {
+				File.Delete( path );
+			}
 			//}
 			//catch( DirectoryNotFoundException e ) {
 			//	Debug.LogException( e );
@@ -99,7 +100,7 @@ namespace Hananoki {
 		}
 
 
-		public static string ReadAllText(string path) {
+		public static string ReadAllText( string path ) {
 			if( !File.Exists( path ) ) return null;
 
 			return File.ReadAllText( path );

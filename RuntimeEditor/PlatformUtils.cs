@@ -5,16 +5,15 @@
 
 #if UNITY_EDITOR
 
-using Hananoki;
 using Hananoki.Reflection;
 using Hananoki.SharedModule;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using System.Collections;
 
 namespace Hananoki {
-	public static class PlatformUtils  {
+	public static class PlatformUtils {
 
 		static List<BuildTargetGroup> s_buildTargetGroup;
 
@@ -50,7 +49,7 @@ namespace Hananoki {
 		/// <param name="group"></param>
 		/// <returns></returns>
 		public static bool SwitchActiveBuildTarget( BuildTargetGroup group ) {
-			var target = UEditorUserBuildSettingsUtils.CalculateSelectedBuildTarget( group );
+			var target = UnityEditorUserBuildSettingsUtils.CalculateSelectedBuildTarget( group );
 			return SwitchActiveBuildTarget( group, target );
 		}
 
@@ -120,7 +119,7 @@ namespace Hananoki {
 
 		public static List<BuildTargetGroup> GetSupportList() {
 			if( s_buildTargetGroup != null ) return s_buildTargetGroup;
-			
+
 			s_buildTargetGroup = new List<BuildTargetGroup>();
 
 			//var ll = EnumUtils.GetArray<BuildTargetGroup>();
@@ -139,7 +138,7 @@ namespace Hananoki {
 
 			var forceShowTarget = R.Field( "forceShowTarget", "UnityEditor.Build.BuildPlatform" );
 			var targetGroup = R.Field( "targetGroup", "UnityEditor.Build.BuildPlatform" );
-			
+
 			var lst = buildPlatforms.Get<IList>( instance.GetValue( null ) );
 			foreach( var ab in lst ) {
 				if( forceShowTarget.Get<bool>( ab ) ) {

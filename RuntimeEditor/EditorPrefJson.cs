@@ -1,8 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor;
+﻿
 using System;
+using UnityEditor;
+using UnityEngine;
 
 namespace Hananoki {
 	public class EditorPrefJson<T> where T : new() {
@@ -26,11 +25,7 @@ namespace Hananoki {
 		}
 
 		public static void Set( string name, T data ) {
-			string json = JsonUtility.ToJson( new Serialization( data ) );
-#if LOCAL_DEBUG
-			Debug.Log( json );
-#endif
-			EditorPrefs.SetString( name, json );
+			EditorPrefs.SetString( name, JsonUtility.ToJson( new Serialization( data ) ) );
 		}
 	}
 }

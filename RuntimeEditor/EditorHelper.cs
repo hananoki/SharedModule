@@ -1,28 +1,21 @@
 ﻿#pragma warning disable 618
 #if UNITY_EDITOR
 
-using System.Collections;
+using Hananoki.Extensions;
+using Hananoki.Reflection;
+using System;
 using System.Collections.Generic;
-using UnityEngine;
 using System.IO;
 using System.Linq;
-using UnityEditor;
-
 using System.Reflection;
-using System;
-using UnityEditor.Animations;
-using UnityEditor.SceneManagement;
 using System.Text;
-
-using Hananoki;
-using Hananoki.Extensions;
 using System.Text.RegularExpressions;
-using Hananoki.Reflection;
-using Hananoki.Shared;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine;
 
-using UnityObject = UnityEngine.Object;
-using UnityRandom = UnityEngine.Random;
 using static System.Convert;
+using UnityObject = UnityEngine.Object;
 
 namespace Hananoki {
 
@@ -95,7 +88,7 @@ namespace Hananoki {
 				icon = EditorGUIUtility.FindTexture( name ) as Texture2D;
 				if( icon != null ) return icon;
 			}
-			catch( System.Exception ) {
+			catch( Exception ) {
 			}
 
 
@@ -103,7 +96,7 @@ namespace Hananoki {
 				icon = EditorGUIUtility.Load( "icons/" + name + ".png" ) as Texture2D;
 				if( icon != null ) return icon;
 			}
-			catch( System.Exception ) {
+			catch( Exception ) {
 			}
 
 
@@ -121,7 +114,7 @@ namespace Hananoki {
 			{
 				var lst = Resources.FindObjectsOfTypeAll<Texture2D>().Where( x => x.name.Contains( name ) ).ToArray();
 				if( 0 < lst.Length ) {
-					icon= lst[ 0 ];
+					icon = lst[ 0 ];
 					if( icon != null ) return icon;
 				}
 			}
@@ -131,12 +124,12 @@ namespace Hananoki {
 		}
 
 
-		
+
 
 		public static bool HasMenuItem( string menuName ) {
 			var menuTop = menuName.Split( '/' )[ 0 ];
-			var ss =Unsupported.GetSubmenus( menuTop );
-			foreach(var s in ss) {
+			var ss = Unsupported.GetSubmenus( menuTop );
+			foreach( var s in ss ) {
 				if( s == menuName ) return true;
 			}
 			return false;
@@ -192,7 +185,7 @@ namespace Hananoki {
 				}
 			}
 
-			
+
 			return lst;
 		}
 
@@ -229,6 +222,7 @@ namespace Hananoki {
 			serializedObject.ApplyModifiedProperties();
 		}
 
+
 		/// <summary>
 		/// 変更点があるかチェックしてからシーンを開きます
 		/// </summary>
@@ -239,11 +233,11 @@ namespace Hananoki {
 			}
 		}
 		public static void OpenScene( object obj ) {
-			OpenScene( (string)obj );
+			OpenScene( (string) obj );
 		}
 
 
-			public static void Dirty( UnityEngine.Object obj, System.Action ff ) {
+		public static void Dirty( UnityObject obj, Action ff ) {
 			Undo.RecordObject( obj, obj.name );
 			ff.Call();
 			EditorUtility.SetDirty( obj );
@@ -269,12 +263,12 @@ namespace Hananoki {
 
 				return texture;
 			}
-			catch(Exception ) {
+			catch( Exception ) {
 				return null;
 			}
 		}
 
-#if true
+
 		public static void DrawTexture( Rect r, Texture2D tex, bool useDropshadow, GUIStyle style ) {
 			if( !( tex == null ) ) {
 				float num = (float) tex.width;
@@ -300,45 +294,31 @@ namespace Hananoki {
 				GUI.DrawTexture( r, tex, ScaleMode.ScaleToFit );
 			}
 		}
-#endif
 
 
+		#region TempContent
 
-		/// <summary>
-		/// 指定したアセットのGUIDを返します
-		/// </summary>
-		/// <param name="obj"></param>
-		/// <returns></returns>
-		//public static string ToGUID( UnityEngine.Object obj ) {
-		//	var a = AssetDatabase.GetAssetPath( obj );
-		//	var b = AssetDatabase.AssetPathToGUID( a );
-		//	return b;
-		//}
-
-
-		#region GUIContent
-
-		private static GUIContent s_Text = new GUIContent();
+		static GUIContent s_Text = new GUIContent();
 		public static GUIContent TempContent( string t ) {
 			s_Text.text = t;
 			return s_Text;
 		}
 
-		private static GUIContent s_TextTool = new GUIContent();
+		static GUIContent s_TextTool = new GUIContent();
 		public static GUIContent TempContent( string t, string t2 ) {
 			s_TextTool.text = t;
 			s_TextTool.tooltip = t2;
 			return s_TextTool;
 		}
 
-		private static GUIContent s_TextImage = new GUIContent();
+		static GUIContent s_TextImage = new GUIContent();
 		public static GUIContent TempContent( string t, Texture i ) {
 			s_TextImage.image = i;
 			s_TextImage.text = t;
 			return s_TextImage;
 		}
 
-		private static GUIContent s_ContentImage = new GUIContent();
+		static GUIContent s_ContentImage = new GUIContent();
 		public static GUIContent TempContent( Texture image, string tooltip = "" ) {
 			s_ContentImage.image = image;
 			s_ContentImage.tooltip = tooltip;
@@ -351,15 +331,13 @@ namespace Hananoki {
 		#region エディタ拡張、ポップアップ、マウスクリック等
 
 		public static Rect GetLayout( string s, GUIStyle style, params GUILayoutOption[] option ) {
-			return GUILayoutUtility.GetRect( EditorHelper.TempContent( s ), style , option );
+			return GUILayoutUtility.GetRect( EditorHelper.TempContent( s ), style, option );
 		}
+
 		public static Rect GetLayout( Texture2D tex, GUIStyle style, params GUILayoutOption[] option ) {
 			return GUILayoutUtility.GetRect( EditorHelper.TempContent( tex ), style, option );
 		}
 
-		public static Rect PopupRect( Rect rc ) {
-			return new Rect( rc.x, rc.y + 6, rc.width, 12 );
-		}
 
 		/// <summary>
 		/// 
@@ -369,17 +347,14 @@ namespace Hananoki {
 		/// <returns></returns>
 		public static bool HasMouseClick( Rect rc, EventMouseButton type = EventMouseButton.L ) {
 			var ev = Event.current;
-			//var pos = ev.mousePosition;
-			if( ev.type == EventType.MouseDown && ev.button == (int)type ) {
-				//if( rc.x < pos.x && pos.x < rc.max.x && rc.y < pos.y && pos.y < rc.max.y ) {
-				//	return true;
-				//}
+			if( ev.type == EventType.MouseDown && ev.button == (int) type ) {
 				if( rc.Contains( ev.mousePosition ) ) {
 					return true;
 				}
 			}
 			return false;
 		}
+
 
 		public static bool IsMouseAreaHit( Rect rc ) {
 			var ev = Event.current;
@@ -389,18 +364,19 @@ namespace Hananoki {
 
 		#endregion
 
-		public static void SetBoldFont( SerializedProperty prop ) {
-			if( prop.prefabOverride ) {
-				GUI.skin.font = EditorStyles.boldFont;
-			}
-			else {
-				GUI.skin.font = EditorStyles.standardFont;
-			}
-		}
+
+		//public static void SetBoldFont( SerializedProperty prop ) {
+		//	if( prop.prefabOverride ) {
+		//		GUI.skin.font = EditorStyles.boldFont;
+		//	}
+		//	else {
+		//		GUI.skin.font = EditorStyles.standardFont;
+		//	}
+		//}
 
 
 		public static void ForceReloadInspectors() {
-			var _ForceReloadInspectors = typeof( UnityEditor.EditorUtility ).GetMethod( "ForceReloadInspectors", BindingFlags.NonPublic | BindingFlags.Static );
+			var _ForceReloadInspectors = typeof( EditorUtility ).GetMethod( "ForceReloadInspectors", BindingFlags.NonPublic | BindingFlags.Static );
 			_ForceReloadInspectors.Invoke( null, null );
 		}
 
@@ -444,7 +420,7 @@ namespace Hananoki {
 		}
 
 
-		public static T DuplicateAsset<T>( T obj ) where T: UnityObject {
+		public static T DuplicateAsset<T>( T obj ) where T : UnityObject {
 			var path = AssetDatabase.GetAssetPath( obj );
 			var dir = Path.GetDirectoryName( path );
 			var fname = Path.GetFileName( path );
@@ -453,7 +429,7 @@ namespace Hananoki {
 			AssetDatabase.CopyAsset( path, uniquePath );
 			AssetDatabase.Refresh();
 			var asset = AssetDatabase.LoadAssetAtPath<T>( uniquePath );
-	
+
 			return asset;
 		}
 
@@ -536,7 +512,7 @@ namespace Hananoki {
 		/// <param name="func">書き出しアクション</param>
 		/// <param name="autoRefresh">AssetDataBaseにリフレッシュを呼び出すかどうか</param>
 		/// <param name="utf8bom">UTF8のbomをつけるかどうか</param>
-		public static void WriteFile( string fname, Action<StringBuilder> func, bool autoRefresh = true, bool utf8bom=true ) {
+		public static void WriteFile( string fname, Action<StringBuilder> func, bool autoRefresh = true, bool utf8bom = true ) {
 			if( fname.IsEmpty() ) return;
 
 			var builder = new StringBuilder();
@@ -572,7 +548,7 @@ namespace Hananoki {
 			float fval = 0.00f;
 			float fadd = 1.00f / ( (float) models.Length );
 
-			var output = new ModelImporter[0];
+			var output = new ModelImporter[ 0 ];
 
 			foreach( var obj in models ) {
 				var path = AssetDatabase.GetAssetPath( obj );
@@ -603,7 +579,7 @@ namespace Hananoki {
 			EditorUtility.ClearProgressBar();
 
 			return output;
-			
+
 		}
 
 
@@ -689,7 +665,7 @@ namespace Hananoki {
 					return icon;
 				}
 			}
-			catch( System.Exception ) {
+			catch( Exception ) {
 			}
 
 			try {
@@ -700,7 +676,7 @@ namespace Hananoki {
 					return iconz;
 				}
 			}
-			catch( System.Exception ) {
+			catch( Exception ) {
 			}
 
 			var a = AssetDatabase.FindAssets( "Icons" );
@@ -719,8 +695,8 @@ namespace Hananoki {
 
 			{
 				var lst = Resources.FindObjectsOfTypeAll<Texture2D>().Where( x => x.name.Contains( name ) ).ToArray();
-				if(0 < lst.Length) {
-					s_iconCache.Add( name, lst[0] );
+				if( 0 < lst.Length ) {
+					s_iconCache.Add( name, lst[ 0 ] );
 					return lst[ 0 ];
 				}
 			}

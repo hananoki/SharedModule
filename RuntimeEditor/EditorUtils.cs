@@ -69,19 +69,20 @@ namespace Hananoki {
 		}
 
 
-		public static void SetBoldFont( SerializedProperty prop ) {
-			if( prop.prefabOverride ) {
-				GUI.skin.font = EditorStyles.boldFont;
-			}
-			else {
-				GUI.skin.font = EditorStyles.standardFont;
-			}
-		}
+		//public static void SetBoldFont( SerializedProperty prop ) {
+		//	if( prop.prefabOverride ) {
+		//		GUI.skin.font = EditorStyles.boldFont;
+		//	}
+		//	else {
+		//		GUI.skin.font = EditorStyles.standardFont;
+		//	}
+		//}
 
 		public static void ForceReloadInspectors() {
 			var _ForceReloadInspectors = typeof( UnityEditor.EditorUtility ).GetMethod( "ForceReloadInspectors", BindingFlags.NonPublic | BindingFlags.Static );
 			_ForceReloadInspectors.Invoke( null, null );
 		}
+
 
 		public static void SetPrefabOverride( object userData ) {
 			SerializedProperty serializedProperty = (SerializedProperty) userData;
@@ -267,6 +268,7 @@ namespace Hananoki {
 			return context && context.GetType() != typeof( T );
 		}
 
+
 		/// <summary>
 		/// Convert to the specified component.
 		/// </summary>
@@ -296,6 +298,20 @@ namespace Hananoki {
 	public class HEditorApplication {
 		public static void RepaintInspectorWindow() {
 			EditorUtils.InspectorWindow()?.Repaint();
+		}
+	}
+}
+
+namespace Hananoki {
+	public static partial class UnityEditorUserBuildSettingsUtils {
+		public static BuildTarget CalculateSelectedBuildTarget( BuildTargetGroup group ) {
+			var bak = EditorUserBuildSettings.selectedBuildTargetGroup;
+			EditorUserBuildSettings.selectedBuildTargetGroup = group;
+
+			var ret = CalculateSelectedBuildTarget();
+
+			EditorUserBuildSettings.selectedBuildTargetGroup = bak;
+			return ret;
 		}
 	}
 }

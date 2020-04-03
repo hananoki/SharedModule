@@ -1,5 +1,12 @@
 # Shared Module
 
+## [1.1.0] - 2020-04-04
+
+### Changed
+- Refactoring of using, code format, etc
+- Assigning editor extension methods to namespaces
+- moved ReflectionUtils to the RuntimeEditor
+
 ## [1.0.2] - 2020-04-02
 
 ### Changed

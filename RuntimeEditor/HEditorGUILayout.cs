@@ -1,15 +1,11 @@
 ﻿#if UNITY_EDITOR
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor;
-using Hananoki;
 using Hananoki.Extensions;
+using System;
+using UnityEditor;
+using UnityEngine;
 
 using UnityObject = UnityEngine.Object;
-using Hananoki.Reflection;
 
 namespace Hananoki {
 	public static class HEditorStyles {
@@ -59,7 +55,10 @@ namespace Hananoki {
 					s_Toolbarbutton2.margin.zero();
 					s_Toolbarbutton2.padding.zero();//= new RectOffset(1,1,2,2);
 					s_Toolbarbutton2.fontSize = 10;
-					s_Toolbarbutton2.fixedHeight=20;
+					s_Toolbarbutton2.fixedHeight = 18;
+					if( UnitySymbol.Has( "UNITY_2019_3_OR_NEWER" ) ) {
+						s_Toolbarbutton2.fixedHeight = 20;
+					}
 				}
 				return s_Toolbarbutton2;
 			}
@@ -75,7 +74,7 @@ namespace Hananoki {
 					return;
 				}
 				Toolbarbutton = new GUIStyle( EditorStyles.toolbarButton );
-				
+
 
 				ToolbarDropDown = new GUIStyle( "ToolbarDropDown" );
 				ToolbarDropDown.alignment = TextAnchor.MiddleCenter;
@@ -96,7 +95,7 @@ namespace Hananoki {
 		public static bool Button( Texture image, params GUILayoutOption[] options ) {
 			return Button( EditorHelper.TempContent( image ), GUILayout.Width( 26 ) );
 		}
-		public static bool Button( GUIContent content,  params GUILayoutOption[] options ) {
+		public static bool Button( GUIContent content, params GUILayoutOption[] options ) {
 			if( Toolbarbutton2 == null ) return false;
 			try {
 				if( GUILayout.Button( content, Toolbarbutton2, options ) ) {
@@ -112,8 +111,8 @@ namespace Hananoki {
 
 		public static bool Toggle( bool value, string s, Texture image ) {
 			var size = Toolbarbutton2.CalcSize( s.content() );
-			var rc = GUILayoutUtility.GetRect( s.content(), Toolbarbutton2, GUILayout.Width( size.x+24 ) );
-			return Toggle( rc, value , EditorHelper.TempContent( s, image ), Toolbarbutton2 );
+			var rc = GUILayoutUtility.GetRect( s.content(), Toolbarbutton2, GUILayout.Width( size.x + 24 ) );
+			return Toggle( rc, value, EditorHelper.TempContent( s, image ), Toolbarbutton2 );
 			//return Toggle( value, EditorHelper.TempContent( s, image ), Toolbarbutton2, options );
 		}
 		public static bool Toggle( bool value, string s, params GUILayoutOption[] options ) {
@@ -176,9 +175,12 @@ namespace Hananoki {
 
 
 		public static bool IconButton( Rect position, Texture2D tex, float heighOffset = 0 ) {
-			return IconButton( position, tex, HEditorStyles.iconButton, heighOffset );
+			return IconButton( position, tex, string.Empty, heighOffset );
 		}
-		public static bool IconButton( Rect position, Texture2D tex, GUIStyle style, float heighOffset = 0 ) {
+		public static bool IconButton( Rect position, Texture2D tex, string tooltip, float heighOffset = 0 ) {
+			return IconButton( position, EditorHelper.TempContent( tex, tooltip ), HEditorStyles.iconButton, heighOffset );
+		}
+		public static bool IconButton( Rect position, GUIContent content, GUIStyle style, float heighOffset = 0 ) {
 			bool result = false;
 			position.y += heighOffset;
 			if( EditorHelper.HasMouseClick( position ) ) {
@@ -193,7 +195,7 @@ namespace Hananoki {
 			////var mm = a.GetValue( s );
 			//a.SetValue( s , 0);
 			//EditorGUI.DrawRect( position, new Color( 0, 0, 1, 0.2f ) );
-			GUI.Button( position, EditorHelper.TempContent( tex ), style );
+			GUI.Button( position, content, style );
 			return result;
 		}
 
@@ -224,9 +226,10 @@ namespace Hananoki {
 	}
 
 
+
 	public static class HEditorGUILayout {
 
-		
+
 
 		public static bool Foldout( bool foldout, string text ) {
 			string ssss = "     " + text;
@@ -247,7 +250,7 @@ namespace Hananoki {
 			var style = new GUIStyle( HEditorStyles.iconButton );
 			style.margin = new RectOffset( 0, 0, marginHeighOffset, 0 );
 			var r = EditorHelper.GetLayout( tex, style );
-			return HEditorGUI.IconButton( r, tex, style, 0 );
+			return HEditorGUI.IconButton( r, EditorHelper.TempContent( tex ), style, 0 );
 		}
 		//public static bool DropDown( string text, GUIStyle style, params GUILayoutOption[] options ) {
 		//	return DropDown( EditorHelper.TempContent( text ), style, options );

@@ -14,10 +14,10 @@ namespace Hananoki {
 			if( s_dic == null ) {
 				s_dic = new Dictionary<string, EditorLocalizeDictionary>();
 			}
-			
+
 			var _localize = new EditorLocalizeDictionary();
 			_localize.Load( loadGUID.IsEmpty() ? defaultGUID : loadGUID );
-			
+
 			if( s_dic.ContainsKey( packageName ) ) {
 				s_dic[ packageName ] = _localize;
 			}
@@ -82,7 +82,7 @@ namespace Hananoki {
 
 
 	[AttributeUsage( AttributeTargets.Class )]
-	public class EditorLocalizeClass : Attribute {}
+	public class EditorLocalizeClass : Attribute { }
 
 	[AttributeUsage( AttributeTargets.Method )]
 	public class EditorLocalizeMethod : Attribute { }
