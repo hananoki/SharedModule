@@ -9,6 +9,17 @@ using UnityObject = UnityEngine.Object;
 
 namespace Hananoki {
 	public static class HEditorStyles {
+		public static GUIStyle s_ImageButton;
+		public static GUIStyle imageButton {
+			get {
+				if( s_ImageButton == null ) {
+					s_ImageButton = new GUIStyle( GUI.skin.button );
+				}
+				return s_ImageButton;
+			}
+		}
+
+
 		public static GUIStyle s_IconButton;
 		public static GUIStyle iconButton {
 			get {
@@ -173,12 +184,30 @@ namespace Hananoki {
 	public static class HEditorGUI {
 		public static Rect lastRect;
 
-
-		public static bool IconButton( Rect position, Texture2D tex, float heighOffset = 0 ) {
-			return IconButton( position, tex, string.Empty, heighOffset );
+		public static bool ImageButton( Rect position, Texture2D image ) {
+			return ImageButton( position, image, string.Empty );
 		}
-		public static bool IconButton( Rect position, Texture2D tex, string tooltip, float heighOffset = 0 ) {
-			return IconButton( position, EditorHelper.TempContent( tex, tooltip ), HEditorStyles.iconButton, heighOffset );
+		public static bool ImageButton( Rect position, Texture2D image, string tooltip ) {
+			return ImageButton( position, EditorHelper.TempContent( image, tooltip ), HEditorStyles.imageButton );
+		}
+		public static bool ImageButton( Rect position, GUIContent content, GUIStyle style ) {
+			bool result = false;
+			//position.y += heighOffset;
+			if( EditorHelper.HasMouseClick( position ) ) {
+				Event.current.Use();
+				result = true;
+			}
+			GUI.Button( position, content, style );
+			return result;
+		}
+
+
+
+		public static bool IconButton( Rect position, Texture2D image, float heighOffset = 0 ) {
+			return IconButton( position, image, string.Empty, heighOffset );
+		}
+		public static bool IconButton( Rect position, Texture2D image, string tooltip, float heighOffset = 0 ) {
+			return IconButton( position, EditorHelper.TempContent( image, tooltip ), HEditorStyles.iconButton, heighOffset );
 		}
 		public static bool IconButton( Rect position, GUIContent content, GUIStyle style, float heighOffset = 0 ) {
 			bool result = false;
@@ -187,14 +216,6 @@ namespace Hananoki {
 				Event.current.Use();
 				result = true;
 			}
-			//EditorGUI.DrawRect( r2, new Color( 0, 0, 1, 0.2f ) );
-			//GUIStyle s = EditorStyles.label;
-			//s.name = "IconButton";
-			////s.name = "Command";
-			//var a = R.Field( "blockId", "UnityEngine.GUIStyle", "UnityEngine.dll" );
-			////var mm = a.GetValue( s );
-			//a.SetValue( s , 0);
-			//EditorGUI.DrawRect( position, new Color( 0, 0, 1, 0.2f ) );
 			GUI.Button( position, content, style );
 			return result;
 		}
@@ -223,13 +244,15 @@ namespace Hananoki {
 			//EditorGUI.DrawRect( lastRect, new Color( 0, 0, 1, 0.5f ) );
 			return false;
 		}
+
+		public static T ObjectField<T>( Rect position, string label, UnityObject obj, bool allowSceneObjects = false ) where T : UnityObject {
+			return (T) EditorGUI.ObjectField( position, EditorHelper.TempContent( label ), obj, typeof( T ), allowSceneObjects );
+		}
 	}
 
 
 
 	public static class HEditorGUILayout {
-
-
 
 		public static bool Foldout( bool foldout, string text ) {
 			string ssss = "     " + text;
@@ -243,6 +266,13 @@ namespace Hananoki {
 			foldout = EditorGUI.Foldout( rc2, foldout, "" );
 			GUI.Button( rc, cont, HEditorStyles.foldoutText );
 			return foldout;
+		}
+
+		public static bool ImageButton( Texture2D tex, params GUILayoutOption[] option ) {
+			var style = new GUIStyle( HEditorStyles.imageButton );
+			//style.margin = new RectOffset( 0, 0, 0, 0 );
+			var r = EditorHelper.GetLayout( tex, style, option );
+			return HEditorGUI.ImageButton( r, EditorHelper.TempContent( tex ), style );
 		}
 
 

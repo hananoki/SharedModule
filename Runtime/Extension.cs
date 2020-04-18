@@ -168,6 +168,12 @@ namespace Hananoki.Extensions {
 		}
 
 
+		public static void GetComponentAndAttach<T>( this GameObject gobj, Action<T> attach ) where T : Component {
+			var p = gobj.GetComponent<T>();
+			if( p == null ) return;
+			attach?.Invoke( p );
+		}
+
 
 		/// <summary>
 		/// パラメーターを受け取らない Action デリゲートを実行します

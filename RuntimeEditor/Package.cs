@@ -5,9 +5,10 @@ namespace Hananoki.SharedModule {
   public static class Package {
     public const string name = "SharedModule";
     public const string editorPrefName = "Hananoki.SharedModule";
-    public const string version = "1.1.0";
+    public const string version = "1.2.0";
   }
   
+#if UNITY_EDITOR
   [EditorLocalizeClass]
   public class LocalizeEvent {
     [EditorLocalizeMethod]
@@ -19,4 +20,5 @@ namespace Hananoki.SharedModule {
       }
     }
   }
+#endif
 }

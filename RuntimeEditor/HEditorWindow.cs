@@ -40,9 +40,8 @@ namespace Hananoki {
 #endif
 
 		public class PreferenceLayoutScope : IDisposable {
-			Vector2 m_scrollPos;
-			public PreferenceLayoutScope() {
-				m_scrollPos = EditorGUILayout.BeginScrollView( m_scrollPos );
+			public PreferenceLayoutScope( ref Vector2 scrollPos ) {
+				scrollPos = EditorGUILayout.BeginScrollView( scrollPos );
 				GUILayout.BeginHorizontal();
 				GUILayout.Space( 4 );
 				GUILayout.BeginVertical();

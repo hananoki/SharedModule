@@ -1,5 +1,15 @@
 # Shared Module
 
+## [1.2.0] - 2020-04-18
+
+### Added
+- Added extended method GetComponentAndAttach.
+- Added HEditorGUI.ImageButton
+- Added EditorIcon.PlayButton
+
+### Fixed
+- Fixed the scrolling in HSettingsEditorWindow.
+
 ## [1.1.0] - 2020-04-04
 
 ### Changed

@@ -10,9 +10,6 @@ namespace Hananoki.Extensions {
 
 	public static class EditorExtensions {
 
-
-
-
 		#region string
 
 		public static string quote( this string s ) {

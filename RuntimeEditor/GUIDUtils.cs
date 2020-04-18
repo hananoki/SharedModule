@@ -13,7 +13,7 @@ namespace Hananoki {
 			return b;
 		}
 
-		
+
 		public static string GetAssetPath( string guid ) {
 			return AssetDatabase.GUIDToAssetPath( guid );
 		}
