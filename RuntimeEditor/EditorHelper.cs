@@ -1,4 +1,4 @@
-﻿#pragma warning disable 618
+﻿//#pragma warning disable 618
 #if UNITY_EDITOR
 
 using Hananoki.Extensions;
@@ -30,10 +30,19 @@ namespace Hananoki {
 
 			var t = AssetDatabase.LoadAssetAtPath<UnityObject>( outputPath );
 			if( t != null ) {
-				outobj = PrefabUtility.ReplacePrefab( gameObject, t, ReplacePrefabOptions.ReplaceNameBased );
+				//outobj = PrefabUtility.ReplacePrefab( gameObject, t, ReplacePrefabOptions.ReplaceNameBased );
+				var copy = GameObject.Instantiate( gameObject );
+				outobj = PrefabUtility.SaveAsPrefabAsset( copy, outputPath );
+				GameObject.DestroyImmediate( copy );
 			}
 			else {
-				outobj = PrefabUtility.CreatePrefab( outputPath, gameObject, ReplacePrefabOptions.Default );
+				var copy = GameObject.Instantiate( gameObject );
+				outobj = PrefabUtility.SaveAsPrefabAsset( copy, outputPath );
+				GameObject.DestroyImmediate( copy );
+				//PrefabUtility.UnpackPrefabInstance( outobj, PrefabUnpackMode.OutermostRoot, InteractionMode.AutomatedAction );
+				//outobj = PrefabUtility.SaveAsPrefabAsset( gameObject, outputPath );
+				//PrefabUtility.SaveAsPrefabAssetAndConnect
+				//outobj = PrefabUtility.CreatePrefab( outputPath, gameObject, ReplacePrefabOptions.Default );
 			}
 
 			postProcess.Call( outobj );
@@ -59,6 +68,92 @@ namespace Hananoki {
 
 
 	public static class EditorHelper {
+
+
+
+		public static EditorWindow GetWindow( Type windowT, params Type[] desiredDockNextTo ) {
+			return GetWindow( windowT, null, true, desiredDockNextTo );
+		}
+
+		public static EditorWindow GetWindow( Type windowT, string title, bool focus, params Type[] desiredDockNextTo ) {
+			var array = Resources.FindObjectsOfTypeAll( windowT ) as EditorWindow[];
+			EditorWindow t = ( array.Length != 0 ) ? array[ 0 ] : default;
+
+			EditorWindow result;
+			if( t != null ) {
+				if( focus ) {
+					t.Focus();
+				}
+				result = t;
+			}
+			else {
+				result = CreateWindow( windowT, title, desiredDockNextTo );
+			}
+			return result;
+		}
+
+		public static EditorWindow CreateWindow( Type windowT, string title, params Type[] desiredDockNextTo ) {
+			EditorWindow t = (EditorWindow) ScriptableObject.CreateInstance( windowT );
+			bool flag = title != null;
+			if( flag ) {
+				t.titleContent = new GUIContent( title );
+			}
+			EditorWindow result;
+			for( int i = 0; i < desiredDockNextTo.Length; i++ ) {
+				Type desired = desiredDockNextTo[ i ];
+				var windows = (Array) R.Property( "windows", "UnityEditor.ContainerWindow" ).GetValue( null );
+				//var a = windows.GetType();
+				foreach( var containerWindow in windows ) {
+
+					var rootView = R.Property( "rootView", "UnityEditor.ContainerWindow" ).GetValue( containerWindow );
+					var allChildren = (Array) R.Property( "allChildren", "UnityEditor.View" ).GetValue( rootView );
+					foreach( var view in allChildren ) {
+
+						if( view == null ) continue;
+						if( view.GetType().Name != "DockArea" ) continue;
+
+						var arg_B9_0 = (IEnumerable<EditorWindow>) R.Field( "m_Panes", "UnityEditor.DockArea" ).GetValue( view );
+						if( arg_B9_0 == null ) continue;
+
+						bool flag3 = arg_B9_0.Any( x => x.GetType() == desired );
+						if( flag3 ) {
+							view.MethodInvoke( "AddTab", new Type[] { typeof( EditorWindow ), typeof( bool ) }, new object[] { t, true } );
+							result = t;
+							return result;
+						}
+						//Debug.Log( arg_B9_0.ToString() );
+					}
+				}
+			}
+			t.Show();
+			result = t;
+			return result;
+		}
+
+
+		public static void MarkSceneDirty() {
+			EditorSceneManager.MarkAllScenesDirty();
+		}
+
+		public static void EditScript( Type t ) {
+			var a = ScriptableObject.CreateInstance( t );
+			AssetDatabase.OpenAsset( MonoScript.FromScriptableObject( a ) );
+			UnityObject.DestroyImmediate( a );
+		}
+
+		public static void EditScript( ScriptableObject obj ) {
+			AssetDatabase.OpenAsset( MonoScript.FromScriptableObject( obj ) );
+		}
+
+		public static void EditScript( MonoBehaviour obj ) {
+			AssetDatabase.OpenAsset( MonoScript.FromMonoBehaviour( obj ) );
+		}
+
+		public static void PingObject( Type t ) {
+			var a = ScriptableObject.CreateInstance( t );
+			PingObject( MonoScript.FromScriptableObject( a ) );
+			UnityObject.DestroyImmediate( a );
+		}
 
 		public static void PingObject( UnityObject obj ) {
 			EditorGUIUtility.PingObject( obj );
@@ -256,7 +351,7 @@ namespace Hananoki {
 		public static Texture ReadTexture( string path, int width, int height ) {
 			try {
 				if( !File.Exists( path ) ) return null;
-				byte[] readBinary = EditorHelper.ReadBinaryFile( path );
+				byte[] readBinary = ReadBinaryFile( path );
 
 				Texture2D texture = new Texture2D( width, height );
 				texture.LoadImage( readBinary );
@@ -331,11 +426,11 @@ namespace Hananoki {
 		#region エディタ拡張、ポップアップ、マウスクリック等
 
 		public static Rect GetLayout( string s, GUIStyle style, params GUILayoutOption[] option ) {
-			return GUILayoutUtility.GetRect( EditorHelper.TempContent( s ), style, option );
+			return GUILayoutUtility.GetRect( TempContent( s ), style, option );
 		}
 
 		public static Rect GetLayout( Texture2D tex, GUIStyle style, params GUILayoutOption[] option ) {
-			return GUILayoutUtility.GetRect( EditorHelper.TempContent( tex ), style, option );
+			return GUILayoutUtility.GetRect( TempContent( tex ), style, option );
 		}
 
 
@@ -440,8 +535,8 @@ namespace Hananoki {
 		public static bool AnimationControllerIsRegistered( UnityEditor.Animations.AnimatorController controller, AnimationClip clip ) {
 			var st = controller.layers[ 0 ].stateMachine.states;
 
-			if( 0 <= System.Array.FindIndex( controller.animationClips, ( c ) => { return c.name == clip.name; } ) ) {
-				int i = System.Array.FindIndex( st, c => c.state.motion == clip );
+			if( 0 <= Array.FindIndex( controller.animationClips, ( c ) => { return c.name == clip.name; } ) ) {
+				int i = Array.FindIndex( st, c => c.state.motion == clip );
 				if( 0 <= i ) {
 					if( st[ i ].state.name != clip.name ) {
 						//console.log( st[ i ].state.name );
@@ -593,37 +688,37 @@ namespace Hananoki {
 		public static bool FoldoutTitlebar( bool foldout, GUIContent label, bool skipIconSpacing ) {
 			if( methodInfoFoldoutTitlebar == null ) {
 #if UNITY_5_5 || UNITY_5_6 || UNITY_2017_1_OR_NEWER
-				typeFoldoutTitlebar = System.Reflection.Assembly.Load( "UnityEditor.dll" ).GetType( "UnityEditor.EditorGUILayout" );
+				typeFoldoutTitlebar = Assembly.Load( "UnityEditor.dll" ).GetType( "UnityEditor.EditorGUILayout" );
 #else
 				typeFoldoutTitlebar = Types.GetType( "UnityEditor.EditorGUILayout", "UnityEditor.dll" );
 #endif
-				methodInfoFoldoutTitlebar = typeFoldoutTitlebar.GetMethod( "FoldoutTitlebar", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static );
+				methodInfoFoldoutTitlebar = typeFoldoutTitlebar.GetMethod( "FoldoutTitlebar", BindingFlags.NonPublic | BindingFlags.Static );
 			}
 
 			var obj = methodInfoFoldoutTitlebar.Invoke( null, new object[] { foldout, label, skipIconSpacing } );
-			return Convert.ToBoolean( obj );
+			return ToBoolean( obj );
 		}
 		public static bool FoldoutTitlebar( bool foldout, string label, bool skipIconSpacing ) {
-			return FoldoutTitlebar( foldout, EditorHelper.TempContent( label ), skipIconSpacing );
+			return FoldoutTitlebar( foldout, TempContent( label ), skipIconSpacing );
 		}
 
 
 		public static bool FoldoutTitlebar( Rect rect, bool foldout, GUIContent label, bool skipIconSpacing ) {
 			if( EditorGUI_FoldoutTitlebar == null ) {
 #if UNITY_5_5 || UNITY_5_6 || UNITY_2017_1_OR_NEWER
-				var t = System.Reflection.Assembly.Load( "UnityEditor.dll" ).GetType( "UnityEditor.EditorGUI" );
+				var t = Assembly.Load( "UnityEditor.dll" ).GetType( "UnityEditor.EditorGUI" );
 #else
 				typeFoldoutTitlebar = Types.GetType( "UnityEditor.EditorGUILayout", "UnityEditor.dll" );
 #endif
-				EditorGUI_FoldoutTitlebar = t.GetMethod( "FoldoutTitlebar", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static );
+				EditorGUI_FoldoutTitlebar = t.GetMethod( "FoldoutTitlebar", BindingFlags.NonPublic | BindingFlags.Static );
 			}
 
 			var obj = EditorGUI_FoldoutTitlebar.Invoke( null, new object[] { rect, label, foldout, skipIconSpacing } );
-			return Convert.ToBoolean( obj );
+			return ToBoolean( obj );
 		}
 
 		public static bool FoldoutTitlebar( Rect rect, bool foldout, string label, bool skipIconSpacing ) {
-			return FoldoutTitlebar( rect, foldout, EditorHelper.TempContent( label ), skipIconSpacing );
+			return FoldoutTitlebar( rect, foldout, TempContent( label ), skipIconSpacing );
 		}
 
 		#endregion

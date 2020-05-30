@@ -52,6 +52,41 @@ namespace Hananoki {
 			GUI.backgroundColor = color;
 		}
 	}
+
+
+	public class SerializedObjectScope : GUI.Scope {
+		SerializedObject _so;
+
+		public SerializedObjectScope( SerializedObject so ) {
+			_so = so;
+			_so.Update();
+		}
+
+		protected override void CloseScope() {
+			_so.ApplyModifiedProperties();
+		}
+	}
+
+
+	public class LockReloadAssembliesScope : GUI.Scope {
+		public LockReloadAssembliesScope() {
+			EditorApplication.LockReloadAssemblies();
+		}
+		protected override void CloseScope() {
+			EditorApplication.UnlockReloadAssemblies();
+		}
+	}
+
+
+	public class AssetEditingScope : GUI.Scope {
+		public AssetEditingScope() {
+			AssetDatabase.StartAssetEditing();
+		}
+		protected override void CloseScope() {
+			AssetDatabase.StopAssetEditing();
+			AssetDatabase.Refresh();
+		}
+	}
 }
 
 #endif

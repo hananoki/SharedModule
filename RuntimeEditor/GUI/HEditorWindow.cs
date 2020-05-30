@@ -48,6 +48,7 @@ namespace Hananoki {
 			}
 			public void Dispose() {
 				GUILayout.EndVertical();
+				GUILayout.Space( 4 );
 				GUILayout.EndHorizontal();
 				EditorGUILayout.EndScrollView();
 			}

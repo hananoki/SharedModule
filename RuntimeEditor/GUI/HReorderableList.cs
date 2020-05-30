@@ -7,6 +7,7 @@ using UnityEditorInternal;
 using System.Reflection;
 using Hananoki.Extensions;
 using System.Collections.Generic;
+using Hananoki.Reflection;
 
 namespace Hananoki {
 	public class HReorderableList {
@@ -14,6 +15,9 @@ namespace Hananoki {
 
 		SerializedObject m_serializedObject;
 		SerializedProperty m_serializedProperty;
+
+
+		public ReorderableList reorderableList => m_lst;
 
 		string m_headerName = "";
 
@@ -76,7 +80,7 @@ namespace Hananoki {
 
 				m_serializedProperty.isExpanded = EditorGUI.Foldout( rc1, m_serializedProperty.isExpanded, title );
 			};
-			m_lst.elementHeight = ( EditorGUIUtility.singleLineHeight * heightNum ) + 2;
+			m_lst.elementHeight = ( EditorGUIUtility.singleLineHeight * heightNum ) + 4;
 		}
 
 
@@ -94,13 +98,15 @@ namespace Hananoki {
 		}
 	}
 
+
+
 	public static class ReorderableListExtension {
 		static FieldInfo _s_Defaults;
 		static MethodInfo _DoListHeader;
 
 		public static void DoListHeader( this ReorderableList r ) {
 			if( _s_Defaults == null ) {
-				_s_Defaults = typeof( ReorderableList ).GetField( "s_Defaults", BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic );
+				_s_Defaults = R.Field<ReorderableList>( "s_Defaults" );// typeof( ReorderableList ).GetField( "s_Defaults", BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic );
 			}
 			if( _DoListHeader == null ) {
 				_DoListHeader = typeof( ReorderableList ).GetMethod( "DoListHeader", BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic );

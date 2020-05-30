@@ -187,19 +187,28 @@ namespace Hananoki {
 			return EditorWindow.GetWindow( t, false, "Hierarchy", false );
 		}
 
-		public static EditorWindow AnimationWindow() {
-			//アニメーションウィンドウ
-			var asm = Assembly.Load( "UnityEditor" );
-			var typeAnimWindow = asm.GetType( "UnityEditor.AnimationWindow" );
-			return EditorWindow.GetWindow( typeAnimWindow, true, "Animation", false );
+		public static Type AnimationWindowType {
+			get {
+				var asm = Assembly.Load( "UnityEditor" );
+				return asm.GetType( "UnityEditor.AnimationWindow" );
+			}
+		}
+		public static EditorWindow AnimationWindow() => EditorWindow.GetWindow( AnimationWindowType, false, "Animation", false );
+
+
+
+		public static Type AnimatorWindowType {
+			get {
+				var asm = Assembly.Load( "UnityEditor.Graphs" );
+				Module editorGraphModule = asm.GetModule( "UnityEditor.Graphs.dll" );
+				return editorGraphModule.GetType( "UnityEditor.Graphs.AnimatorControllerTool" );
+			}
 		}
 
 		public static EditorWindow AnimatorWindow() {
-			var asm2 = Assembly.Load( "UnityEditor.Graphs" );
-			Module editorGraphModule = asm2.GetModule( "UnityEditor.Graphs.dll" );
-			var typeAnimatorWindow = editorGraphModule.GetType( "UnityEditor.Graphs.AnimatorControllerTool" );
-			return EditorWindow.GetWindow( typeAnimatorWindow, true, "Animator", false );
+			return EditorWindow.GetWindow( AnimatorWindowType, false, "Animator", false );
 		}
+
 
 		public static EditorWindow ConsoleWindow() {
 			var asm = Assembly.Load( "UnityEditor" );

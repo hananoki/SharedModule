@@ -1,5 +1,4 @@
-﻿#if UNITY_EDITOR
-
+﻿
 using Hananoki.Extensions;
 using System;
 using UnityEditor;
@@ -8,52 +7,6 @@ using UnityEngine;
 using UnityObject = UnityEngine.Object;
 
 namespace Hananoki {
-	public static class HEditorStyles {
-		public static GUIStyle s_ImageButton;
-		public static GUIStyle imageButton {
-			get {
-				if( s_ImageButton == null ) {
-					s_ImageButton = new GUIStyle( GUI.skin.button );
-				}
-				return s_ImageButton;
-			}
-		}
-
-
-		public static GUIStyle s_IconButton;
-		public static GUIStyle iconButton {
-			get {
-				if( s_IconButton == null ) {
-#if UNITY_2019_3_OR_NEWER
-					s_IconButton = new GUIStyle( "IconButton" );
-#else
-					s_IconButton = new GUIStyle( "IconButton" );
-					s_IconButton.fixedWidth = s_IconButton.fixedHeight = 16;
-					s_IconButton.padding = new RectOffset( 0, 0, 0, 0 );
-					s_IconButton.margin = new RectOffset( 0, 0, 0, 0 );
-					s_IconButton.stretchWidth = false;
-					s_IconButton.stretchHeight = false;
-#endif
-				}
-				return s_IconButton;
-			}
-		}
-
-		public static GUIStyle s_FoldoutText;
-		public static GUIStyle foldoutText {
-			get {
-				if( s_FoldoutText == null ) {
-					s_FoldoutText = new GUIStyle( "ExposablePopupItem" );
-					s_FoldoutText.font = EditorStyles.boldLabel.font;
-					s_FoldoutText.fontStyle = FontStyle.Bold;
-					s_FoldoutText.margin = new RectOffset( 0, 0, 0, 0 );
-				}
-				return s_FoldoutText;
-			}
-		}
-	}
-
-
 
 	[InitializeOnLoad]
 	public static class HGUILayoutToolbar {
@@ -81,7 +34,7 @@ namespace Hananoki {
 				try {
 					if( EditorStyles.toolbarButton == null ) return;
 				}
-				catch( System.NullReferenceException ) {
+				catch( NullReferenceException ) {
 					return;
 				}
 				Toolbarbutton = new GUIStyle( EditorStyles.toolbarButton );
@@ -184,6 +137,24 @@ namespace Hananoki {
 	public static class HEditorGUI {
 		public static Rect lastRect;
 
+		public static string FolderFiled( Rect position, string guid ) {
+			EditorGUI.LabelField( position, guid, EditorStyles.textField );
+			return guid;
+		}
+		public static string FolderFiled( Rect position, GUIContent label, string path ) {
+			var name = path.IsEmpty() ? "None (Folder)" : path;
+			var rcL = position;
+			rcL.width -= 16;
+
+			EditorGUI.LabelField( rcL, label, EditorHelper.TempContent( name, Icon.Get( "Folder Icon" ) ), HEditorStyles.folderField );
+			if( IconButton( position.AlignR( 16 ), Icon.Get( "OpenedFolder Icon" ), 1 ) ) {
+				path = EditorUtility.OpenFolderPanel( "Select Folder", "", "" );
+			}
+			//GUI.DrawTexture( position.AlignR( 16 ), Icon.Get( "OpenedFolder Icon" ), ScaleMode.ScaleToFit );
+			;
+			return path;
+		}
+
 		public static bool ImageButton( Rect position, Texture2D image ) {
 			return ImageButton( position, image, string.Empty );
 		}
@@ -248,11 +219,26 @@ namespace Hananoki {
 		public static T ObjectField<T>( Rect position, string label, UnityObject obj, bool allowSceneObjects = false ) where T : UnityObject {
 			return (T) EditorGUI.ObjectField( position, EditorHelper.TempContent( label ), obj, typeof( T ), allowSceneObjects );
 		}
+		public static T ObjectField<T>( Rect position, UnityObject obj, bool allowSceneObjects = false ) where T : UnityObject {
+			return (T) EditorGUI.ObjectField( position, obj, typeof( T ), allowSceneObjects );
+		}
 	}
 
 
 
 	public static class HEditorGUILayout {
+
+		public static string FolderFiled( string label, string path, params GUILayoutOption[] options ) {
+			var rect = GUILayoutUtility.GetRect( EditorHelper.TempContent( path, Icon.Get( "Folder Icon" ) ), HEditorStyles.folderField, options );
+			return HEditorGUI.FolderFiled( rect, label.content(), path );
+		}
+
+
+		public static float FrameSlider( float value, int leftValue, int rightValue, params GUILayoutOption[] options ) {
+			int frame = (int) ( ( value * 60.0f ) + 0.5f );
+			frame = EditorGUILayout.IntSlider( frame, leftValue, rightValue );
+			return frame / 60.0f;
+		}
 
 		public static bool Foldout( bool foldout, string text ) {
 			string ssss = "     " + text;
@@ -372,11 +358,23 @@ namespace Hananoki {
 		}
 
 		public static T ObjectField<T>( string label, UnityObject obj, bool allowSceneObjects = false, params GUILayoutOption[] options ) where T : UnityObject {
-			return (T) EditorGUILayout.ObjectField( label, obj, typeof( T ), allowSceneObjects, options );
+			var labelCont = EditorHelper.TempContent( label );
+			var rc = GUILayoutUtility.GetRect( labelCont, EditorStyles.objectField, options );
+			rc = EditorGUI.PrefixLabel( rc, GUIUtility.GetControlID( FocusType.Passive ), new GUIContent( label ) );
+
+			using( new GUIBackgroundColorScope() ) {
+				if( obj == null ) {
+					GUI.backgroundColor = new Color( 1, 0, 0, 0.1f );
+				}
+				var _obj = (T) EditorGUI.ObjectField( rc, obj, typeof( T ), allowSceneObjects );
+				return _obj;
+			}
 		}
+
 		public static T ObjectField<T>( UnityObject obj, bool allowSceneObjects = false, params GUILayoutOption[] options ) where T : UnityObject {
 			return (T) EditorGUILayout.ObjectField( obj, typeof( T ), allowSceneObjects, options );
 		}
+
 
 		public static string GUIDObjectField( string label, string guid ) {
 			UnityObject value = null;
@@ -389,9 +387,12 @@ namespace Hananoki {
 			var rc = GUILayoutUtility.GetLastRect();
 
 			rc = EditorGUI.PrefixLabel( rc, GUIUtility.GetControlID( FocusType.Passive ), new GUIContent( label ) );
-			//GUI.changed = false;
-			value = (UnityObject) EditorGUI.ObjectField( rc, value, typeof( UnityObject ), false );
-			//if( GUI.changed ) {
+			using( new GUIBackgroundColorScope() ) {
+				if( value == null ) {
+					GUI.backgroundColor = new Color( 1, 0, 0, 0.1f );
+				}
+				value = EditorGUI.ObjectField( rc, value, typeof( UnityObject ), false );
+			}
 			if( value == null ) return "";
 
 			return AssetDatabase.AssetPathToGUID( AssetDatabase.GetAssetPath( value ) );
@@ -417,5 +418,3 @@ namespace Hananoki {
 		}
 	}
 }
-
-#endif

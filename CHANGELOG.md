@@ -1,5 +1,22 @@
 # Shared Module
 
+## [1.3.0] - 2020-05-31
+
+### Added
+- Added HTreeView
+- Added SerializedObjectScope
+- Added LockReloadAssembliesScope
+- Added AssetEditingScope
+- Added GUIDUtils.NewString
+- Added GUIDUtils.NewInt32
+- Added EditorHelper.GetWindow
+- Added EditorHelper.CreateWindow
+- Added EditorHelper.MarkSceneDirty
+- Added EditorHelper.EditScript
+
+### Changed
+- Changed the arrangement of the files.
+
 ## [1.2.0] - 2020-04-18
 
 ### Added

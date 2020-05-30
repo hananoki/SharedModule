@@ -10,6 +10,11 @@ namespace Hananoki {
 			return values;
 		}
 
+		public static System.Array GetArray( System.Type t )  {
+			System.Type type = t;
+			return System.Enum.GetValues( type );
+		}
+
 		public static void Remove<T>( ref T[] array, T item ) {
 			List<T> list = new List<T>( array );
 			list.Remove( item );

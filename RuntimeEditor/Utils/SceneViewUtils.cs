@@ -25,6 +25,7 @@ namespace Hananoki {
 		}
 
 		public static void SetPivot( Vector3 a ) {
+			if( SceneView.lastActiveSceneView == null ) return;
 			SceneView.lastActiveSceneView.pivot = a;
 		}
 

@@ -10,37 +10,24 @@ namespace Hananoki {
 
 	public static class DirectoryUtils {
 
-		/// <summary>
-		/// <para>指定したディレクトリ内のファイルの名前 (パスを含む) を返します</para>
-		/// <para>パスの区切り文字は「\\」ではなく「/」です</para>
-		/// </summary>
 		public static string[] GetFiles( string path ) {
 			return Directory
 					.GetFiles( path )
-					.Select( c => c.Replace( "\\", "/" ) )
+					.Select( c => Prettyfy( c ) )
 					.ToArray();
 		}
 
-		/// <summary>
-		/// <para>指定したディレクトリ内の指定した検索パターンに一致するファイル名 (パスを含む) を返します</para>
-		/// <para>パスの区切り文字は「\\」ではなく「/」です</para>
-		/// </summary>
 		public static string[] GetFiles( string path, string searchPattern ) {
 			return Directory
 					.GetFiles( path, searchPattern )
-					.Select( c => c.Replace( "\\", "/" ) )
+					.Select( c => Prettyfy( c ) )
 					.ToArray();
 		}
 
-		/// <summary>
-		/// <para>指定したディレクトリの中から、指定した検索パターンに一致し、</para>
-		/// <para>サブディレクトリを検索するかどうかを決定する値を持つファイル名 (パスを含む) を返します</para>
-		/// <para>パスの区切り文字は「\\」ではなく「/」です</para>
-		/// </summary>
 		public static string[] GetFiles( string path, string searchPattern, SearchOption searchOption ) {
 			return Directory
 					.GetFiles( path, searchPattern, searchOption )
-					.Select( c => c.Replace( "\\", "/" ) )
+					.Select( c => Prettyfy( c ) )
 					.ToArray();
 		}
 

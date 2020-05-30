@@ -196,6 +196,10 @@ namespace Hananoki.Extensions {
 
 
 
+		public static void SetEnabled<T>( this T p, bool value ) where T : Behaviour {
+			if( p == null ) return;
+			p.enabled = value;
+		}
 
 		public static void SetActive<T>( this T p, bool value ) where T : Component {
 			if( p == null ) return;

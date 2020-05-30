@@ -10,7 +10,7 @@ using UnityEditor.Animations;
 
 namespace Hananoki {
 
-	public static class AnimatorControllerHelper {
+	public static class AnimatorControllerUtls {
 		public static void DefaultStatePosition( AnimatorController controller ) {
 			foreach( var layer in controller.layers ) {
 				layer.stateMachine.anyStatePosition = new Vector3( -168.0f, 0.0f, 0.0f );
@@ -20,12 +20,8 @@ namespace Hananoki {
 		}
 
 		public static void AddFolder( AnimatorController controller, string apath ) {
-			//Debug.Log( path );
-
 			DefaultStatePosition( controller );
-
-
-			var st = controller.layers[ 0 ].stateMachine.states;
+						var st = controller.layers[ 0 ].stateMachine.states;
 			int addcnt = 0;
 			var files = Directory.GetFiles( apath, "*.fbx" );
 			float fval = 0.00f;
@@ -81,7 +77,7 @@ namespace Hananoki {
 				fval += fadd;
 				var c = states[ i ];
 				EditorUtility.DisplayProgressBar( "クリップ削除中", string.Format( "{0} : {1}", controller.name, c.state.name ), fval );
-				AnimatorControllerHelper.Remove( controller, c.state );
+				AnimatorControllerUtls.Remove( controller, c.state );
 			}
 
 			EditorUtility.ClearProgressBar();
