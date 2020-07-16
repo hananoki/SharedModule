@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using System.Text.RegularExpressions;
+using Hananoki.Reflection;
 
 using UnityObject = UnityEngine.Object;
 
@@ -46,11 +47,21 @@ namespace Hananoki.Extensions {
 			return AssetDatabase.GetAssetPath( obj );
 		}
 
+		public static string GetGUID( this UnityObject obj ) {
+			return AssetDatabase.AssetPathToGUID( GetAssetPath( obj ) );
+		}
+
 		public static string GetPropertyType( this SerializedProperty property ) {
 			var type = property.type;
 			var match = Regex.Match( type, @"PPtr<\$(.*?)>" );
 			return match.Success ? match.Groups[ 1 ].Value : type;
 		}
+
+		//public static string GetProperty( this SerializedProperty property ) {
+		//	var type = typeof( SerializedProperty );
+		//	object _property;
+		//	_property.GetProperty<string>
+		//}
 	}
 
 

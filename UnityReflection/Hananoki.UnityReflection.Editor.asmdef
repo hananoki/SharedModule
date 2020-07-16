@@ -1,0 +1,18 @@
+{
+    "name": "Hananoki.UnityReflection.Editor",
+    "references": [
+        "Hananoki.ReflectionUtils.Editor",
+        "Hananoki.UnitySymbol.Editor"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

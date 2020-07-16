@@ -81,38 +81,35 @@ namespace Hananoki {
 		}
 
 		public static GUIContent IconContent( BuildTargetGroup platform ) {
-			if( platform == BuildTargetGroup.Standalone )
+			var name = platform.ToString();
+			if( name == "Standalone" )
 				return EditorGUIUtility.IconContent( "BuildSettings.Standalone" );
-			if( platform == BuildTargetGroup.Android )
+			if( name == "Android" )
 				return EditorGUIUtility.IconContent( "BuildSettings.Android" );
-			if( platform == BuildTargetGroup.iOS )
+			if( name == "iOS" )
 				return EditorGUIUtility.IconContent( "BuildSettings.iPhone" );
-			if( platform == BuildTargetGroup.WebGL )
+			if( name == "WebGL" )
 				return EditorGUIUtility.IconContent( "BuildSettings.WebGL" );
-			if( platform == BuildTargetGroup.PS4 )
+			if( name == "PS4" )
 				return EditorGUIUtility.IconContent( "BuildSettings.PS4" );
-			if( platform == BuildTargetGroup.XboxOne )
+			if( name == "XboxOne" )
 				return EditorGUIUtility.IconContent( "BuildSettings.XboxOne" );
-			if( platform == BuildTargetGroup.Facebook ) {
-				if( EditorHelper.IsDefine( "UNITY_2019_3_OR_NEWER" ) ) {
+			if( name == "Facebook" ) {
+				if( UnitySymbol.Has( "UNITY_2019_3_OR_NEWER" ) ) {
 					return null; // アイコンあるけどビルド出来ない
 				}
 				return EditorGUIUtility.IconContent( "BuildSettings.Facebook" );
 			}
-			if( platform == BuildTargetGroup.tvOS )
+			if( name == "tvOS" )
 				return EditorGUIUtility.IconContent( "BuildSettings.tvOS" );
-			if( platform == BuildTargetGroup.WSA )
+			if( name == "WSA" )
 				return EditorGUIUtility.IconContent( "BuildSettings.Metro" );
-			if( platform == BuildTargetGroup.Switch )
+			if( name == "Switch" )
 				return EditorGUIUtility.IconContent( "BuildSettings.Switch" );
-#if UNITY_2018_3_OR_NEWER
-			if( platform == BuildTargetGroup.Lumin )
+			if( name == "Lumin" )
 				return EditorGUIUtility.IconContent( "BuildSettings.Lumin" );
-#endif
-#if UNITY_2019_3_OR_NEWER
-			if( platform == BuildTargetGroup.Stadia )
+			if( name == "Stadia" )
 				return EditorGUIUtility.IconContent( "BuildSettings.Stadia" );
-#endif
 			return null;
 		}
 

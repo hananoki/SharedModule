@@ -8,229 +8,45 @@ using UnityObject = UnityEngine.Object;
 
 namespace Hananoki {
 
-	[InitializeOnLoad]
-	public static class HGUILayoutToolbar {
-		public static GUIStyle Toolbarbutton;
-		static GUIStyle s_Toolbarbutton2;
-		static GUIStyle Toolbarbutton2 {
-			get {
-				if( s_Toolbarbutton2 == null ) {
-					s_Toolbarbutton2 = new GUIStyle( EditorStyles.toolbarButton );
-					s_Toolbarbutton2.margin.zero();
-					s_Toolbarbutton2.padding.zero();//= new RectOffset(1,1,2,2);
-					s_Toolbarbutton2.fontSize = 10;
-					s_Toolbarbutton2.fixedHeight = 18;
-					if( UnitySymbol.Has( "UNITY_2019_3_OR_NEWER" ) ) {
-						s_Toolbarbutton2.fixedHeight = 20;
-					}
-				}
-				return s_Toolbarbutton2;
-			}
-		}
-		static GUIStyle ToolbarDropDown;
-
-		static HGUILayoutToolbar() {
-			void InitStyle() {
-				try {
-					if( EditorStyles.toolbarButton == null ) return;
-				}
-				catch( NullReferenceException ) {
-					return;
-				}
-				Toolbarbutton = new GUIStyle( EditorStyles.toolbarButton );
-
-
-				ToolbarDropDown = new GUIStyle( "ToolbarDropDown" );
-				ToolbarDropDown.alignment = TextAnchor.MiddleCenter;
-				ToolbarDropDown.padding = new RectOffset( 6, ToolbarDropDown.padding.right, 2, 2 );
-				ToolbarDropDown.fontSize = 10;
-
-				EditorApplication.update -= InitStyle;
-			}
-			EditorApplication.update += InitStyle;
-		}
-
-		public static bool Button( string s, Texture image, params GUILayoutOption[] options ) {
-			return Button( EditorHelper.TempContent( s, image ), options );
-		}
-		public static bool Button( string s, params GUILayoutOption[] options ) {
-			return Button( EditorHelper.TempContent( s ), options );
-		}
-		public static bool Button( Texture image, params GUILayoutOption[] options ) {
-			return Button( EditorHelper.TempContent( image ), GUILayout.Width( 26 ) );
-		}
-		public static bool Button( GUIContent content, params GUILayoutOption[] options ) {
-			if( Toolbarbutton2 == null ) return false;
-			try {
-				if( GUILayout.Button( content, Toolbarbutton2, options ) ) {
-					return true;
-				}
-			}
-			catch( Exception e ) {
-				Debug.LogException( e );
-			}
-			return false;
-		}
-
-
-		public static bool Toggle( bool value, string s, Texture image ) {
-			var size = Toolbarbutton2.CalcSize( s.content() );
-			var rc = GUILayoutUtility.GetRect( s.content(), Toolbarbutton2, GUILayout.Width( size.x + 24 ) );
-			return Toggle( rc, value, EditorHelper.TempContent( s, image ), Toolbarbutton2 );
-			//return Toggle( value, EditorHelper.TempContent( s, image ), Toolbarbutton2, options );
-		}
-		public static bool Toggle( bool value, string s, params GUILayoutOption[] options ) {
-			return Toggle( value, EditorHelper.TempContent( s ), Toolbarbutton2, options );
-		}
-		public static bool Toggle( bool value, GUIContent content, GUIStyle style, params GUILayoutOption[] options ) {
-			var rc = GUILayoutUtility.GetRect( content, style, options );
-			return Toggle( rc, value, content, style );
-		}
-		public static bool Toggle( Rect position, bool value, GUIContent content, GUIStyle style ) {
-			if( GUI.Toggle( position, value, content, style ) ) {
-				return true;
-			}
-			return false;
-		}
-
-
-		public static bool StaticButton( string s, params GUILayoutOption[] options ) {
-			return StaticButton( EditorHelper.TempContent( s ), options );
-		}
-		public static bool StaticButton( Texture image, params GUILayoutOption[] options ) {
-			return StaticButton( EditorHelper.TempContent( image ), GUILayout.Width( 26 ) );
-		}
-		public static bool StaticButton( GUIContent content, params GUILayoutOption[] options ) {
-			if( Toolbarbutton2 == null ) return false;
-			try {
-				GUILayout.Label( content, Toolbarbutton2, options );
-				if( EditorHelper.HasMouseClick( GUILayoutUtility.GetLastRect() ) ) {
-					return true;
-				}
-			}
-			catch( Exception e ) {
-				Debug.LogException( e );
-			}
-			return false;
-		}
-
-
-		public static bool DropDown( string s, params GUILayoutOption[] options ) {
-			return DropDown( EditorHelper.TempContent( s ), options );
-		}
-
-		public static bool DropDown( GUIContent content, params GUILayoutOption[] options ) {
-			if( ToolbarDropDown == null ) return false;
-
-			var r = GUILayoutUtility.GetRect( content, ToolbarDropDown, options );
-			var result = EditorHelper.HasMouseClick( r );
-			if( result ) {
-				Event.current.Use();
-			}
-			GUI.Button( r, content, ToolbarDropDown );
-			return result;
-		}
-	}
-
-
-
-	public static class HEditorGUI {
-		public static Rect lastRect;
-
-		public static string FolderFiled( Rect position, string guid ) {
-			EditorGUI.LabelField( position, guid, EditorStyles.textField );
-			return guid;
-		}
-		public static string FolderFiled( Rect position, GUIContent label, string path ) {
-			var name = path.IsEmpty() ? "None (Folder)" : path;
-			var rcL = position;
-			rcL.width -= 16;
-
-			EditorGUI.LabelField( rcL, label, EditorHelper.TempContent( name, Icon.Get( "Folder Icon" ) ), HEditorStyles.folderField );
-			if( IconButton( position.AlignR( 16 ), Icon.Get( "OpenedFolder Icon" ), 1 ) ) {
-				path = EditorUtility.OpenFolderPanel( "Select Folder", "", "" );
-			}
-			//GUI.DrawTexture( position.AlignR( 16 ), Icon.Get( "OpenedFolder Icon" ), ScaleMode.ScaleToFit );
-			;
-			return path;
-		}
-
-		public static bool ImageButton( Rect position, Texture2D image ) {
-			return ImageButton( position, image, string.Empty );
-		}
-		public static bool ImageButton( Rect position, Texture2D image, string tooltip ) {
-			return ImageButton( position, EditorHelper.TempContent( image, tooltip ), HEditorStyles.imageButton );
-		}
-		public static bool ImageButton( Rect position, GUIContent content, GUIStyle style ) {
-			bool result = false;
-			//position.y += heighOffset;
-			if( EditorHelper.HasMouseClick( position ) ) {
-				Event.current.Use();
-				result = true;
-			}
-			GUI.Button( position, content, style );
-			return result;
-		}
-
-
-
-		public static bool IconButton( Rect position, Texture2D image, float heighOffset = 0 ) {
-			return IconButton( position, image, string.Empty, heighOffset );
-		}
-		public static bool IconButton( Rect position, Texture2D image, string tooltip, float heighOffset = 0 ) {
-			return IconButton( position, EditorHelper.TempContent( image, tooltip ), HEditorStyles.iconButton, heighOffset );
-		}
-		public static bool IconButton( Rect position, GUIContent content, GUIStyle style, float heighOffset = 0 ) {
-			bool result = false;
-			position.y += heighOffset;
-			if( EditorHelper.HasMouseClick( position ) ) {
-				Event.current.Use();
-				result = true;
-			}
-			GUI.Button( position, content, style );
-			return result;
-		}
-
-
-		public static bool DropDown( Rect position, string text, GUIStyle style, float allowWidth, Action buttonAction, Action allowAction ) {
-			return DropDown( position, EditorHelper.TempContent( text ), style, allowWidth, buttonAction, allowAction );
-		}
-
-		public static bool DropDown( Rect position, GUIContent content, GUIStyle style, float allowWidth, Action buttonAction, Action allowAction ) {
-			lastRect = position;
-			lastRect.width = allowWidth;
-			lastRect.x += position.width;
-			lastRect.x -= lastRect.width;
-			if( EditorHelper.HasMouseClick( lastRect ) ) {
-				allowAction?.Invoke();
-				Event.current.Use();
-			}
-			if( GUI.Button( position, content, style ) ) {
-				buttonAction?.Invoke();
-			}
-
-			var rr = lastRect.AlignCenter( 12, 12 );
-			//rr.y -= 1;
-			GUI.DrawTexture( rr, Shared.Icon.Get( "$icondropdown" ), ScaleMode.ScaleToFit );
-			//EditorGUI.DrawRect( lastRect, new Color( 0, 0, 1, 0.5f ) );
-			return false;
-		}
-
-		public static T ObjectField<T>( Rect position, string label, UnityObject obj, bool allowSceneObjects = false ) where T : UnityObject {
-			return (T) EditorGUI.ObjectField( position, EditorHelper.TempContent( label ), obj, typeof( T ), allowSceneObjects );
-		}
-		public static T ObjectField<T>( Rect position, UnityObject obj, bool allowSceneObjects = false ) where T : UnityObject {
-			return (T) EditorGUI.ObjectField( position, obj, typeof( T ), allowSceneObjects );
-		}
-	}
-
-
-
 	public static class HEditorGUILayout {
 
+		#region HeaderTitle
+
+
+
+		public static void HeaderTitle( string title ) {
+			var labelCont = EditorHelper.TempContent( title );
+			var rc = GUILayoutUtility.GetRect( labelCont, EditorStyles.textField );
+			HEditorGUI.HeaderTitle( rc, title );
+		}
+
+		#endregion
+
+		public static string TextFieldAndAction( string label, string text, Action buttonAction, bool safeCheck = true, params GUILayoutOption[] options ) {
+			var labelCont = EditorHelper.TempContent( label );
+			var rc = GUILayoutUtility.GetRect( labelCont, EditorStyles.textField, options );
+			rc = EditorGUI.PrefixLabel( rc, GUIUtility.GetControlID( FocusType.Passive ), new GUIContent( label ) );
+
+			using( new GUIBackgroundColorScope() ) {
+				if( label.IsEmpty() ) {
+					GUI.backgroundColor = HEditorStyles.fieldInvalidColor;
+				}
+				var fieldRect = rc;
+				fieldRect.width -= 18;
+				label = EditorGUI.TextField( fieldRect, text );
+
+				if( HEditorGUI.IconButton( rc.AlignR( 16 ), EditorIcon.settings, 1 ) ) {
+					buttonAction?.Invoke();
+				}
+			}
+			return label;
+		}
+
+
 		public static string FolderFiled( string label, string path, params GUILayoutOption[] options ) {
-			var rect = GUILayoutUtility.GetRect( EditorHelper.TempContent( path, Icon.Get( "Folder Icon" ) ), HEditorStyles.folderField, options );
-			return HEditorGUI.FolderFiled( rect, label.content(), path );
+			var rect = GUILayoutUtility.GetRect( GUIContent.none, HEditorStyles.folderField, options );
+
+			return HEditorGUI.FolderFiled( rect, EditorHelper.TempContent( label ), path );
 		}
 
 
@@ -337,6 +153,7 @@ namespace Hananoki {
 			}
 		}
 
+
 		public static bool SessionToggleLeft( string s, bool b ) {
 			return SessionToggleLeft( s, s, b );
 		}
@@ -357,6 +174,10 @@ namespace Hananoki {
 			}
 		}
 
+
+
+		#region ObjectFieldAndAction<T>
+
 		public static T ObjectField<T>( string label, UnityObject obj, bool allowSceneObjects = false, params GUILayoutOption[] options ) where T : UnityObject {
 			var labelCont = EditorHelper.TempContent( label );
 			var rc = GUILayoutUtility.GetRect( labelCont, EditorStyles.objectField, options );
@@ -364,17 +185,26 @@ namespace Hananoki {
 
 			using( new GUIBackgroundColorScope() ) {
 				if( obj == null ) {
-					GUI.backgroundColor = new Color( 1, 0, 0, 0.1f );
+					GUI.backgroundColor = HEditorStyles.fieldInvalidColor;
 				}
 				var _obj = (T) EditorGUI.ObjectField( rc, obj, typeof( T ), allowSceneObjects );
 				return _obj;
 			}
 		}
 
-		public static T ObjectField<T>( UnityObject obj, bool allowSceneObjects = false, params GUILayoutOption[] options ) where T : UnityObject {
-			return (T) EditorGUILayout.ObjectField( obj, typeof( T ), allowSceneObjects, options );
+		public static T ObjectField<T>( UnityObject obj, bool allowSceneObjects = false, bool safeCheck = true, params GUILayoutOption[] options ) where T : UnityObject {
+			using( new GUIBackgroundColorScope() ) {
+				if( safeCheck && obj == null ) {
+					GUI.backgroundColor = HEditorStyles.fieldInvalidColor;
+				}
+				return (T) EditorGUILayout.ObjectField( obj, typeof( T ), allowSceneObjects, options );
+			}
 		}
 
+		#endregion
+
+
+		#region GUIDObjectField<T>
 
 		public static string GUIDObjectField( string label, string guid ) {
 			UnityObject value = null;
@@ -389,7 +219,7 @@ namespace Hananoki {
 			rc = EditorGUI.PrefixLabel( rc, GUIUtility.GetControlID( FocusType.Passive ), new GUIContent( label ) );
 			using( new GUIBackgroundColorScope() ) {
 				if( value == null ) {
-					GUI.backgroundColor = new Color( 1, 0, 0, 0.1f );
+					GUI.backgroundColor = HEditorStyles.fieldInvalidColor;
 				}
 				value = EditorGUI.ObjectField( rc, value, typeof( UnityObject ), false );
 			}
@@ -409,12 +239,61 @@ namespace Hananoki {
 			var rc = GUILayoutUtility.GetLastRect();
 
 			rc = EditorGUI.PrefixLabel( rc, GUIUtility.GetControlID( FocusType.Passive ), new GUIContent( label ) );
-			//GUI.changed = false;
-			value = (T) EditorGUI.ObjectField( rc, value, typeof( T ), false );
-			//if( GUI.changed ) {
+			using( new GUIBackgroundColorScope() ) {
+				if( value == null ) {
+					GUI.backgroundColor = HEditorStyles.fieldInvalidColor;
+				}
+				value = (T) EditorGUI.ObjectField( rc, value, typeof( T ), false );
+			}
 			if( value == null ) return "";
 
 			return AssetDatabase.AssetPathToGUID( AssetDatabase.GetAssetPath( value ) );
 		}
+
+		#endregion
+
 	}
+
+
+
+
+	public static class HGUIScope {
+		public static void Horizontal( Action action, params GUILayoutOption[] options ) {
+			if( action == null ) return;
+			GUILayout.BeginHorizontal();
+			action.Invoke();
+			GUILayout.EndHorizontal();
+		}
+
+		public static void Horizontal( GUIStyle style, Action action, params GUILayoutOption[] options ) {
+			if( action == null ) return;
+			GUILayout.BeginHorizontal( style );
+			action.Invoke();
+			GUILayout.EndHorizontal();
+		}
+
+		public static void Vertical( Action action, params GUILayoutOption[] options ) {
+			if( action == null ) return;
+			GUILayout.BeginVertical();
+			action.Invoke();
+			GUILayout.EndVertical();
+		}
+		public static void Vertical( GUIStyle style, Action action, params GUILayoutOption[] options ) {
+			if( action == null ) return;
+			GUILayout.BeginVertical( style );
+			action.Invoke();
+			GUILayout.EndVertical();
+		}
+
+		public static void Disable( bool disabled, Action action ) {
+			if( action == null ) return;
+
+			EditorGUI.BeginDisabledGroup( disabled );
+			action.Invoke();
+			EditorGUI.EndDisabledGroup();
+		}
+	}
+
+
+
 }

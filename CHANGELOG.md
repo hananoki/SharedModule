@@ -1,5 +1,16 @@
 # Shared Module
 
+## [1.5.0] - 2020-07-16
+
+### Added
+- Integrated settings menu added
+  - ENABLE_HANANOKI_SETTINGS is required
+- Added ReflectionUtils and UnitySymbols asmdef
+
+### Changed
+- UnityReflection is now integrated, asmdef continues
+- EditorIcon pro-skin support
+
 ## [1.3.0] - 2020-05-31
 
 ### Added

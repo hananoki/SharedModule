@@ -12,10 +12,14 @@ namespace Hananoki {
 			T b = AssetDatabase.LoadAssetAtPath( path, typeof( T ) ) as T;
 			return b;
 		}
-		public static UnityEngine.Object LoadAssetAtGUID( string guid ) {
+		public static UnityEngine.Object LoadAssetAtGUID( System.Type type, string guid ) {
 			var path = AssetDatabase.GUIDToAssetPath( guid );
-			UnityEngine.Object b = AssetDatabase.LoadAssetAtPath( path, typeof( UnityEngine.Object ) ) as UnityEngine.Object;
+			UnityEngine.Object b = AssetDatabase.LoadAssetAtPath( path, type ) as UnityEngine.Object;
 			return b;
+		}
+
+		public static UnityEngine.Object LoadAssetAtGUID( string guid ) {
+			return LoadAssetAtGUID( typeof( UnityEngine.Object ), guid);
 		}
 
 		public static string GetAssetPath( string guid ) {

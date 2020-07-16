@@ -34,6 +34,22 @@ namespace Hananoki.Reflection {
 			return type.GetEvent( methodName, AllMembers );
 		}
 
+
+		//	( typeof(Method_PlayClip ), null, type.GetMethod( "PlayClip", AllMembers, null, new System.Type[] { typeof(AudioClip ), typeof(Int32 ), typeof(Boolean )
+		//}, null ) );
+		//	}
+
+		public static MethodInfo Method( string methodName, string typeName, string dllName, params Type[] types ) {
+			try {
+				var type = Assembly.Load( dllName ).GetType( typeName );
+				return type.GetMethod( methodName, AllMembers, null, types, null );
+			}
+			catch( System.Exception ) {
+				//Debug.LogException( ee );
+			}
+			return null;
+		}
+
 		public static MethodInfo Method( string methodName, string typeName, string dllName = "UnityEditor.dll" ) {
 			try {
 				//*
@@ -81,6 +97,12 @@ namespace Hananoki.Reflection {
 
 		public static void MethodInvoke( this object obj, string propertyName, Type[] types, params object[] args ) {
 			_MethodInvoke( obj, propertyName, types ).Invoke( obj, args );
+		}
+
+
+
+		public static T MethodInvoke<T>( this Type t, string propertyName, params object[] args ) {
+			return (T) t.GetMethod( propertyName, AllMembers ).Invoke( null, args );
 		}
 
 		#endregion
@@ -141,6 +163,18 @@ namespace Hananoki.Reflection {
 		}
 
 
+
+
+		//public static T Property<T>( string name, string typeName, string dllName = "UnityEditor.dll" ) {
+		//	return (T) PropertyInfo( name, typeName, dllName ).GetValue( null, null );
+		//}
+
+		//public static PropertyInfo FindProperty( this Type type, string propertyName, BindingFlags flags = FULL_BINDING ) {
+
+		//}
+
+		#region PropertyInfo
+
 		public static PropertyInfo Property( string name, string typeName, string dllName = "UnityEditor.dll" ) {
 			var n = $"{typeName}.{name}";
 			if( !s_properties.ContainsKey( n ) ) {
@@ -151,15 +185,16 @@ namespace Hananoki.Reflection {
 			return s_properties[ n ];
 		}
 
-		public static T Property<T>( string name, string typeName, string dllName = "UnityEditor.dll" ) {
-			return (T) Property( name, typeName, dllName ).GetValue( null, null );
+		public static PropertyInfo Property( string name, Type t ) {
+			return t.GetProperty( name, AllMembers );
+		}
+		public static T Get<T>( this PropertyInfo info ) {
+			return (T) info.GetValue( null );
+		}
+		public static void Set<T>( this PropertyInfo info, T prm ) {
+			info.SetValue( null, prm );
 		}
 
-		//public static PropertyInfo FindProperty( this Type type, string propertyName, BindingFlags flags = FULL_BINDING ) {
-
-		//}
-
-		#region PropertyInfo
 
 		public static T GetProperty<T>( this object obj, string propertyName ) {
 			if( obj == null ) throw new ArgumentNullException( "The argument obj is null." );
@@ -179,14 +214,9 @@ namespace Hananoki.Reflection {
 
 
 
-		public static T Field<T>( this object obj, string propertyName ) {
-			if( obj == null ) throw new ArgumentNullException( "The argument obj is null." );
-			var t = obj.GetType();
-			var p = t.GetField( propertyName, AllMembers );
-			return (T) p.GetValue( obj );
-		}
-
 		
+
+
 
 		public static void Field<TObj, TValue>( this TObj obj, string name, TValue value ) {
 			obj.GetType().GetField( name, AllMembers ).SetValue( obj, value );
@@ -211,6 +241,17 @@ namespace Hananoki.Reflection {
 
 		public static FieldInfo Field( string name, string typeName, string dllName = "UnityEditor.dll" ) {
 			return Field( name, Assembly.Load( dllName ).GetType( typeName ) );
+		}
+
+		public static FieldInfo Field( this Type t, string name ) {
+			return t.GetField( name, AllMembers );
+		}
+
+		public static T GetField<T>( this object obj, string propertyName ) {
+			if( obj == null ) throw new ArgumentNullException( "The argument obj is null." );
+			var t = obj.GetType();
+			var p = t.GetField( propertyName, AllMembers );
+			return (T) p.GetValue( obj );
 		}
 
 		#endregion

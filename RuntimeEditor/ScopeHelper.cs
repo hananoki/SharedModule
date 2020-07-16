@@ -6,23 +6,23 @@ using UnityEngine;
 
 namespace Hananoki {
 
-	public class HandlesGUIScope : IDisposable {
+	public class HandlesGUIScope : GUI.Scope {
 		public HandlesGUIScope() {
 			Handles.BeginGUI();
 		}
-		public void Dispose() {
+		protected override void CloseScope() {
 			Handles.EndGUI();
 		}
 	}
 
 
-	public class GUISkinScope : IDisposable {
+	public class GUISkinScope : GUI.Scope {
 		GUISkin skin;
 		public GUISkinScope( EditorSkin editorSkin ) {
 			skin = GUI.skin;
 			GUI.skin = EditorGUIUtility.GetBuiltinSkin( editorSkin );
 		}
-		public void Dispose() {
+		protected override void CloseScope() {
 			GUI.skin = skin;
 		}
 	}
@@ -87,6 +87,15 @@ namespace Hananoki {
 			AssetDatabase.Refresh();
 		}
 	}
+
+
+	public class IsCompilingDisableScope : EditorGUI.DisabledGroupScope {
+
+		public IsCompilingDisableScope() : base( EditorApplication.isCompiling ) {
+		}
+	}
+
+
 }
 
 #endif

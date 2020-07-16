@@ -37,7 +37,7 @@
 
 ### [EditorToolbar](https://github.com/hananoki/EditorToolbar)
 - Frequently used functions are summarized in the toolbar
-![](https://raw.githubusercontent.com/hananoki/EditorToolbar/master/Documentation~/Preview_2019.3.png)
+  ![](https://raw.githubusercontent.com/hananoki/EditorToolbar/master/Documentation~/Preview_2019.3.png)
 
 ### [HierarchyDropDown](https://github.com/hananoki/HierarchyDropDown)
 - Add a drop down menu next to the hierarchy game object name
@@ -50,8 +50,9 @@
 - Tool to manage ScriptingDefineSymbols
 ![](https://raw.githubusercontent.com/hananoki/SymbolSettings/master/Documentation~/Preview.png)
 
-### [UnityReflection](https://github.com/hananoki/UnityReflection)
-- Provides access to UnityEditor's inner classes with reflection
+~~### [UnityReflection](https://github.com/hananoki/UnityReflection)~~
+~~- Provides access to UnityEditor's inner classes with reflection~~
+
 
 ## Licence
 

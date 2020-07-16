@@ -28,7 +28,7 @@ namespace Hananoki {
 		}
 
 		public static string GetLocalizeName() {
-			return GUIDUtils.GetAssetPath( Hananoki.SharedModule.SharedPreference.i.language ).FileName();
+			return GUIDUtils.GetAssetPath( Hananoki.SharedModule.SettingsEditor.i.language ).FileName();
 		}
 
 		public static string Tr( EditorLocalizeDictionary _localize, string s ) {
@@ -86,4 +86,11 @@ namespace Hananoki {
 
 	[AttributeUsage( AttributeTargets.Method )]
 	public class EditorLocalizeMethod : Attribute { }
+
+
+	[AttributeUsage( AttributeTargets.Class )]
+	public class SettingsClass : Attribute { }
+
+	[AttributeUsage( AttributeTargets.Method )]
+	public class SettingsMethod : Attribute { }
 }

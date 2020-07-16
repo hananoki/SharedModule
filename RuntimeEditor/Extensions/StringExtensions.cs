@@ -10,6 +10,10 @@ namespace Hananoki.Extensions {
 			return '"' + s + '"';
 		}
 
+		public static string pathSeparator( this string s ) {
+			return s.Replace( '/', '\\' );
+		}
+
 		public static string nicify( this string s ) {
 			return ObjectNames.NicifyVariableName( s );
 		}
@@ -29,6 +33,8 @@ namespace Hananoki.Extensions {
 			s1 = s1.Replace( "\"", "_" );
 			s1 = s1.Replace( "…", "_" );
 			s1 = s1.Replace( "#", "Sharp" );
+			s1 = s1.Replace( "！", "_" );
+
 
 			return s1;
 		}
@@ -74,7 +80,19 @@ namespace Hananoki.Extensions {
 			return Path.GetExtension( s );
 		}
 
+		public static string GetExtension( this string s ) {
+			return Path.GetExtension( s );
+		}
 
+		public static string GetDirectory( this string s ) {
+			if( s == "" ) return "";
+			return Path.GetDirectoryName( s );
+		}
+
+		public static string TryReplace( this string s, string oldValue, string newValue ) {
+			if( s == null ) return string.Empty;
+			return s.Replace( oldValue, newValue );
+		}
 
 		public static string colorTag( this string s, string color ) {
 			return "<color=" + s + ">" + s + "</color>";

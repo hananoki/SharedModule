@@ -15,15 +15,22 @@ namespace Hananoki.SharedModule {
 		public static string _Revert => L.Tr( "Revert" );
 		public static string _Confirm => L.Tr( "Confirm" );
 		public static string _Continue => L.Tr( "Continue" );
+		public static string _Add => L.Tr( "Add" );
+		public static string _Delete => L.Tr( "Delete" );
+		public static string _Rename => L.Tr( "Rename" );
+		public static string _Replace => L.Tr( "Replace" );
 		public static string _Clear => L.Tr( "Clear" );
 		public static string _Copy => L.Tr( "Copy" );
 		public static string _Copytoclipboard => L.Tr( "Copy to clipboard" );
 		public static string _Language => L.Tr( "Language" );
-		public static string _Preferences => L.Tr( "Preferences" );
 		public static string _Experimental => L.Tr( "Experimental" );
 		public static string _Pleaseselectadirectory => L.Tr( "Please select a directory" );
 		public static string _IsitOK_ => L.Tr( "Is it OK?" );
 		public static string _Directory => L.Tr( "Directory" );
+		public static string _Preferences => L.Tr( "Preferences" );
+		public static string _ProjectSettings => L.Tr( "Project Settings" );
+		public static string _Settings_Editor_ => L.Tr( "Settings (Editor)" );
+		public static string _Settings_Project_ => L.Tr( "Settings (Project)" );
 		public static string _Deprecated => L.Tr( "Deprecated" );
 		public static string _Warning => L.Tr( "Warning" );
 		public static string _Info => L.Tr( "Info" );
@@ -48,7 +55,6 @@ namespace Hananoki.SharedModule {
 		public static string _Network => L.Tr( "Network" );
 		public static string _Editor => L.Tr( "Editor" );
 		public static string _ScriptExecutionOrder => L.Tr( "Script Execution Order" );
-		public static string _ProjectSettings => L.Tr( "Project Settings" );
 		public static string _OpenOutputFolder => L.Tr( "Open Output Folder" );
 		public static string _ReloadScene => L.Tr( "Reload Scene" );
 		public static string _Therearenoscenesregisteredinthebuildsettings => L.Tr( "There are no scenes registered in the build settings" );
@@ -62,5 +68,9 @@ namespace Hananoki.SharedModule {
 		public static string _OpenBuildSettings => L.Tr( "Open Build Settings" );
 		public static string _EnablePingObject => L.Tr( "Enable Ping Object" );
 		public static string _RecordObjectCount => L.Tr( "Record Object Count" );
+		public static string _ShowinExplorer => L.Tr( "Show in Explorer" );
+		public static string _SelectAsset => L.Tr( "Select Asset" );
+		public static string _VersionTextColor => L.Tr( "Version Text Color" );
+		public static string _VersionBackColor => L.Tr( "Version Back Color" );
 	}
 }

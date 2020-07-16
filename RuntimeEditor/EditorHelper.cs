@@ -23,53 +23,10 @@ namespace Hananoki {
 		L, R, M,
 	}
 
-	public static class PrefabHelper {
-		public static void SavePrefab2( GameObject gameObject, string outputPath, Action<GameObject> postProcess = null ) {
-			GameObject outobj = null;
-			gameObject.SetActive( true );
-
-			var t = AssetDatabase.LoadAssetAtPath<UnityObject>( outputPath );
-			if( t != null ) {
-				//outobj = PrefabUtility.ReplacePrefab( gameObject, t, ReplacePrefabOptions.ReplaceNameBased );
-				var copy = GameObject.Instantiate( gameObject );
-				outobj = PrefabUtility.SaveAsPrefabAsset( copy, outputPath );
-				GameObject.DestroyImmediate( copy );
-			}
-			else {
-				var copy = GameObject.Instantiate( gameObject );
-				outobj = PrefabUtility.SaveAsPrefabAsset( copy, outputPath );
-				GameObject.DestroyImmediate( copy );
-				//PrefabUtility.UnpackPrefabInstance( outobj, PrefabUnpackMode.OutermostRoot, InteractionMode.AutomatedAction );
-				//outobj = PrefabUtility.SaveAsPrefabAsset( gameObject, outputPath );
-				//PrefabUtility.SaveAsPrefabAssetAndConnect
-				//outobj = PrefabUtility.CreatePrefab( outputPath, gameObject, ReplacePrefabOptions.Default );
-			}
-
-			postProcess.Call( outobj );
-			AssetDatabase.SaveAssets();
-			AssetDatabase.Refresh();
-
-			Debug.LogFormat( "プレハブを書き出しました. [{0}]", outputPath );
-			EditorGUIUtility.PingObject( outobj );
-		}
-
-		public static void SavePrefab( GameObject gameObject, string guid, Action<GameObject> postProcess = null ) {
-			if( string.IsNullOrEmpty( guid ) ) {
-				Debug.Assert( !string.IsNullOrEmpty( guid ), "m_OutputPrefab が未設定" );
-				return;
-			}
-
-			var outputPath = AssetDatabase.GUIDToAssetPath( guid );
-
-			SavePrefab2( gameObject, outputPath, postProcess );
-		}
-	}
 
 
 
 	public static class EditorHelper {
-
-
 
 		public static EditorWindow GetWindow( Type windowT, params Type[] desiredDockNextTo ) {
 			return GetWindow( windowT, null, true, desiredDockNextTo );
@@ -162,7 +119,10 @@ namespace Hananoki {
 			PingObject( AssetDatabase.LoadAssetAtPath<UnityObject>( path ) );
 		}
 
-
+		public static void PingAndSelectObject( UnityObject obj ) {
+			EditorGUIUtility.PingObject( obj );
+			Selection.activeObject = obj;
+		}
 
 		public static bool IsDefine( string symbol ) {
 			foreach( var s in EditorUserBuildSettings.activeScriptCompilationDefines ) {
@@ -334,7 +294,7 @@ namespace Hananoki {
 
 		public static void Dirty( UnityObject obj, Action ff ) {
 			Undo.RecordObject( obj, obj.name );
-			ff.Call();
+			ff?.Invoke();
 			EditorUtility.SetDirty( obj );
 		}
 
@@ -410,6 +370,7 @@ namespace Hananoki {
 		public static GUIContent TempContent( string t, Texture i ) {
 			s_TextImage.image = i;
 			s_TextImage.text = t;
+			s_TextImage.tooltip = null;
 			return s_TextImage;
 		}
 
@@ -486,11 +447,12 @@ namespace Hananoki {
 			inspector.Show( true );
 			inspector.Repaint();
 
-#if UNITY_2018_3_OR_NEWER
-			R.Property( "isLocked", "UnityEditor.InspectorWindow" ).SetValue( inspector, (object) true );
-#else
-			R.Method( "FlipLocked", "UnityEditor.InspectorWindow" ).Invoke( inspector, null );
-#endif
+			if( UnitySymbol.Has( "UNITY_2018_3_OR_NEWER" ) ) {
+				R.Property( "isLocked", "UnityEditor.InspectorWindow" ).SetValue( inspector, (object) true );
+			}
+			else {
+				R.Method( "FlipLocked", "UnityEditor.InspectorWindow" ).Invoke( inspector, null );
+			}
 		}
 
 
@@ -681,45 +643,45 @@ namespace Hananoki {
 
 		#region インスペクタ
 
-		static Type typeFoldoutTitlebar;
-		static MethodInfo methodInfoFoldoutTitlebar;
-		static MethodInfo EditorGUI_FoldoutTitlebar;
+		//		static Type typeFoldoutTitlebar;
+		//		static MethodInfo methodInfoFoldoutTitlebar;
+		//		static MethodInfo EditorGUI_FoldoutTitlebar;
 
-		public static bool FoldoutTitlebar( bool foldout, GUIContent label, bool skipIconSpacing ) {
-			if( methodInfoFoldoutTitlebar == null ) {
-#if UNITY_5_5 || UNITY_5_6 || UNITY_2017_1_OR_NEWER
-				typeFoldoutTitlebar = Assembly.Load( "UnityEditor.dll" ).GetType( "UnityEditor.EditorGUILayout" );
-#else
-				typeFoldoutTitlebar = Types.GetType( "UnityEditor.EditorGUILayout", "UnityEditor.dll" );
-#endif
-				methodInfoFoldoutTitlebar = typeFoldoutTitlebar.GetMethod( "FoldoutTitlebar", BindingFlags.NonPublic | BindingFlags.Static );
-			}
+		//		public static bool FoldoutTitlebar( bool foldout, GUIContent label, bool skipIconSpacing ) {
+		//			if( methodInfoFoldoutTitlebar == null ) {
+		//#if UNITY_5_5 || UNITY_5_6 || UNITY_2017_1_OR_NEWER
+		//				typeFoldoutTitlebar = Assembly.Load( "UnityEditor.dll" ).GetType( "UnityEditor.EditorGUILayout" );
+		//#else
+		//				typeFoldoutTitlebar = Types.GetType( "UnityEditor.EditorGUILayout", "UnityEditor.dll" );
+		//#endif
+		//				methodInfoFoldoutTitlebar = typeFoldoutTitlebar.GetMethod( "FoldoutTitlebar", BindingFlags.NonPublic | BindingFlags.Static );
+		//			}
 
-			var obj = methodInfoFoldoutTitlebar.Invoke( null, new object[] { foldout, label, skipIconSpacing } );
-			return ToBoolean( obj );
-		}
-		public static bool FoldoutTitlebar( bool foldout, string label, bool skipIconSpacing ) {
-			return FoldoutTitlebar( foldout, TempContent( label ), skipIconSpacing );
-		}
+		//			var obj = methodInfoFoldoutTitlebar.Invoke( null, new object[] { foldout, label, skipIconSpacing } );
+		//			return ToBoolean( obj );
+		//		}
+		//		public static bool FoldoutTitlebar( bool foldout, string label, bool skipIconSpacing ) {
+		//			return FoldoutTitlebar( foldout, TempContent( label ), skipIconSpacing );
+		//		}
 
 
-		public static bool FoldoutTitlebar( Rect rect, bool foldout, GUIContent label, bool skipIconSpacing ) {
-			if( EditorGUI_FoldoutTitlebar == null ) {
-#if UNITY_5_5 || UNITY_5_6 || UNITY_2017_1_OR_NEWER
-				var t = Assembly.Load( "UnityEditor.dll" ).GetType( "UnityEditor.EditorGUI" );
-#else
-				typeFoldoutTitlebar = Types.GetType( "UnityEditor.EditorGUILayout", "UnityEditor.dll" );
-#endif
-				EditorGUI_FoldoutTitlebar = t.GetMethod( "FoldoutTitlebar", BindingFlags.NonPublic | BindingFlags.Static );
-			}
+		//		public static bool FoldoutTitlebar( Rect rect, bool foldout, GUIContent label, bool skipIconSpacing ) {
+		//			if( EditorGUI_FoldoutTitlebar == null ) {
+		//#if UNITY_5_5 || UNITY_5_6 || UNITY_2017_1_OR_NEWER
+		//				var t = Assembly.Load( "UnityEditor.dll" ).GetType( "UnityEditor.EditorGUI" );
+		//#else
+		//				typeFoldoutTitlebar = Types.GetType( "UnityEditor.EditorGUILayout", "UnityEditor.dll" );
+		//#endif
+		//				EditorGUI_FoldoutTitlebar = t.GetMethod( "FoldoutTitlebar", BindingFlags.NonPublic | BindingFlags.Static );
+		//			}
 
-			var obj = EditorGUI_FoldoutTitlebar.Invoke( null, new object[] { rect, label, foldout, skipIconSpacing } );
-			return ToBoolean( obj );
-		}
+		//			var obj = EditorGUI_FoldoutTitlebar.Invoke( null, new object[] { rect, label, foldout, skipIconSpacing } );
+		//			return ToBoolean( obj );
+		//		}
 
-		public static bool FoldoutTitlebar( Rect rect, bool foldout, string label, bool skipIconSpacing ) {
-			return FoldoutTitlebar( rect, foldout, TempContent( label ), skipIconSpacing );
-		}
+		//		public static bool FoldoutTitlebar( Rect rect, bool foldout, string label, bool skipIconSpacing ) {
+		//			return FoldoutTitlebar( rect, foldout, TempContent( label ), skipIconSpacing );
+		//		}
 
 		#endregion
 	}
@@ -740,11 +702,31 @@ namespace Hananoki {
 		}
 
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="name"></param>
-		/// <returns></returns>
+		public static Texture2D Get( string lightskin, string darkskin ) {
+			if( EditorGUIUtility.isProSkin ) {
+				return Get( darkskin );
+			}
+			return Get( lightskin );
+		}
+
+		public static string GetBuiltinPath( string path ) {
+			var paths = path.Split( '/' );
+			if( EditorGUIUtility.isProSkin ) {
+				paths[ paths.Length - 1 ] = "d_" + paths[ paths.Length - 1 ];
+			}
+
+			return string.Join( "/", paths );
+		}
+
+		public static Texture2D GetBuiltin( string path ) {
+			if( EditorGUIUtility.isProSkin ) {
+				var icon = Get( GetBuiltinPath( path ) );
+				if( icon != null ) return icon;
+			}
+			return Get( path );
+		}
+
+
 		public static Texture2D Get( string name ) {
 			if( s_iconCache.ContainsKey( name ) ) {
 				return s_iconCache[ name ];
@@ -765,6 +747,17 @@ namespace Hananoki {
 
 			try {
 				Texture2D iconz = EditorGUIUtility.Load( "icons/" + name + ".png" ) as Texture2D;
+				//var iconz = EditorGUIUtility.IconContent( name ).image as Texture2D;
+				if( iconz != null ) {
+					s_iconCache.Add( name, iconz );
+					return iconz;
+				}
+			}
+			catch( Exception ) {
+			}
+
+			try {
+				Texture2D iconz = EditorGUIUtility.Load( name ) as Texture2D;
 				//var iconz = EditorGUIUtility.IconContent( name ).image as Texture2D;
 				if( iconz != null ) {
 					s_iconCache.Add( name, iconz );

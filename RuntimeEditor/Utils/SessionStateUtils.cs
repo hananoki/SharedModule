@@ -81,7 +81,17 @@ namespace Hananoki {
 
 
 	[CustomPropertyDrawer( typeof( SessionStateBool ) )]
-	class SessionStateBoolDrawer : PropertyDrawer {
+	public class SessionStateBoolDrawer : PropertyDrawer {
+
+		public static bool OnGUILayout( SessionStateBool ss ) {
+			var rect = GUILayoutUtility.GetRect( EditorHelper.TempContent( ss.__name ), EditorStyles.objectField );
+
+			EditorGUI.DrawRect( rect, new Color( 0f, 1f, 0f, 0.25f ) );
+
+			return EditorGUI.ToggleLeft( rect, ss.__label, ss.Value );
+		}
+
+
 
 		public override void OnGUI( Rect rc, SerializedProperty property, GUIContent label ) {
 
@@ -101,7 +111,16 @@ namespace Hananoki {
 
 
 	[CustomPropertyDrawer( typeof( SessionStateInt ) )]
-	class SessionStateIntDrawer : PropertyDrawer {
+	public class SessionStateIntDrawer : PropertyDrawer {
+
+		public static int OnGUILayout( SessionStateInt ss ) {
+			var rect = GUILayoutUtility.GetRect( EditorHelper.TempContent( ss.__name ), EditorStyles.objectField );
+
+			EditorGUI.DrawRect( rect, new Color( 0f, 1f, 0f, 0.25f ) );
+
+			return EditorGUI.IntField( rect, ss.__label, ss.Value );
+		}
+
 
 		public override void OnGUI( Rect rc, SerializedProperty property, GUIContent label ) {
 

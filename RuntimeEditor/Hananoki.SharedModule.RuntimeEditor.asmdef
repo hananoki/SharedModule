@@ -1,9 +1,11 @@
 {
     "name": "Hananoki.SharedModule.RuntimeEditor",
     "references": [
-        "Hananoki.SharedModule.Runtime"
+        "Hananoki.SharedModule.Runtime",
+        "Hananoki.ReflectionUtils.Editor",
+        "Hananoki.UnityReflection.Editor",
+        "Hananoki.UnitySymbol.Editor"
     ],
-    "optionalUnityReferences": [],
     "includePlatforms": [
         "Editor"
     ],
@@ -12,5 +14,7 @@
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": []
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

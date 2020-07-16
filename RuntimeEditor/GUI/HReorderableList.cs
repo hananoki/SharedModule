@@ -16,52 +16,132 @@ namespace Hananoki {
 		SerializedObject m_serializedObject;
 		SerializedProperty m_serializedProperty;
 
+		bool isExpanded = true;
 
 		public ReorderableList reorderableList => m_lst;
 
 		string m_headerName = "";
 
-		//public static HReorderableList CreateInstance() {
-		//}
 
-		public static HReorderableList CreateInstance( SerializedObject serializedObject, string propertyName, int heightNum = 1, string headerName = "" ) {
+
+		public static HReorderableList CreateInstance<T>( List<T> list, string headerName, int heightNum = 1 ) where T : class {
 			var s = new HReorderableList();
-			s.Create( serializedObject, propertyName, heightNum, headerName );
+			s.Create<T>( list, headerName, heightNum );
 			return s;
 		}
 
-		//public void Create<T>( List<T> list, int heightNum = 1, string headerName = "" ) where T : class, new() {
-		//	m_headerName = headerName;
-		//	m_lst = new ReorderableList( list, typeof( T ) );
 
-		//	m_lst.drawHeaderCallback = ( rect ) => {
-		//		EditorGUI.LabelField( rect, headerName );
-		//	};
+		public void Create<T>( List<T> list, string headerName, int heightNum = 1 ) where T : class {
+			m_headerName = headerName;
+			m_lst = new ReorderableList( list, typeof( T ) );
 
-		//	m_lst.onAddCallback = ( rect ) => {
-		//		if( list.Count == 0 ) {
-		//			list.Add( new T() );
-		//		}
-		//		else {
-		//			list.Add( list[ m_lst.count - 1 ]  );
-		//		}
-		//	};
-		//}
+			m_lst.drawHeaderCallback = ( rect ) => {
+				var rc1 = rect;
+				rc1.x += 10;
+
+				string title = m_headerName;
+
+				if( !isExpanded ) {
+					title = $"{title}  [{list.Count}]";
+				}
+
+				isExpanded = EditorGUI.Foldout( rc1, isExpanded, title );
+			};
+
+			//	m_lst.onAddCallback = ( rect ) => {
+			//		if( list.Count == 0 ) {
+			//			list.Add( new T() );
+			//		}
+			//		else {
+			//			list.Add( list[ m_lst.count - 1 ]  );
+			//		}
+			//	};
+			m_lst.elementHeight = ( EditorGUIUtility.singleLineHeight * heightNum ) + 4;
+		}
 
 
 
-		public void Create( SerializedObject serializedObject, string propertyName, int heightNum = 1, string headerName = "" ) {
+		public static HReorderableList CreateInstance( SerializedObject serializedObject, string propertyName, int heightNum = 1, string headerName = "", bool drawer = false ) {
+			var s = new HReorderableList();
+			s.Create( serializedObject, propertyName, heightNum, headerName, drawer );
+			return s;
+		}
+
+		public void Create( SerializedObject serializedObject, string propertyName, int heightNum = 1, string headerName = "", bool drawer = false ) {
 			m_serializedObject = serializedObject;
 			m_serializedProperty = serializedObject.FindProperty( propertyName );
 			m_headerName = headerName;
-			m_lst = new ReorderableList( serializedObject, serializedObject.FindProperty( propertyName ) );
+			m_lst = new ReorderableList( serializedObject, m_serializedProperty );
 
-			m_lst.drawElementCallback = ( rect, index, isActive, isFocused ) => {
-				var rc1 = rect;
-				rc1.y += 1;
-				rc1.height = EditorGUIUtility.singleLineHeight;
-				EditorGUI.PropertyField( rc1, serializedObject.FindProperty( propertyName + ".Array.data[" + index + "]" ) );
-			};
+
+
+			if( drawer ) {
+				m_lst.drawElementCallback = ( rect, index, isActive, isFocused ) => {
+					var rc1 = rect;
+					rc1.y += 1;
+					rc1.height = EditorGUIUtility.singleLineHeight;
+					EditorGUI.PropertyField( rc1, serializedObject.FindProperty( propertyName + ".Array.data[" + index + "]" ) );
+				};
+			}
+			else {
+				m_lst.drawElementCallback = ( rect, index, isActive, isFocused ) => {
+					var rc1 = rect;
+					rc1.y += 1;
+					rc1.height = EditorGUIUtility.singleLineHeight;
+					var prop = serializedObject.FindProperty( propertyName + ".Array.data[" + index + "]" );
+
+					var hander = new UnityEditorPropertyHandler( UnityScriptAttributeUtility.GetHandler( prop ) );
+					
+					if( hander.hasPropertyDrawer ) {
+						//m_lst.elementHeightCallback = (index2) => {
+						//	var prop2 = serializedObject.FindProperty( propertyName + ".Array.data[" + index2 + "]" );
+						//	var hander2 = UnityScriptAttributeUtility.GetHandler( prop2 );
+						//	return hander2.GetProperty<PropertyDrawer>( "propertyDrawer" ).GetPropertyHeight( prop2, EditorHelper.TempContent( prop2.displayName ) );
+						//};
+					//	m_lst.elementHeight = hander.GetProperty<PropertyDrawer>( "propertyDrawer" ).GetPropertyHeight( prop, EditorHelper.TempContent( prop.displayName ) );
+						EditorGUI.PropertyField( rc1, prop );
+					}
+					else if( prop.propertyType == SerializedPropertyType.Generic ) {
+						prop.Next( true );
+						int ii = 0;
+						int depth = prop.depth;
+
+						do {
+							EditorGUI.PropertyField( rc1, prop );
+							rc1.y += EditorGUIUtility.singleLineHeight;
+							ii++;
+							prop.Next( false );
+						} while( depth == prop.depth );
+
+						m_lst.elementHeight = ( EditorGUIUtility.singleLineHeight * ii ) + 4;
+					}
+					else {
+						var cont = EditorHelper.TempContent( $"0x{index:X02}:" );
+						var size = EditorStyles.label.CalcSize( cont );
+						rc1.width = 40;
+						EditorGUI.LabelField( rc1, cont );
+						var rc2 = rect;
+						rc2.x = rc1.xMax;
+						rc2.width = rect.width - 40;
+						rc2.y += 1;
+						rc2.height = EditorGUIUtility.singleLineHeight;
+						EditorGUI.PropertyField( rc2, prop, GUIContent.none );
+					}
+					//if( !prop.hasChildren ) {
+					//	return;
+					//}
+					//prop.Next( true );
+					//int ii = 0;
+					//int depth = prop.depth;
+					//do {
+					//	EditorGUI.PropertyField( rc1, prop );
+					//	rc1.y += EditorGUIUtility.singleLineHeight;
+					//	ii++;
+					//	prop.Next( false );
+					//} while( depth == prop.depth );
+					//m_lst.elementHeight = ( EditorGUIUtility.singleLineHeight * ii ) + 4;
+				};
+			}
 			m_lst.drawHeaderCallback = ( rect ) => {
 				var rc1 = rect;
 				rc1.x += 10;
@@ -86,11 +166,21 @@ namespace Hananoki {
 
 		public void DoLayoutList( Action changed = null ) {
 			EditorGUI.BeginChangeCheck();
-			if( m_serializedProperty.isExpanded ) {
-				m_lst.DoLayoutList();
+			if( m_serializedProperty == null ) {
+				if( isExpanded ) {
+					m_lst.DoLayoutList();
+				}
+				else {
+					m_lst.DoListHeader();
+				}
 			}
 			else {
-				m_lst.DoListHeader();
+				if( m_serializedProperty.isExpanded ) {
+					m_lst.DoLayoutList();
+				}
+				else {
+					m_lst.DoListHeader();
+				}
 			}
 			if( EditorGUI.EndChangeCheck() ) {
 				changed?.Invoke();

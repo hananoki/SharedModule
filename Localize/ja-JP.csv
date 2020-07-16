@@ -5,15 +5,24 @@ Revert	元に戻す
 Confirm	確認
 Continue	続ける
 
+Add	追加
+Delete	削除
+Rename	名前の変更
+Replace	置換
 Clear	クリア
 Copy	コピー
 Copy to clipboard	クリップボードにコピー
 Language	言語
-Preferences	環境設定
 Experimental	実験的
 Please select a directory	ディレクトリを選択してください
 Is it OK?	よろしいですか?
 Directory	ディレクトリ
+
+Preferences	環境設定
+Project Settings	プロジェクト設定
+
+Settings (Editor)	設定 (Editor)
+Settings (Project)	設定 (Project)
 
 Deprecated	非推奨
 Warning	警告
@@ -45,7 +54,6 @@ Script Execution Order	スクリプト優先
 
 
 # EditorToolbar
-Project Settings	プロジェクト設定
 Open Output Folder	出力フォルダを開く
 Reload Scene	シーンをリロード
 There are no scenes registered in the build settings	ビルドセッティングに登録されたシーンがありません
@@ -62,9 +70,11 @@ Open Build Settings	ビルド設定を開く
 Enable Ping Object	オブジェクトをPingする
 Record Object Count	履歴可能な最大オブジェクト数
 
+Show in Explorer	エクスプローラーで表示
+Select Asset	アセットを選択
 
-
-
+Version Text Color	Version 文字色
+Version Back Color	Version 背景色
 
 
 

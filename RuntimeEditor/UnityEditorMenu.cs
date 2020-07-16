@@ -15,61 +15,83 @@ namespace Hananoki {
 			EditorApplication.ExecuteMenuItem( "Edit/Preferences..." );
 		}
 
-#if UNITY_2018_3_OR_NEWER
 		public static void Edit_Project_Settings() {
-			EditorApplication.ExecuteMenuItem( "Edit/Project Settings..." );
+			if( UnitySymbol.Has( "UNITY_2018_3_OR_NEWER" ) ) {
+				EditorApplication.ExecuteMenuItem( "Edit/Project Settings..." );
+			}
 		}
-#endif
 
 
-#if !UNITY_2018_3_OR_NEWER
 		public static void Edit_Project_Settings_Input() {
-			EditorApplication.ExecuteMenuItem( "Edit/Project Settings/Input" );
+			if( !UnitySymbol.Has( "UNITY_2018_3_OR_NEWER" ) ) {
+				EditorApplication.ExecuteMenuItem( "Edit/Project Settings/Input" );
+			}
 		}
 
 		public static void Edit_Project_Settings_Tags_and_Layers() {
-			EditorApplication.ExecuteMenuItem( "Edit/Project Settings/Tags and Layers" );
+			if( !UnitySymbol.Has( "UNITY_2018_3_OR_NEWER" ) ) {
+				EditorApplication.ExecuteMenuItem( "Edit/Project Settings/Tags and Layers" );
+			}
 		}
 
 		public static void Edit_Project_Settings_Audio() {
-			EditorApplication.ExecuteMenuItem( "Edit/Project Settings/Audio" );
+			if( !UnitySymbol.Has( "UNITY_2018_3_OR_NEWER" ) ) {
+				EditorApplication.ExecuteMenuItem( "Edit/Project Settings/Audio" );
+			}
 		}
 
 		public static void Edit_Project_Settings_Time() {
-			EditorApplication.ExecuteMenuItem( "Edit/Project Settings/Time" );
+			if( !UnitySymbol.Has( "UNITY_2018_3_OR_NEWER" ) ) {
+				EditorApplication.ExecuteMenuItem( "Edit/Project Settings/Time" );
+			}
 		}
 
 		public static void Edit_Project_Settings_Player() {
-			EditorApplication.ExecuteMenuItem( "Edit/Project Settings/Player" );
+			if( !UnitySymbol.Has( "UNITY_2018_3_OR_NEWER" ) ) {
+				EditorApplication.ExecuteMenuItem( "Edit/Project Settings/Player" );
+			}
 		}
 
 		public static void Edit_Project_Settings_Physics() {
-			EditorApplication.ExecuteMenuItem( "Edit/Project Settings/Physics" );
+			if( !UnitySymbol.Has( "UNITY_2018_3_OR_NEWER" ) ) {
+				EditorApplication.ExecuteMenuItem( "Edit/Project Settings/Physics" );
+			}
 		}
 
 		public static void Edit_Project_Settings_Physics_2D() {
-			EditorApplication.ExecuteMenuItem( "Edit/Project Settings/Physics 2D" );
+			if( !UnitySymbol.Has( "UNITY_2018_3_OR_NEWER" ) ) {
+				EditorApplication.ExecuteMenuItem( "Edit/Project Settings/Physics 2D" );
+			}
 		}
 
 		public static void Edit_Project_Settings_Quality() {
-			EditorApplication.ExecuteMenuItem( "Edit/Project Settings/Quality" );
+			if( !UnitySymbol.Has( "UNITY_2018_3_OR_NEWER" ) ) {
+				EditorApplication.ExecuteMenuItem( "Edit/Project Settings/Quality" );
+			}
 		}
 
 		public static void Edit_Project_Settings_Graphics() {
-			EditorApplication.ExecuteMenuItem( "Edit/Project Settings/Graphics" );
+			if( !UnitySymbol.Has( "UNITY_2018_3_OR_NEWER" ) ) {
+				EditorApplication.ExecuteMenuItem( "Edit/Project Settings/Graphics" );
+			}
 		}
 
 		public static void Edit_Project_Settings_Network() {
-			EditorApplication.ExecuteMenuItem( "Edit/Project Settings/Network" );
+			if( !UnitySymbol.Has( "UNITY_2018_3_OR_NEWER" ) ) {
+				EditorApplication.ExecuteMenuItem( "Edit/Project Settings/Network" );
+			}
 		}
 
 		public static void Edit_Project_Settings_Editor() {
-			EditorApplication.ExecuteMenuItem( "Edit/Project Settings/Editor" );
+			if( !UnitySymbol.Has( "UNITY_2018_3_OR_NEWER" ) ) {
+				EditorApplication.ExecuteMenuItem( "Edit/Project Settings/Editor" );
+			}
 		}
 
 		public static void Edit_Project_Settings_Script_Execution_Order() {
-			EditorApplication.ExecuteMenuItem( "Edit/Project Settings/Script Execution Order" );
+			if( !UnitySymbol.Has( "UNITY_2018_3_OR_NEWER" ) ) {
+				EditorApplication.ExecuteMenuItem( "Edit/Project Settings/Script Execution Order" );
+			}
 		}
-#endif
 	}
 }

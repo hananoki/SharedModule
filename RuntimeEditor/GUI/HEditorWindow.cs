@@ -1,6 +1,12 @@
-﻿using System;
+﻿//#define ENABLE_LEGACY_PREFERENCE
+#if UNITY_2018_3_OR_NEWER
+//#undef ENABLE_LEGACY_PREFERENCE
+#endif
+
+using System;
 using UnityEditor;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace Hananoki {
 	public class HEditorWindow : EditorWindow {
@@ -33,103 +39,52 @@ namespace Hananoki {
 
 
 	public class HSettingsEditorWindow : HEditorWindow {
-		GUIStyle sectionHeader;
-		public string sectionName;
-#if UNITY_2018_3_OR_NEWER
-		public SettingsProvider m_settingsProvider;
-#endif
 
-		public class PreferenceLayoutScope : IDisposable {
-			public PreferenceLayoutScope( ref Vector2 scrollPos ) {
-				scrollPos = EditorGUILayout.BeginScrollView( scrollPos );
+		public class LayoutScope : GUI.Scope {
+			public LayoutScope() {
 				GUILayout.BeginHorizontal();
 				GUILayout.Space( 4 );
 				GUILayout.BeginVertical();
 			}
-			public void Dispose() {
+			protected override void CloseScope() {
 				GUILayout.EndVertical();
 				GUILayout.Space( 4 );
 				GUILayout.EndHorizontal();
-				EditorGUILayout.EndScrollView();
 			}
 		}
 
-		/*
-			var rr = R.Type( "UnityEditor.StyleSheets.StyleCatalogKeyword" );
-			var marginLeft = R.Field( "marginLeft", "UnityEditor.StyleSheets.StyleCatalogKeyword" );
-			
+		public string headerMame;
+		public string headerVersion;
+		public Action gui;
+		Vector2 scrollPos;
 
-			var ff = UnityStyleSheetsStyleBlock.GetFloat( (int)marginLeft.GetValue( null ), 0 );
-			;
-			//var aa = R.Methods( "GetStyle", "UnityEditor.Experimental.EditorResources" );
-			//var hoge = aa[0].Invoke(null,new object[] { "sb-settings-header",null } );
-			 
-			var vara = R.Property( "settingsPanel", "UnityEditor.SettingsWindow+Styles" );
-			var bl = new UnityStyleSheetsStyleBlock() { m_instance = vara.GetValue( null ) };
-			var a = UnityStyleSheetsStyleCatalogKeyword.marginLeft;
-			var ff = bl.GetFloat( a, 0 );
-			
-			GUILayout.Label( ""+ff );
-			*/
 
-		void DrawTitleBar( string s ) {
+		public void DrawTitleBar() {
 			GUILayout.BeginHorizontal();
-			//GUILayout.Space( SettingsWindow.Styles.settingsPanel.GetFloat( StyleKeyword.marginLeft, 0f ) );
-			GUILayout.Space( 10 );
-			GUIContent content = new GUIContent( s );
-			GUILayout.Label( content, "SettingsHeader" );
+			GUILayout.Space( 8f );
+			GUIContent content = new GUIContent( headerMame );
+			GUILayout.Label( content, "SettingsHeader", GUILayout.MaxHeight( 30 ) );
 			GUILayout.FlexibleSpace();
-			m_settingsProvider.OnTitleBarGUI();
+			//this.m_TreeView.currentProvider.OnTitleBarGUI();
+			GUILayout.Label( headerVersion, EditorStyles.miniLabel );
 			GUILayout.EndHorizontal();
 		}
 
-		/// <summary>
-		/// Implement your own editor GUI here.
-		/// </summary>
 		void OnGUI() {
-#if UNITY_2018_3_OR_NEWER
-			try {
-				var w = position.width - 4;
-				var h = position.height;
-				using( new EditorGUI.DisabledGroupScope( EditorApplication.isCompiling ) )
-				using( new GUILayout.AreaScope( new Rect( 2, 2, w, h ) ) ) {
-					DrawTitleBar( m_settingsProvider.label );
-					m_settingsProvider.OnGUI( "" );
-				}
-			}
-			catch( System.Exception e ) {
-				Debug.LogError( e );
-			}
-#else
+			DrawTitleBar();
 
-			try {
-				var w = position.width - 4;
-				var h = position.height;
-				using( new EditorGUI.DisabledGroupScope( EditorApplication.isCompiling ) ) {
-					using( new GUILayout.AreaScope( new Rect( 2, 2, w, h ) ) ) {
-						if( sectionHeader == null ) {
-							sectionHeader = new GUIStyle( EditorStyles.largeLabel );
-							sectionHeader.fontStyle = FontStyle.Bold;
-							sectionHeader.fontSize = 18;
-							sectionHeader.margin.top = 10;
-							sectionHeader.margin.left++;
-							if( !EditorGUIUtility.isProSkin ) {
-								sectionHeader.normal.textColor = new Color( 0.4f, 0.4f, 0.4f, 1f );
-							}
-							else {
-								sectionHeader.normal.textColor = new Color( 0.7f, 0.7f, 0.7f, 1f );
-							}
-						}
-						GUILayout.Label( sectionName, sectionHeader );
-						//GUILayout.Space( 10f );
-						drawGUI.Invoke();
-					}
-				}
-			}
-			catch( System.Exception e ) {
-				Debug.LogError( e );
-			}
-#endif
+			scrollPos = EditorGUILayout.BeginScrollView( scrollPos );
+			GUILayout.BeginHorizontal();
+			GUILayout.Space( 4 );
+			GUILayout.BeginVertical();
+			gui?.Invoke();
+			GUILayout.EndVertical();
+			GUILayout.Space( 4 );
+			GUILayout.EndHorizontal();
+			EditorGUILayout.EndScrollView();
 		}
 	}
+
+
+	
 }

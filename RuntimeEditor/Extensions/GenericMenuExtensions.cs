@@ -32,8 +32,22 @@ namespace Hananoki.Extensions {
 			menu.AddDisabledItem( new GUIContent( s1, s2 ) );
 		}
 
-		public static void DropDown( this GenericMenu menu ) {
-			menu.DropDown( new Rect( Event.current.mousePosition, new Vector2( 0, 0 ) ) );
+		public static void AddSeparator( this GenericMenu menu ) {
+			menu.AddSeparator( "" );
 		}
+
+
+		public static void DropDown( this GenericMenu menu ) {
+			menu.DropDownPopupRect( new Rect( Event.current.mousePosition, new Vector2( 0, 0 ) ) );
+		}
+		public static void DropDownLastRect( this GenericMenu menu ) {
+			menu.DropDownPopupRect( GUILayoutUtility.GetLastRect().PopupRect() );
+		}
+		public static void DropDownPopupRect( this GenericMenu menu, Rect rect ) {
+			menu.DropDown( rect );
+			GUI.FocusControl( "" );
+			Event.current.Use();
+		}
+		
 	}
 }
