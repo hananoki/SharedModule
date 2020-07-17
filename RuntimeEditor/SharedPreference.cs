@@ -51,7 +51,7 @@ namespace Hananoki.SharedModule {
 
 		public static string projectSettingDirectory {
 			get {
-#if ENABLE_HANANOKI_SETTINGS
+#if ENABLE_USER_SETTINGS_FOLDER
 				return $"{GUIDUtils.GetAssetPath( "6763de3f012135f439fea4e446738691" )}";
 #else
 				return $"{Environment.CurrentDirectory}/ProjectSettings";

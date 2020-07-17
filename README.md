@@ -43,8 +43,14 @@
 - Add a drop down menu next to the hierarchy game object name
 ![](https://raw.githubusercontent.com/hananoki/HierarchyDropDown/master/Documentation~/Preview.png)
 
+### [PackageFileTools](https://assetstore.unity.com/packages/tools/utilities/package-file-tools-171114)
+![](https://assetstorev1-prd-cdn.unity3d.com/package-screenshot/94141e50-a008-49d3-b1c4-b1231d465335.webp)
+
 ### [SceneViewTools](https://github.com/hananoki/SceneViewTools)
 - Add tools to SceneView
+
+### [ScriptableObjectManager](https://assetstore.unity.com/packages/tools/utilities/scriptableobject-manager-170587)
+![](https://assetstorev1-prd-cdn.unity3d.com/package-screenshot/6aea12ae-89ff-413c-9cad-de02c9e07136.webp)
 
 ### [SymbolSettings](https://github.com/hananoki/SymbolSettings)
 - Tool to manage ScriptingDefineSymbols

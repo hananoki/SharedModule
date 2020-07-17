@@ -1,5 +1,10 @@
 # Shared Module
 
+## [1.5.1] - 2020-07-17
+
+### Fixed
+- Addressed an issue where the storage location of project settings would switch when ENABLE_HANANOKI_SETTINGS was defined.
+
 ## [1.5.0] - 2020-07-16
 
 ### Added
