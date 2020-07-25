@@ -110,7 +110,7 @@ namespace Hananoki {
 							EditorGUI.PropertyField( rc1, prop );
 							rc1.y += EditorGUIUtility.singleLineHeight;
 							ii++;
-							prop.Next( false );
+							if( prop.Next( false ) == false ) break;
 						} while( depth == prop.depth );
 
 						m_lst.elementHeight = ( EditorGUIUtility.singleLineHeight * ii ) + 4;

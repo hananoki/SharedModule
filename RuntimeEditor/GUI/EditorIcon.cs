@@ -1,7 +1,7 @@
 ﻿
 using UnityEngine;
 using UnityEditor;
-
+using System;
 
 namespace Hananoki {
 	public static class EditorIcon {
@@ -48,6 +48,29 @@ namespace Hananoki {
 		public static Texture2D asset_store => Icon.GetBuiltin( IconPath( "asset store" ) );
 		public static Texture2D sceneviewfx => Icon.GetBuiltin( IconPath( "sceneviewfx" ) );
 
+		public static Texture2D waitspin00 => Icon.GetBuiltin( IconPath( "waitspin00" ) );
+		public static Texture2D waitspin01 => Icon.GetBuiltin( IconPath( "waitspin01" ) );
+		public static Texture2D waitspin02 => Icon.GetBuiltin( IconPath( "waitspin02" ) );
+		public static Texture2D waitspin03 => Icon.GetBuiltin( IconPath( "waitspin03" ) );
+		public static Texture2D waitspin04 => Icon.GetBuiltin( IconPath( "waitspin04" ) );
+		public static Texture2D waitspin05 => Icon.GetBuiltin( IconPath( "waitspin05" ) );
+		public static Texture2D waitspin06 => Icon.GetBuiltin( IconPath( "waitspin06" ) );
+		public static Texture2D waitspin07 => Icon.GetBuiltin( IconPath( "waitspin07" ) );
+		public static Texture2D waitspin08 => Icon.GetBuiltin( IconPath( "waitspin08" ) );
+		public static Texture2D waitspin09 => Icon.GetBuiltin( IconPath( "waitspin09" ) );
+		public static Texture2D waitspin10 => Icon.GetBuiltin( IconPath( "waitspin10" ) );
+		public static Texture2D waitspin11 => Icon.GetBuiltin( IconPath( "waitspin11" ) );
+
+		public static Texture2D[] s_waitspin;
+		public static Texture2D[] waitspin {
+			get {
+				if( s_waitspin == null ) {
+					s_waitspin = new Texture2D[] { waitspin00, waitspin01, waitspin02, waitspin03, waitspin04, waitspin05, waitspin06, waitspin07, waitspin08, waitspin09, waitspin10, waitspin11 };
+				}
+				return s_waitspin;
+			}
+		}
+
 		//(Texture2D) EditorGUIUtility.Load( EditorGUIUtility.isProSkin ? "icons/d_Settings.png" : "icons/settings.png" );
 		//public static Texture2D settings => (Texture2D) EditorGUIUtility.Load( "settings" );
 
@@ -81,5 +104,63 @@ namespace Hananoki {
 
 
 		//"console.warnicon.inactive.sml"
+	}
+
+	public class IconWaitSpin : IDisposable {
+
+		float _curTime;
+		float _lastTime;
+		float _watiTime;
+
+		int _count;
+		Action _repaint;
+
+		public static implicit operator Texture2D( IconWaitSpin c ) { return EditorIcon.waitspin[ c._count ]; }
+		//public static implicit operator Texture( WaitSpinIcon c ) { return EditorIcon.waitspin[ c._count ]; }
+
+		public IconWaitSpin( Action repaint = null ) {
+			_repaint = repaint;
+			EditorApplication.update += UpdateEditor;
+			//Debug.Log( "ctor: WaitSpinIcon" );
+		}
+
+		~IconWaitSpin() {
+			_Dispose( false );
+			//Debug.Log( "dtor: WaitSpinIcon" );
+		}
+
+		public void UpdateEditor() {
+			_curTime = Time.realtimeSinceStartup;
+			float deltaTime = (float) ( _curTime - _lastTime );
+			_lastTime = _curTime;
+
+			_watiTime -= deltaTime;
+			if( _watiTime < 0 ) {
+				_watiTime = 0.1250f;
+
+				_count++;
+				if( 12 <= _count ) {
+					_count = 0;
+				}
+				_repaint?.Invoke();
+			}
+		}
+
+		public void Dispose() {
+			_Dispose( true );
+			GC.SuppressFinalize( this );
+		}
+
+		protected virtual void _Dispose( bool disposing ) {
+			if( disposing ) {
+				// 管理（managed）リソースの破棄処理をここに記述します。 
+			}
+
+			// 非管理（unmanaged）リソースの破棄処理をここに記述します。
+			EditorApplication.update -= UpdateEditor;
+			//Debug.Log( "dtor: _Dispose" );
+		}
+
+
 	}
 }

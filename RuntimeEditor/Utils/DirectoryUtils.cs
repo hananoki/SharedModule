@@ -53,11 +53,19 @@ namespace Hananoki {
 			}
 		}
 		public static void mv( string src, string dst ) {
-			if( File.Exists( dst ) ) {
-				File.Delete( dst );
-			}
+			
 			if( File.Exists( src ) ) {
+				if( File.Exists( dst ) ) {
+					File.Delete( dst );
+				}
 				File.Move( src, dst );
+			}
+			
+			if( Directory.Exists( src ) ) {
+				if( Directory.Exists( dst ) ) {
+					Directory.Delete( dst );
+				}
+				Directory.Move( src, dst );
 			}
 		}
 		public static void cp( string src, string dst, bool overwrite = false ) {

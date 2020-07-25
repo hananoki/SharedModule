@@ -1,5 +1,17 @@
 # Shared Module
 
+## [1.5.2] - 2020-07-25
+
+### Added
+- Added GUIDStringAttribute
+- Added IconWaitSpin
+
+### Changed
+- Support for both folders and files in fs.mv
+
+### Fixed
+- Fixed an issue with HReorderableList
+
 ## [1.5.1] - 2020-07-17
 
 ### Fixed
