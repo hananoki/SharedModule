@@ -1,5 +1,28 @@
 # Shared Module
 
+## [1.5.3] - 2020-08-02
+
+### Added
+- Added EditorHelper.TravaseAllType
+- Added EditorHelper.ShowInspector
+- Added HGUIUtility.GUIToScreenRect
+- Added EditorExtensions.GetCachedIcon
+- Added EditorExtensions.GetAssetPath
+- Added EditorExtensions.LoadAsset
+- Added EditorExtensions.CalcSizeFromLabel
+- Added EditorIcon.search_icon
+- Added HEditorGUI.MiniLabelR
+- Added HEditorGUI.ClickableIcon
+- Added HTreeView.DisableSelectionStyle
+- Added HTreeView.DrawLayoutGUI
+- Added HTreeView.SetSelectionNone
+- Added HexNumberAttribute
+
+### Changed
+- Changed argument of EditorHelper.DuplicateAsset
+- Changed to deselect when clicking blank in HTreeView
+- Separated the assembly of Hananoki.Attribute
+
 ## [1.5.2] - 2020-07-25
 
 ### Added

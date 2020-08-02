@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Hananoki.Reflection;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
-using System.Linq;
 
 namespace Hananoki {
 	public abstract class HTreeView<T> : TreeView where T : TreeViewItem {
@@ -27,15 +30,51 @@ namespace Hananoki {
 		public void InitID() {
 			m_id = 0;
 		}
+
 		public int GetID() {
 			m_id++;
 			return m_id;
 		}
 
+
+		public void DisableSelectionStyle() {
+			// 2019.3以降はm_SelectionStyleで独立してるので書き換えれる
+			if( UnitySymbol.Has( "UNITY_2019_3_OR_NEWER" ) ) {
+				object _obj = this;
+				var tt = typeof( TreeView );
+				var p = tt.GetField( "m_TreeView", BindingFlags.Instance | BindingFlags.NonPublic );
+				var _treeView = p.GetValue( _obj );
+				var _gui = _treeView.GetProperty<object>( "gui" );
+				_gui.SetProperty( "selectionStyle", EditorStyles.label );
+			}
+		}
+
+
+		public void DrawLayoutGUI() {
+			GUILayout.Box( "", HEditorStyles.treeViweArea, GUILayout.ExpandWidth( true ), GUILayout.ExpandHeight( true ) );
+
+			var dropRc = GUILayoutUtility.GetLastRect();
+
+			OnGUI( dropRc );
+		}
+
+
 		public override void OnGUI( Rect rect ) {
 			if( !isInitialized ) return;
 
 			base.OnGUI( rect );
+			if( Event.current.type == EventType.MouseDown && Event.current.button == 0 && rect.Contains( Event.current.mousePosition ) ) {
+				SetSelectionNone();
+			}
+		}
+
+
+		protected virtual void OnSelectionNone() { }
+
+
+		public void SetSelectionNone() {
+			SetSelection( new int[ 0 ], TreeViewSelectionOptions.FireSelectionChanged );
+			OnSelectionNone();
 		}
 
 		new public void ExpandAll() {

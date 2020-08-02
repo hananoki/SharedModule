@@ -58,6 +58,21 @@ namespace Hananoki.Extensions {
 			return EditorHelper.TempContent( s, s );
 		}
 
+		public static Texture2D GetCachedIcon( this string s ) {
+			return (Texture2D) AssetDatabase.GetCachedIcon( s );
+		}
+
+		public static string GetAssetPath( this string s ) {
+			return AssetDatabase.GUIDToAssetPath( s );
+		}
+
+		public static Object LoadAsset( this string s )  {
+			return (Object) GUIDUtils.LoadAssetAtGUID<Object>( s );
+		}
+
+		public static Vector2 CalcSizeFromLabel( this string s ) {
+			return EditorStyles.label.CalcSize( EditorHelper.TempContent( s ) );
+		}
 
 		public static string GenerateUniqueAssetPath( this string s ) {
 			return AssetDatabase.GenerateUniqueAssetPath( s );

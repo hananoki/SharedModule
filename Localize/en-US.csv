@@ -4,22 +4,25 @@ Apply
 Revert
 Confirm
 Continue
-Add
-Delete
-Rename
-Replace
-Clear
-Copy
-Copy to clipboard
 Language
 Experimental
-Please select a directory
-Is it OK?
 Directory
 Preferences
 Project Settings
 Settings (Editor)
 Settings (Project)
+Add
+Replace
+Clear
+Cut
+Copy
+Paste
+Duplicate
+Delete
+Rename
+Copy to clipboard
+Please select a directory
+Is it OK?
 Deprecated
 Warning
 Info
@@ -59,5 +62,6 @@ Enable Ping Object
 Record Object Count
 Show in Explorer
 Select Asset
+Edit Script
 Version Text Color
 Version Back Color

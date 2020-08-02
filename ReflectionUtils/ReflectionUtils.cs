@@ -250,7 +250,7 @@ namespace Hananoki.Reflection {
 		public static T GetField<T>( this object obj, string propertyName ) {
 			if( obj == null ) throw new ArgumentNullException( "The argument obj is null." );
 			var t = obj.GetType();
-			var p = t.GetField( propertyName, AllMembers );
+			var p = t.GetField( propertyName, InstanceMembers );
 			return (T) p.GetValue( obj );
 		}
 

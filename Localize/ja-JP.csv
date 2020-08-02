@@ -4,22 +4,25 @@ Apply	適用する
 Revert	元に戻す
 Confirm	確認
 Continue	続ける
-Add	追加
-Delete	削除
-Rename	名前の変更
-Replace	置換
-Clear	クリア
-Copy	コピー
-Copy to clipboard	クリップボードにコピー
 Language	言語
 Experimental	実験的
-Please select a directory	ディレクトリを選択してください
-Is it OK?	よろしいですか?
 Directory	ディレクトリ
 Preferences	環境設定
 Project Settings	プロジェクト設定
 Settings (Editor)	設定 (Editor)
 Settings (Project)	設定 (Project)
+Add	追加
+Replace	置換
+Clear	クリア
+Cut	切り取り
+Copy	コピー
+Paste	ペースト
+Duplicate	複製
+Delete	削除
+Rename	名前の変更
+Copy to clipboard	クリップボードにコピー
+Please select a directory	ディレクトリを選択してください
+Is it OK?	よろしいですか?
 Deprecated	非推奨
 Warning	警告
 Info	情報
@@ -59,5 +62,6 @@ Enable Ping Object	オブジェクトをPingする
 Record Object Count	履歴可能な最大オブジェクト数
 Show in Explorer	エクスプローラーで表示
 Select Asset	アセットを選択
+Edit Script	スクリプトを編集
 Version Text Color	Version 文字色
 Version Back Color	Version 背景色

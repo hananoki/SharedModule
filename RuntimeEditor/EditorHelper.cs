@@ -28,6 +28,40 @@ namespace Hananoki {
 
 	public static class EditorHelper {
 
+		public static void TravaseAllType( Action<Type> action ) {
+			Debug.Assert( action != null, "EditorHelper.TravaseAllType is NULL" );
+			if( action == null ) return;
+
+			float fval = 0.00f;
+
+			var assemblys = AppDomain.CurrentDomain.GetAssemblies();
+
+			foreach( Assembly assembly in assemblys ) {
+				float fmax = 1.00f / assemblys.Length;
+				EditorUtility.DisplayProgressBar( "TravaseAllType", assembly.FullName, fval );
+
+				try {
+					var types = assembly.GetTypes();
+					float fadd = fmax / types.Length;
+
+					foreach( Type t in types ) {
+						try {
+							action.Invoke( t );
+						}
+						catch( Exception ee ) {
+							Debug.LogException( ee );
+						}
+					}
+				}
+				catch( ReflectionTypeLoadException ) {
+				}
+				catch( Exception ee ) {
+					Debug.LogException( ee );
+				}
+			}
+			EditorUtility.ClearProgressBar();
+		}
+
 		public static EditorWindow GetWindow( Type windowT, params Type[] desiredDockNextTo ) {
 			return GetWindow( windowT, null, true, desiredDockNextTo );
 		}
@@ -436,8 +470,14 @@ namespace Hananoki {
 			_ForceReloadInspectors.Invoke( null, null );
 		}
 
+		public static void ShowInspector( UnityObject uobj ) {
+			if( Selection.activeObject == uobj ) return;
+			Selection.activeObject = uobj;
+			UnityEditorProjectBrowser.lockOnce();
+		}
 
-		public static void ShowNewInspector( UnityObject uobj ) {
+
+		public static void ShowNewInspectorWindow( UnityObject uobj ) {
 			Selection.activeObject = uobj;
 
 			var t = typeof( Editor ).Assembly.GetType( "UnityEditor.InspectorWindow" );
@@ -476,12 +516,74 @@ namespace Hananoki {
 			ForceReloadInspectors();
 		}
 
+		//public static UnityObject DuplicateAsset( UnityObject obj, string prefix = "" ) {
+		//	Type type = obj.GetType();
 
-		public static T DuplicateAsset<T>( T obj ) where T : UnityObject {
+		//	var path = AssetDatabase.GetAssetPath( obj );
+		//	var dir = Path.GetDirectoryName( path );
+		//	var fname = Path.GetFileName( path );
+		//	var newPath = dir + "/" + prefix + fname;
+		//	var uniquePath = AssetDatabase.GenerateUniqueAssetPath( newPath );
+		//	AssetDatabase.CopyAsset( path, uniquePath );
+		//	AssetDatabase.Refresh();
+		//	var asset = AssetDatabase.LoadAssetAtPath( uniquePath, type );
+
+		//	return asset;
+		//}
+
+		// preview
+		public static UnityObject DuplicateAsset2( UnityObject obj, string prefix = "" ) {
+
+			if( !AssetDatabase.IsSubAsset( obj ) ) {
+
+				return DuplicateAsset( obj );
+			}
+
+			void _pasteparameters( UnityObject src, UnityObject dst ) {
+				if( src.GetType() == dst.GetType() ) {
+					var so1 = new SerializedObject( dst );
+					var so2 = new SerializedObject( src );
+					so2.Update();
+					so1.Update();
+					var it = so2.GetIterator();
+					it.NextVisible( true );
+					while( it.NextVisible( true ) ) {
+						//Debug.Log( it.name );
+						var prop = so2.FindProperty( it.name );
+						if( prop == null ) continue;
+						so1.CopyFromSerializedProperty( prop );
+					}
+					so1.ApplyModifiedProperties();
+				}
+				else {
+					//Debug.LogError( $"{obj.GetType().Name} != {copyObject.GetType().Name}: {S._Typedoesnotmatch}" );
+				}
+			}
+
+			Type type = obj.GetType();
+
+			var path = AssetDatabase.GetAssetPath( obj );
+			var dir = Path.GetDirectoryName( path );
+			var fname = obj.name;
+			var newPath = $"{dir}/{prefix}{fname}.asset";
+			var uniquePath = AssetDatabase.GenerateUniqueAssetPath( newPath );
+			//AssetDatabase.CopyAsset( path, uniquePath );
+
+			var newobj = UnityObject.Instantiate( obj );
+			AssetDatabase.CreateAsset( newobj, uniquePath );
+			_pasteparameters( obj, newobj );
+
+			AssetDatabase.Refresh();
+			var asset = AssetDatabase.LoadAssetAtPath( uniquePath, type );
+
+			return asset;
+		}
+
+		public static T DuplicateAsset<T>( T obj, string prefix = "" ) where T : UnityObject {
 			var path = AssetDatabase.GetAssetPath( obj );
 			var dir = Path.GetDirectoryName( path );
 			var fname = Path.GetFileName( path );
-			var newPath = dir + "/" + "@" + fname;
+			var newPath = dir + "/" + prefix + fname;
 			var uniquePath = AssetDatabase.GenerateUniqueAssetPath( newPath );
 			AssetDatabase.CopyAsset( path, uniquePath );
 			AssetDatabase.Refresh();
@@ -806,6 +908,19 @@ namespace Hananoki {
 
 		public static byte[] Decode( string base64Str ) {
 			return FromBase64String( base64Str );
+		}
+	}
+
+
+	// preview
+	public static class HGUIUtility {
+
+		// GUIToScreenRectは2019.1から
+		public static Rect GUIToScreenRect( Rect guiRect ) {
+			Vector2 vector = GUIUtility.GUIToScreenPoint( new Vector2( guiRect.x, guiRect.y ) );
+			guiRect.x = vector.x;
+			guiRect.y = vector.y;
+			return guiRect;
 		}
 	}
 }

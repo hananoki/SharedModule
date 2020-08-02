@@ -11,6 +11,24 @@ namespace Hananoki {
 	public static class HEditorGUI {
 		public static Rect lastRect;
 
+		#region MiniLabelR
+
+		public static void MiniLabelR( Rect position, string title ) {
+			var lrc = position;
+			var cont = EditorHelper.TempContent( $"{title}" );
+			var size = HEditorStyles.versionLabel.CalcSize( cont );
+
+			lrc = lrc.AlignR( size.x );
+			lrc.x -= 4;
+			lrc = lrc.AlignCenterH( 12 );
+			EditorGUI.DrawRect( lrc, SharedModule.SettingsEditor.i.versionBackColor );
+			HEditorStyles.versionLabel.normal.textColor = SharedModule.SettingsEditor.i.versionTextColor;
+			GUI.Label( lrc, $"{title}", HEditorStyles.versionLabel );
+		}
+
+		#endregion
+
+
 
 		#region HeaderTitle
 
@@ -189,6 +207,22 @@ namespace Hananoki {
 		}
 
 		#endregion
+
+
+		public static bool ClickableIcon( Rect position, Texture2D image ) {
+
+			return ClickableIcon( position, image, GUI.enabled ? 1.00f : 0.4f );
+		}
+		public static bool ClickableIcon( Rect position, Texture2D image, float alpha = 1.0f ) {
+			bool result = false;
+			HEditorGUI.lastRect = position;
+
+			GUI.DrawTexture( position, image, ScaleMode.StretchToFill, true, 0, new Color( 1, 1, 1, alpha ), 0, 0 );
+			if( EditorHelper.HasMouseClick( position ) ) {
+				result = true;
+			}
+			return result;
+		}
 
 
 

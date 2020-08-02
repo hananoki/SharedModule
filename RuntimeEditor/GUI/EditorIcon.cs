@@ -83,6 +83,8 @@ namespace Hananoki {
 		public static Texture2D animatorcontrollertool => Icon.GetBuiltin( IconPath( "unityeditor.graphs.animatorcontrollertool" ) );
 
 
+		public static Texture2D search_icon => Icon.Get( ProcessedPath( "search" ) );
+
 		public static Texture2D assetstore_icon => Icon.Get( ProcessedPath( "assetstore" ) );
 		public static Texture2D cs_script {
 			get {

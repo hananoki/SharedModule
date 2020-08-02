@@ -63,7 +63,7 @@ namespace Hananoki {
 				s_treeViweArea = new GUIStyle( GUI.skin.box );
 				s_treeViweArea.margin = new RectOffset( 0, 0, 0, 0 );
 				s_treeViweArea.padding = new RectOffset( 0, 0, 0, 0 );
-
+				s_treeViweArea.normal.background = null;
 				return s_treeViweArea;
 			}
 		}

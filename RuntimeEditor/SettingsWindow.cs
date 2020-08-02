@@ -23,6 +23,8 @@ namespace Hananoki.SharedModule {
 			Project,
 		}
 
+		static SettingsWindow s_instance;
+
 		object m_HorizontalSplitter;
 
 		SettingsTreeView m_treeViewEditor;
@@ -50,19 +52,22 @@ namespace Hananoki.SharedModule {
 		}
 
 		public static void Open( string displayName ) {
-			var window = GetWindow<SettingsWindow>();
-			window.SetTitle( new GUIContent( "Settings", EditorIcon.settings ) );
+			s_instance = GetWindow<SettingsWindow>();
+			s_instance.SetTitle( new GUIContent( "Settings", EditorIcon.settings ) );
 
 			var dsip = displayName.Split( '/' );
 			if( dsip[ 0 ] == "Editor" ) {
-				window.mode = Mode.Editor;
+				s_instance.mode = Mode.Editor;
 			}
 			else {
-				window.mode = Mode.Project;
+				s_instance.mode = Mode.Project;
 			}
-			window.selectionDeley = displayName;
+			s_instance.selectionDeley = displayName;
 		}
 
+		new public static void Repaint() {
+			( (EditorWindow) s_instance )?.Repaint();
+		}
 
 
 		public void SelectionDeley( string displayName ) {
@@ -77,7 +82,13 @@ namespace Hananoki.SharedModule {
 			//EditorUtils.RepaintEditorWindow();
 		}
 
+		void OnDestroy() {
+			s_instance = null;
+		}
+
 		void OnEnable() {
+			s_instance = this;
+
 			var sz = new float[] { 0.3f, 0.7f };
 			m_HorizontalSplitter = Activator.CreateInstance( R.Type( "UnityEditor.SplitterState", "UnityEditor.dll" ), new object[] { sz } );
 
