@@ -3,10 +3,11 @@
 //#undef ENABLE_LEGACY_PREFERENCE
 #endif
 
+using Hananoki.Reflection;
 using System;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using System.Collections.Generic;
 
 namespace Hananoki {
 	public class HEditorWindow : EditorWindow {
@@ -35,7 +36,52 @@ namespace Hananoki {
 				Debug.LogException( e );
 			}
 		}
+
+
+		public static EditorWindow ShowConsoleWindow( bool utility = false ) {
+			return GetWindow( R.Type( "UnityEditor.ConsoleWindow" ), utility );
+		}
+
+		public static EditorWindow ShowAnimationWindow( bool utility = false ) {
+			return GetWindow( R.Type( "UnityEditor.AnimationWindow" ), utility );
+		}
+
+		public static EditorWindow ShowAnimatorControllerTool( bool utility = false ) {
+			return GetWindow( R.Type( "UnityEditor.Graphs.AnimatorControllerTool", "UnityEditor.Graphs.dll" ), utility );
+		}
+
+
+		public static EditorWindow ShowProfilerWindow( bool utility = false ) {
+			return GetWindow( R.Type( "UnityEditor.ProfilerWindow" ), utility );
+		}
+
+		public static EditorWindow ShowTimelineWindow( bool utility = false ) {
+			if( UnitySymbol.Has( "UNITY_2019_1_OR_NEWER" ) ) {
+				var asm = R.LoadAssembly( "Unity.Timeline.Editor" );
+				if( asm == null ) {
+					Debug.LogWarning( "Timeline is not installed." );
+					return null;
+				}
+				return GetWindow( R.Type( "UnityEditor.Timeline.TimelineWindow", "Unity.Timeline.Editor" ), utility );
+			}
+			else {
+				return GetWindow( R.Type( "UnityEditor.Timeline.TimelineWindow", "UnityEditor.Timeline" ), utility );
+			}
+		}
+
+
+		public static EditorWindow[] FindArray( Type editorWindowType ) {
+			return Resources.FindObjectsOfTypeAll( editorWindowType ).Cast<EditorWindow>().ToArray();
+		}
+
+		public static EditorWindow Find( Type editorWindowType ) {
+			foreach( var p in Resources.FindObjectsOfTypeAll( editorWindowType ) ) {
+				return (EditorWindow) p;
+			}
+			return null;
+		}
 	}
+
 
 
 	public class HSettingsEditorWindow : HEditorWindow {
@@ -86,5 +132,5 @@ namespace Hananoki {
 	}
 
 
-	
+
 }

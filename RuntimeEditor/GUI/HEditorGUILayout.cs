@@ -14,10 +14,11 @@ namespace Hananoki {
 
 
 
-		public static void HeaderTitle( string title ) {
+		public static void HeaderTitle( string title, float space = 4 ) {
 			var labelCont = EditorHelper.TempContent( title );
-			var rc = GUILayoutUtility.GetRect( labelCont, EditorStyles.textField );
+			var rc = GUILayoutUtility.GetRect( labelCont, EditorStyles.label );
 			HEditorGUI.HeaderTitle( rc, title );
+			GUILayout.Space( space );
 		}
 
 		#endregion
@@ -84,19 +85,13 @@ namespace Hananoki {
 			var r = EditorHelper.GetLayout( tex, style );
 			return HEditorGUI.IconButton( r, EditorHelper.TempContent( tex ), style, 0 );
 		}
-		//public static bool DropDown( string text, GUIStyle style, params GUILayoutOption[] options ) {
-		//	return DropDown( EditorHelper.TempContent( text ), style, options );
-		//}
+		public static bool IconButton( Texture2D tex, string tooltip, int marginHeighOffset = 0 ) {
+			var style = new GUIStyle( HEditorStyles.iconButton );
+			style.margin = new RectOffset( 0, 0, marginHeighOffset, 0 );
+			var r = EditorHelper.GetLayout( tex, style );
+			return HEditorGUI.IconButton( r, EditorHelper.TempContent( tex, tooltip ), style, 0 );
+		}
 
-		//public static bool DropDown( GUIContent content, GUIStyle style, params GUILayoutOption[] options ) {
-		//	//if( ToolbarDropDown == null ) return false;
-		//	var rect = GUILayoutUtility.GetRect( content, style, options );
-		//	GUI.Button( rect, content, style );
-		//	//if( EditorHelper.HasMouseClick( GUILayoutUtility.GetLastRect() ) ) {
-		//	//	return true;
-		//	//}
-		//	return false;
-		//}
 		public static void BoldLabel( string s, Texture2D ico = null ) {
 			var fontStyle = EditorStyles.label.fontStyle;
 			EditorStyles.label.fontStyle = FontStyle.Bold;

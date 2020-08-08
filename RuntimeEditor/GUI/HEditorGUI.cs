@@ -46,7 +46,7 @@ namespace Hananoki {
 		public static void HeaderTitle( Rect position, string title ) {
 			try {
 				position.height = 18;
-				position.y += 4;
+				//position.y += 4;
 				EditorGUI.LabelField( position, title, EditorStyles.boldLabel );
 				DrawLiine( position );
 			}

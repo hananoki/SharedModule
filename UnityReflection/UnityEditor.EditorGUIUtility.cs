@@ -1,4 +1,4 @@
-﻿/// UnityEditor.EditorGUIUtility : 2019.3.2f1
+﻿/// UnityEditor.EditorGUIUtility : 2019.4.5f1
 
 #if UNITY_EDITOR
 
@@ -6,7 +6,7 @@ using Hananoki.Reflection;
 using System;
 
 namespace Hananoki {
-  public static class UnityEditorGUIUtility {
+  public static partial class UnityEditorGUIUtility {
     delegate UnityEngine.GUIContent Method_TrTextContent0( string key, string text, string tooltip, UnityEngine.Texture icon );
     static Method_TrTextContent0 __TrTextContent0;
     public static UnityEngine.GUIContent TrTextContent( string key, string text, string tooltip, UnityEngine.Texture icon ) {
@@ -63,6 +63,28 @@ namespace Hananoki {
         __LoadIcon0 = (Method_LoadIcon0) Delegate.CreateDelegate( typeof( Method_LoadIcon0 ), null, R.Method("LoadIcon", "UnityEditor.EditorGUIUtility", "UnityEditor.dll") );
       }
       return __LoadIcon0(  name  );
+    }
+
+
+
+    delegate UnityEngine.AssetBundle Method_GetEditorAssetBundle0();
+    static Method_GetEditorAssetBundle0 __GetEditorAssetBundle0;
+    public static UnityEngine.AssetBundle GetEditorAssetBundle() {
+      if( __GetEditorAssetBundle0 == null ) {
+        __GetEditorAssetBundle0 = (Method_GetEditorAssetBundle0) Delegate.CreateDelegate( typeof( Method_GetEditorAssetBundle0 ), null, R.Method("GetEditorAssetBundle", "UnityEditor.EditorGUIUtility", "UnityEditor.dll") );
+      }
+      return __GetEditorAssetBundle0(  );
+    }
+
+
+
+    delegate UnityEngine.Color Method_GetDefaultBackgroundColor0();
+    static Method_GetDefaultBackgroundColor0 __GetDefaultBackgroundColor0;
+    public static UnityEngine.Color GetDefaultBackgroundColor() {
+      if( __GetDefaultBackgroundColor0 == null ) {
+        __GetDefaultBackgroundColor0 = (Method_GetDefaultBackgroundColor0) Delegate.CreateDelegate( typeof( Method_GetDefaultBackgroundColor0 ), null, R.Method("GetDefaultBackgroundColor", "UnityEditor.EditorGUIUtility", "UnityEditor.dll") );
+      }
+      return __GetDefaultBackgroundColor0(  );
     }
 
 

@@ -1,0 +1,58 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Hananoki.Extensions;
+using Hananoki.Reflection;
+using UnityEditor;
+using UnityEngine;
+using System.Collections.Generic;
+using UnityEditor.Animations;
+using System;
+using System.Reflection;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace Hananoki.Extensions {
+	public static partial class EditorWindowExtensions {
+
+		public static object GetRootVisualElement( this EditorWindow ew ) {
+			if( UnitySymbol.Has( "UNITY_2019_1_OR_NEWER" ) ) {
+				return ew.GetProperty<object>( "rootVisualElement" );
+			}
+			return ew.GetProperty<object>( "rootVisualContainer" );
+		}
+
+
+		public static void RemoveIMGUIContainer( this EditorWindow ew, object IMGUIContainer, bool parent = false ) {
+			var visualTree = ew.GetRootVisualElement();
+
+			if( !parent ) {
+				visualTree.MethodInvoke( "Remove", new object[] { IMGUIContainer } );
+			}
+			else {
+				visualTree.GetProperty<object>( "parent" ).MethodInvoke( "Remove", new object[] { IMGUIContainer } );
+			}
+		}
+
+		public static void AddIMGUIContainer( this EditorWindow ew, object IMGUIContainer, bool parent = false ) {
+			var visualTree = ew.GetRootVisualElement();
+
+			if( !parent ) {
+				visualTree.MethodInvoke( "Add", new object[] { IMGUIContainer } );
+			}
+			else {
+				var parentObj = visualTree.GetProperty<object>( "parent" );
+				parentObj?.MethodInvoke( "Add", new object[] { IMGUIContainer } );
+			}
+		}
+
+		public static void AddIMGUIContainer( this EditorWindow ew, Action gui, bool parent = false ) {
+
+
+
+			var instance = Activator.CreateInstance( UnityTypes.IMGUIContainer, new object[] { gui } );
+
+			AddIMGUIContainer( ew, instance, parent );
+		}
+	}
+}

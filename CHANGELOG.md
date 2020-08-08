@@ -1,5 +1,25 @@
 # Shared Module
 
+## [1.5.4] - 2020-08-08
+
+### Added
+- Added EditorWindowExtensions
+- Added UnityTypes
+- Added HEditorWindow.ShowConsoleWindow
+- Added HEditorWindow.ShowAnimationWindow
+- Added HEditorWindow.ShowAnimatorControllerTool
+- Added HEditorWindow.ShowProfilerWindow
+- Added HEditorWindow.ShowTimelineWindow
+- Added HEditorWindow.FindArray
+- Added HEditorWindow.Find
+- Added UnityEditorGUIUtility.GetEditorAssetBundle
+- Added UnityEditorGUIUtility.GetDefaultBackgroundColor
+
+### Changed
+- Adjusted the position of HEditorGUI.HeaderTitle
+- Spaces are now inserted in HEditorGUILayout.HeaderTitle
+- Built-in icon properties are automatically generated
+
 ## [1.5.3] - 2020-08-02
 
 ### Added

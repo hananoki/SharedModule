@@ -848,6 +848,17 @@ namespace Hananoki {
 			}
 
 			try {
+				Texture2D iconz = EditorGUIUtility.Load( name ) as Texture2D;
+				//var iconz = EditorGUIUtility.IconContent( name ).image as Texture2D;
+				if( iconz != null ) {
+					s_iconCache.Add( name, iconz );
+					return iconz;
+				}
+			}
+			catch( Exception ) {
+			}
+
+			try {
 				Texture2D iconz = EditorGUIUtility.Load( "icons/" + name + ".png" ) as Texture2D;
 				//var iconz = EditorGUIUtility.IconContent( name ).image as Texture2D;
 				if( iconz != null ) {

@@ -7,34 +7,25 @@ using System.Reflection;
 using System;
 
 namespace Hananoki {
-	public static class UnityEditorProjectBrowser {
+	public static partial class UnityEditorProjectBrowser {
 
 		static EditorWindow s_ProjectBrowserWindow;
 		static EditorWindow ProjectBrowserWindow {
 			get {
 				if( s_ProjectBrowserWindow == null ) {
-					s_ProjectBrowserWindow = EditorWindow.GetWindow( ProjectBrowserType, false, "Project", false );
+					s_ProjectBrowserWindow = EditorWindow.GetWindow( UnityTypes.ProjectBrowser, false, "Project", false );
 				}
 				return s_ProjectBrowserWindow;
 			}
 		}
 
 
-		static Type s_ProjectBrowserType;
-		static Type ProjectBrowserType {
-			get {
-				if( s_ProjectBrowserType == null ) {
-					s_ProjectBrowserType = Assembly.Load( "UnityEditor.dll" ).GetType( "UnityEditor.ProjectBrowser" );
-				}
-				return s_ProjectBrowserType;
-			}
-		}
 
 		static MethodInfo s_ProjectBrowser_SetSearch;
 		static MethodInfo ProjectBrowser_SetSearch {
 			get {
 				if( s_ProjectBrowser_SetSearch == null ) {
-					foreach( MethodInfo mi in ProjectBrowserType.GetMethods( BindingFlags.Public | BindingFlags.Instance ) ) {
+					foreach( MethodInfo mi in UnityTypes.ProjectBrowser.GetMethods( BindingFlags.Public | BindingFlags.Instance ) ) {
 						if( mi.Name == "SetSearch" ) {
 							var para = mi.GetParameters();
 							if( para[ 0 ].Name == "searchString" ) {
@@ -54,7 +45,7 @@ namespace Hananoki {
 		static MethodInfo ProjectBrowser_ShowFolderContents {
 			get {
 				if( s_ProjectBrowser_ShowFolderContents == null ) {
-					s_ProjectBrowser_ShowFolderContents = s_ProjectBrowserType.GetMethod( "ShowFolderContents", BindingFlags.NonPublic | BindingFlags.Instance );
+					s_ProjectBrowser_ShowFolderContents = UnityTypes.ProjectBrowser.GetMethod( "ShowFolderContents", BindingFlags.NonPublic | BindingFlags.Instance );
 				}
 				return s_ProjectBrowser_ShowFolderContents;
 			}
@@ -67,7 +58,7 @@ namespace Hananoki {
 		static MethodInfo ProjectBrowser_ValidateCreateNewAssetPath {
 			get {
 				if( s_ProjectBrowser_ValidateCreateNewAssetPath == null ) {
-					s_ProjectBrowser_ValidateCreateNewAssetPath = ProjectBrowserType.GetMethod( "ValidateCreateNewAssetPath", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public | BindingFlags.Static );
+					s_ProjectBrowser_ValidateCreateNewAssetPath = UnityTypes.ProjectBrowser.GetMethod( "ValidateCreateNewAssetPath", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public | BindingFlags.Static );
 				}
 				return s_ProjectBrowser_ValidateCreateNewAssetPath;
 			}
@@ -80,25 +71,25 @@ namespace Hananoki {
 		static void init() {
 
 
-			if( s_ProjectBrowserType != null ) {
+			if( UnityTypes.ProjectBrowser != null ) {
 				if( UnitySymbol.Has( "UNITY_2018_1_OR_NEWER" ) ) {
-					s_ProjectBrowser_isLocked = s_ProjectBrowserType.GetProperty( "isLocked", BindingFlags.NonPublic | BindingFlags.Instance );
+					s_ProjectBrowser_isLocked = UnityTypes.ProjectBrowser.GetProperty( "isLocked", BindingFlags.NonPublic | BindingFlags.Instance );
 				}
 				else {
-					s_ProjectBrowser_m_IsLocked = s_ProjectBrowserType.GetField( "m_IsLocked", BindingFlags.NonPublic | BindingFlags.Instance );
+					s_ProjectBrowser_m_IsLocked = UnityTypes.ProjectBrowser.GetField( "m_IsLocked", BindingFlags.NonPublic | BindingFlags.Instance );
 				}
 			}
 		}
 
 
 
-		public static EditorWindow Window() {
-			return ProjectBrowserWindow;
-		}
+		//public static EditorWindow Window() {
+		//	return ProjectBrowserWindow;
+		//}
 
-		public static Type Type() {
-			return ProjectBrowserType;
-		}
+		//public static Type Type() {
+		//	return ProjectBrowserType;
+		//}
 
 
 		/// <summary>
