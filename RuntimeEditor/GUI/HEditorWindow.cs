@@ -38,37 +38,36 @@ namespace Hananoki {
 		}
 
 
-		public static EditorWindow ShowConsoleWindow( bool utility = false ) {
-			return GetWindow( R.Type( "UnityEditor.ConsoleWindow" ), utility );
+		//public static EditorWindow ShowConsoleWindow( bool utility = false ) {
+		//	return GetWindow( R.Type( "UnityEditor.ConsoleWindow" ), utility );
+		//}
+
+		//public static EditorWindow ShowAnimationWindow( bool utility = false ) {
+		//	return ShowWindow( UnityTypes.AnimationWindow, utility );
+		//}
+
+		//public static EditorWindow ShowAnimatorControllerTool( bool utility = false ) {
+		//	return ShowWindow( UnityTypes.AnimatorControllerTool, utility );
+		//}
+
+
+		//public static EditorWindow ShowProfilerWindow( bool utility = false ) {
+		//	return GetWindow( R.Type( "UnityEditor.ProfilerWindow" ), utility );
+		//}
+
+
+		//public static EditorWindow ShowTimelineWindow( bool utility = false ) {
+		//	return ShowWindow( UnityTypes.TimelineWindow, utility );
+		//}
+
+
+		//public static EditorWindow ShowGridPaintPaletteWindow( bool utility = false ) {
+		//	return ShowWindow( UnityTypes.GridPaintPaletteWindow, utility );
+		//}
+
+		public static EditorWindow ShowWindow( Type editorWindowType , bool utility = false ) {
+			return GetWindow( editorWindowType, utility );
 		}
-
-		public static EditorWindow ShowAnimationWindow( bool utility = false ) {
-			return GetWindow( R.Type( "UnityEditor.AnimationWindow" ), utility );
-		}
-
-		public static EditorWindow ShowAnimatorControllerTool( bool utility = false ) {
-			return GetWindow( R.Type( "UnityEditor.Graphs.AnimatorControllerTool", "UnityEditor.Graphs.dll" ), utility );
-		}
-
-
-		public static EditorWindow ShowProfilerWindow( bool utility = false ) {
-			return GetWindow( R.Type( "UnityEditor.ProfilerWindow" ), utility );
-		}
-
-		public static EditorWindow ShowTimelineWindow( bool utility = false ) {
-			if( UnitySymbol.Has( "UNITY_2019_1_OR_NEWER" ) ) {
-				var asm = R.LoadAssembly( "Unity.Timeline.Editor" );
-				if( asm == null ) {
-					Debug.LogWarning( "Timeline is not installed." );
-					return null;
-				}
-				return GetWindow( R.Type( "UnityEditor.Timeline.TimelineWindow", "Unity.Timeline.Editor" ), utility );
-			}
-			else {
-				return GetWindow( R.Type( "UnityEditor.Timeline.TimelineWindow", "UnityEditor.Timeline" ), utility );
-			}
-		}
-
 
 		public static EditorWindow[] FindArray( Type editorWindowType ) {
 			return Resources.FindObjectsOfTypeAll( editorWindowType ).Cast<EditorWindow>().ToArray();

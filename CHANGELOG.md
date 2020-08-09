@@ -1,5 +1,17 @@
 # Shared Module
 
+## [1.5.5] - 2020-08-09
+
+### Added
+- Added HGUIScope.Area
+- Added EditorExtensions.LoadAssetAtGUID
+- Added EditorExtensions.LoadAssetAtPath
+- Added HEditorWindow.ShowWindow
+- Added UnitySymbol.UNITY_2018_1_OR_NEWER ～ UnitySymbol.UNITY_2020_1_OR_NEWER
+
+### Changed
+- Changed to automatically generate EditorWindow type
+
 ## [1.5.4] - 2020-08-08
 
 ### Added

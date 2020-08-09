@@ -66,8 +66,17 @@ namespace Hananoki.Extensions {
 			return AssetDatabase.GUIDToAssetPath( s );
 		}
 
-		public static Object LoadAsset( this string s )  {
+		[System.Obsolete( "Use LoadAssetAtGUID" )]
+		public static Object LoadAsset( this string s ) {
 			return (Object) GUIDUtils.LoadAssetAtGUID<Object>( s );
+		}
+
+		public static Object LoadAssetAtGUID( this string s )  {
+			return (Object) GUIDUtils.LoadAssetAtGUID<Object>( s );
+		}
+
+		public static Object LoadAssetAtPath( this string s ) {
+			return (Object) AssetDatabase.LoadAssetAtPath<Object>( s );
 		}
 
 		public static Vector2 CalcSizeFromLabel( this string s ) {

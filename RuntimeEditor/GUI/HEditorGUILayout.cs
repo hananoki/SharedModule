@@ -253,6 +253,13 @@ namespace Hananoki {
 
 
 	public static class HGUIScope {
+		public static void Area( Rect rect, Action action, params GUILayoutOption[] options ) {
+			if( action == null ) return;
+			GUILayout.BeginArea( rect );
+			action.Invoke();
+			GUILayout.EndArea();
+		}
+
 		public static void Horizontal( Action action, params GUILayoutOption[] options ) {
 			if( action == null ) return;
 			GUILayout.BeginHorizontal();
