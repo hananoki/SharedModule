@@ -26,6 +26,9 @@ namespace Hananoki {
 			return GetSelection().Select( _id => (T) FindItem( _id, rootItem ) ).ToArray();
 		}
 
+		public T FindItem( int id ) {
+			return (T)FindItem( id, rootItem );
+		}
 
 		public void InitID() {
 			m_id = 0;

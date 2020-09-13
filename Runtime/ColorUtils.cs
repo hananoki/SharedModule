@@ -9,5 +9,9 @@ namespace Hananoki {
 		public static Color RGB( int rgb ) {
 			return new Color( rgb / 255.0f, rgb / 255.0f, rgb / 255.0f );
 		}
+
+		public static Color Alpha( Color color, float alpha ) {
+			return new Color( color.r, color.g, color.b, alpha );
+		}
 	}
 }

@@ -201,6 +201,10 @@ namespace Hananoki {
 				//Event.current.Use();
 				result = true;
 			}
+			else if( EditorHelper.HasMouseClick( position, EventMouseButton.R ) ) {
+				//Event.current.Use();
+				result = true;
+			}
 
 			GUI.Button( position, content, style );
 			return result;

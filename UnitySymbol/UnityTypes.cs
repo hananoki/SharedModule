@@ -11,7 +11,7 @@ namespace Hananoki {
 		public static Assembly UnityEngine => Assembly.Load( "UnityEngine.dll" );
 		public static Assembly UnityEditor => Assembly.Load( "UnityEditor.dll" );
 		public static Assembly UnityEditorGraphs => Assembly.Load( "UnityEditor.Graphs.dll" );
-		
+
 		public static Assembly Unity2DTilemapEditor => Assembly.Load( "Unity.2D.Tilemap.Editor" );
 		public static Assembly UnityTimelineEditor => Assembly.Load( "Unity.Timeline.Editor" );
 		public static Assembly UnityEditorTimeline => Assembly.Load( "UnityEditor.Timeline.dll" );
@@ -113,6 +113,39 @@ namespace Hananoki {
 
 		#endregion
 
+
+
+		static Type _UnityEditor_CreateAssetUtility;
+		public static Type UnityEditor_CreateAssetUtility {
+			get {
+				if( _UnityEditor_CreateAssetUtility == null ) {
+					_UnityEditor_CreateAssetUtility = UnityAssembly.UnityEditor.GetType( "UnityEditor.CreateAssetUtility" );
+				}
+				return _UnityEditor_CreateAssetUtility;
+			}
+		}
+
+
+		static Type _UnityEditor_SearchFilter;
+		public static Type UnityEditor_SearchFilter {
+			get {
+				if( _UnityEditor_SearchFilter == null ) {
+					_UnityEditor_SearchFilter = UnityAssembly.UnityEditor.GetType( "UnityEditor.SearchFilter" );
+				}
+				return _UnityEditor_SearchFilter;
+			}
+		}
+
+		static Type _UnityEditor_ProjectWindowCallback_DoCreateFolder;
+		public static Type UnityEditor_ProjectWindowCallback_DoCreateFolder {
+			get {
+				if( _UnityEditor_ProjectWindowCallback_DoCreateFolder == null ) {
+					_UnityEditor_ProjectWindowCallback_DoCreateFolder = UnityAssembly.UnityEditor.GetType( "UnityEditor.ProjectWindowCallback.DoCreateFolder" );
+				}
+				return _UnityEditor_ProjectWindowCallback_DoCreateFolder;
+			}
+		}
+
 		#region UIElements
 
 		static Type _VisualElement;
@@ -147,7 +180,7 @@ namespace Hananoki {
 
 		#endregion
 
-		
+
 	}
 
 

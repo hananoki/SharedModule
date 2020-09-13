@@ -1,7 +1,7 @@
 {
   "name": "com.hananoki.shared-module",
   "displayName": "SharedModule",
-  "version": "1.5.5",
+  "version": "1.5.6",
   "unity": "2018.3",
   "description": "Module required for package created by \"Hananoki\"",
   "keywords": [

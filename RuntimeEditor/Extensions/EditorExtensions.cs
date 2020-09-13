@@ -19,6 +19,14 @@ namespace Hananoki.Extensions {
 		public static int ToInt( this object obj ) {
 			return obj.ToCast<int>();
 		}
+		
+		public static void SetTitle( this EditorWindow wnd, string text ) {
+			wnd.SetTitle( new GUIContent( text ) );
+		}
+
+		public static void SetTitle( this EditorWindow wnd, string text, Texture2D image ) {
+			wnd.SetTitle( new GUIContent( text, image ) );
+		}
 
 		public static void SetTitle( this EditorWindow wnd, GUIContent cont ) {
 			var property = typeof( EditorWindow ).GetProperty( "titleContent" );

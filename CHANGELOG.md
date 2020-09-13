@@ -1,5 +1,23 @@
 # Shared Module
 
+## [1.5.6] - 2020-09-13
+
+### Added
+- Added ColorUtils.Alpha
+- Added Extensions.Alpha
+- Added EditorHelper.MenuCopyPos
+- Added EditorHelper.MenuPastePos
+- Added EditorHelper.GetInheritType
+- Added Dirty( UnityObject obj, string name, Action ff )
+- Added Extensions.RepaintArray
+- Added EditorExtensions.AddItemAndDisable
+- Added HTreeView.FindItem
+### Changed
+- Refactor EditorUtils.cs
+- ProjectBrowserUtils.cs
+- Changed the target character to EditorExtensions.stringModify
+- Enabled to allow right click with HEditorGUI.IconButton
+
 ## [1.5.5] - 2020-08-09
 
 ### Added

@@ -16,6 +16,15 @@ namespace Hananoki.Extensions {
 		}
 
 
+		public static void AddItemAndDisable( this GenericMenu menu, bool b, string s, GenericMenu.MenuFunction2 func, object userData ) {
+			if( b ) {
+				menu.AddItem( s, false, func, userData );
+			}
+			else {
+				menu.AddDisabledItem( s );
+			}
+		}
+		
 		public static void AddItem( this GenericMenu menu, string s, GenericMenu.MenuFunction2 func, object userData ) {
 			menu.AddItem( s, false, func, userData );
 		}

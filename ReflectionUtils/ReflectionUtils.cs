@@ -101,8 +101,13 @@ namespace Hananoki.Reflection {
 
 
 
-		public static T MethodInvoke<T>( this Type t, string propertyName, params object[] args ) {
-			return (T) t.GetMethod( propertyName, AllMembers ).Invoke( null, args );
+		public static T MethodInvoke<T>( this Type t, string methodName, params object[] args ) {
+			return (T) t.GetMethod( methodName, AllMembers ).Invoke( null, args );
+		}
+
+		public static T MethodInvoke<T>( this Type t, Type generic, string methodName, params object[] args ) {
+			var mk = t.GetMethod( methodName, AllMembers ).MakeGenericMethod( generic );
+			return (T) mk.Invoke( null, args );
 		}
 
 		#endregion
@@ -185,6 +190,22 @@ namespace Hananoki.Reflection {
 			return s_properties[ n ];
 		}
 
+		public static PropertyInfo[] Properties( string name, string typeName, string dllName = "UnityEditor.dll" ) {
+			var t = Assembly.Load( dllName ).GetType( typeName );
+			return Properties( name, t );
+		}
+
+		public static PropertyInfo[] Properties( string name, Type type ) {
+			var _buf = new List<PropertyInfo>();
+			foreach( var mi in type.GetProperties( AllMembers ) ) {
+				if( mi.Name == name ) {
+					_buf.Add( mi );
+				}
+			}
+			return _buf.ToArray();
+		}
+
+
 		public static PropertyInfo Property( string name, Type t ) {
 			return t.GetProperty( name, AllMembers );
 		}
@@ -195,6 +216,10 @@ namespace Hananoki.Reflection {
 			info.SetValue( null, prm );
 		}
 
+		public static T GetProperty<T>( this Type t, string propertyName ) {
+			var p = t.GetProperty( propertyName, AllMembers );
+			return (T) p.GetValue( null, null );
+		}
 
 		public static T GetProperty<T>( this object obj, string propertyName ) {
 			if( obj == null ) throw new ArgumentNullException( "The argument obj is null." );
@@ -214,7 +239,7 @@ namespace Hananoki.Reflection {
 
 
 
-		
+
 
 
 

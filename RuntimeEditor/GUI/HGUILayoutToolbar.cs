@@ -135,6 +135,7 @@ namespace Hananoki {
 
 		public static bool DropDown( GUIContent content, Action action, params GUILayoutOption[] options ) {
 			var r = GUILayoutUtility.GetRect( content, toolbarDropDown, options );
+			HEditorGUI.lastRect = r;
 			var result = EditorHelper.HasMouseClick( r );
 			if( result ) {
 				//Event.current.Use(); 

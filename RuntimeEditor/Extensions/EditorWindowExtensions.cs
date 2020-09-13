@@ -15,6 +15,11 @@ using UnityEngine;
 namespace Hananoki.Extensions {
 	public static partial class EditorWindowExtensions {
 
+		public static void RepaintArray( this EditorWindow[] ew ) {
+			if( ew == null ) return;
+			foreach( var p in ew ) p?.Repaint();
+		}
+
 		public static object GetRootVisualElement( this EditorWindow ew ) {
 			if( UnitySymbol.Has( "UNITY_2019_1_OR_NEWER" ) ) {
 				return ew.GetProperty<object>( "rootVisualElement" );
@@ -47,9 +52,6 @@ namespace Hananoki.Extensions {
 		}
 
 		public static void AddIMGUIContainer( this EditorWindow ew, Action gui, bool parent = false ) {
-
-
-
 			var instance = Activator.CreateInstance( UnityTypes.IMGUIContainer, new object[] { gui } );
 
 			AddIMGUIContainer( ew, instance, parent );

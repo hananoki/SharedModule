@@ -34,6 +34,14 @@ namespace Hananoki.Extensions {
 			i &= ~chk;
 		}
 
+		public static void Enable( ref this uint i, uint chk ) {
+			i |= chk;
+		}
+
+		public static void Disable( ref this uint i, uint chk ) {
+			i &= ~chk;
+		}
+
 		public static void Toggle( ref this int i, int chk, bool b ) {
 			if( b ) i |= chk;
 			else i &= ~chk;
@@ -78,5 +86,9 @@ namespace Hananoki.Extensions {
 			return string.IsNullOrEmpty( s );
 		}
 
+
+		public static void Alpha( ref this Color col, float a ) {
+			col.a = a;
+		}
 	}
 }

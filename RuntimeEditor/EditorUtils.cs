@@ -1,5 +1,5 @@
 ﻿
-using Hananoki;
+using Hananoki.Extensions;
 using System;
 using System.IO;
 using System.Reflection;
@@ -8,101 +8,12 @@ using UnityEngine;
 using UnityObject = UnityEngine.Object;
 
 namespace Hananoki {
-	public static class EditorWindowUtils {
-		public static Type AnimationWindowType => Assembly.Load( "UnityEditor" ).GetType( "UnityEditor.AnimationWindow" );
 
-		public static EditorWindow AnimationWindow() => EditorWindow.GetWindow( AnimationWindowType, false, "Animation", false );
-
-		public static EditorWindow InspectorWindow {
-			get {
-				Assembly assembly = typeof( EditorWindow ).Assembly;
-				foreach( EditorWindow a in Resources.FindObjectsOfTypeAll( assembly.GetType( "UnityEditor.InspectorWindow" ) ) ) {
-					return a;
-				}
-				return null;
-			}
-		}
-
-		public static Type AudioMixerWindowType => Assembly.Load( "UnityEditor" ).GetType( "UnityEditor.AudioMixerWindow" );
-		public static EditorWindow GetAudioMixerWindow() {
-			var w = EditorWindow.GetWindow( AudioMixerWindowType, false, "Audio Mixer", false );
-			w.titleContent = new GUIContent( "Audio Mixer", Icon.Get( "Audio Mixer" ) );
-			return w;
-		}
-	}
 
 
 
 	public static class EditorUtils {
-
-		//		private static Type typeFoldoutTitlebar;
-		//		private static MethodInfo methodInfoFoldoutTitlebar;
-		//		private static MethodInfo EditorGUI_FoldoutTitlebar;
-
-		//		public static bool FoldoutTitlebar( Rect rect, bool foldout, GUIContent label, bool skipIconSpacing ) {
-		//			if( EditorGUI_FoldoutTitlebar == null ) {
-		//#if UNITY_5_5 || UNITY_5_6 || UNITY_2017_1_OR_NEWER
-		//				var t = System.Reflection.Assembly.Load( "UnityEditor.dll" ).GetType( "UnityEditor.EditorGUI" );
-		//#else
-		//				typeFoldoutTitlebar = Types.GetType( "UnityEditor.EditorGUILayout", "UnityEditor.dll" );
-		//#endif
-		//				EditorGUI_FoldoutTitlebar = t.GetMethod( "FoldoutTitlebar", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static );
-		//			}
-
-		//			var obj = EditorGUI_FoldoutTitlebar.Invoke( null, new object[] { rect, label, foldout, skipIconSpacing } );
-		//			return Convert.ToBoolean( obj );
-		//		}
-
-		//		public static bool FoldoutTitlebar( Rect rect, bool foldout, string label, bool skipIconSpacing ) {
-		//			return FoldoutTitlebar( rect, foldout, EditorHelper.TempContent( label ), skipIconSpacing );
-		//		}
-
-
-
-		//		public static bool FoldoutTitlebar( bool foldout, GUIContent label, bool skipIconSpacing ) {
-		//			if( methodInfoFoldoutTitlebar == null ) {
-		//#if UNITY_5_5 || UNITY_5_6 || UNITY_2017_1_OR_NEWER
-		//				typeFoldoutTitlebar = System.Reflection.Assembly.Load( "UnityEditor.dll" ).GetType( "UnityEditor.EditorGUILayout" );
-		//#else
-		//				typeFoldoutTitlebar = Types.GetType( "UnityEditor.EditorGUILayout", "UnityEditor.dll" );
-		//#endif
-		//				methodInfoFoldoutTitlebar = typeFoldoutTitlebar.GetMethod( "FoldoutTitlebar", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static );
-		//			}
-
-		//			var obj = methodInfoFoldoutTitlebar.Invoke( null, new object[] { foldout, label, skipIconSpacing } );
-		//			return Convert.ToBoolean( obj );
-		//		}
-		//		public static bool FoldoutTitlebar( bool foldout, string label, bool skipIconSpacing ) {
-		//			return FoldoutTitlebar( foldout, EditorHelper.TempContent( label ), skipIconSpacing );
-		//		}
-
-
-
-		//public static bool AnimationControllerIsRegistered( UnityEditor.Animations.AnimatorController controller, AnimationClip clip ) {
-		//	var st = controller.layers[ 0 ].stateMachine.states;
-
-		//	if( 0 <= System.Array.FindIndex( controller.animationClips, ( c ) => { return c.name == clip.name; } ) ) {
-		//		int i = System.Array.FindIndex( st, c => c.state.motion == clip );
-		//		if( 0 <= i ) {
-		//			if( st[ i ].state.name != clip.name ) {
-		//				//console.log( st[ i ].state.name );
-		//				st[ i ].state.name = clip.name;
-		//			}
-		//		}
-		//		return true;
-		//	}
-		//	return false;
-		//}
-
-
-		//public static void SetBoldFont( SerializedProperty prop ) {
-		//	if( prop.prefabOverride ) {
-		//		GUI.skin.font = EditorStyles.boldFont;
-		//	}
-		//	else {
-		//		GUI.skin.font = EditorStyles.standardFont;
-		//	}
-		//}
+		
 
 		public static void ForceReloadInspectors() {
 			var _ForceReloadInspectors = typeof( UnityEditor.EditorUtility ).GetMethod( "ForceReloadInspectors", BindingFlags.NonPublic | BindingFlags.Static );
@@ -324,7 +235,8 @@ namespace Hananoki {
 
 	public class HEditorApplication {
 		public static void RepaintInspectorWindow() {
-			EditorWindowUtils.InspectorWindow?.Repaint();
+			HEditorWindow.FindArray( UnityTypes.InspectorWindow ).RepaintArray();
+			//EditorWindowUtils.InspectorWindow?.Repaint();
 		}
 	}
 }

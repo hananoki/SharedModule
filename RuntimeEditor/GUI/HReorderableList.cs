@@ -91,41 +91,54 @@ namespace Hananoki {
 					var prop = serializedObject.FindProperty( propertyName + ".Array.data[" + index + "]" );
 
 					var hander = new UnityEditorPropertyHandler( UnityScriptAttributeUtility.GetHandler( prop ) );
-					
-					if( hander.hasPropertyDrawer ) {
-						//m_lst.elementHeightCallback = (index2) => {
-						//	var prop2 = serializedObject.FindProperty( propertyName + ".Array.data[" + index2 + "]" );
-						//	var hander2 = UnityScriptAttributeUtility.GetHandler( prop2 );
-						//	return hander2.GetProperty<PropertyDrawer>( "propertyDrawer" ).GetPropertyHeight( prop2, EditorHelper.TempContent( prop2.displayName ) );
-						//};
-					//	m_lst.elementHeight = hander.GetProperty<PropertyDrawer>( "propertyDrawer" ).GetPropertyHeight( prop, EditorHelper.TempContent( prop.displayName ) );
-						EditorGUI.PropertyField( rc1, prop );
-					}
-					else if( prop.propertyType == SerializedPropertyType.Generic ) {
-						prop.Next( true );
-						int ii = 0;
-						int depth = prop.depth;
 
-						do {
+					try {
+						if( hander.hasPropertyDrawer ) {
+							//m_lst.elementHeightCallback = (index2) => {
+							//	var prop2 = serializedObject.FindProperty( propertyName + ".Array.data[" + index2 + "]" );
+							//	var hander2 = UnityScriptAttributeUtility.GetHandler( prop2 );
+							//	return hander2.GetProperty<PropertyDrawer>( "propertyDrawer" ).GetPropertyHeight( prop2, EditorHelper.TempContent( prop2.displayName ) );
+							//};
+							//	m_lst.elementHeight = hander.GetProperty<PropertyDrawer>( "propertyDrawer" ).GetPropertyHeight( prop, EditorHelper.TempContent( prop.displayName ) );
 							EditorGUI.PropertyField( rc1, prop );
-							rc1.y += EditorGUIUtility.singleLineHeight;
-							ii++;
-							if( prop.Next( false ) == false ) break;
-						} while( depth == prop.depth );
+						}
+						else if( prop != null ) {
+							if( prop.propertyType == SerializedPropertyType.Generic ) {
+								prop.Next( true );
+								int ii = 0;
+								int depth = prop.depth;
 
-						m_lst.elementHeight = ( EditorGUIUtility.singleLineHeight * ii ) + 4;
+								do {
+
+									EditorGUI.PropertyField( rc1, prop );
+
+									rc1.y += EditorGUIUtility.singleLineHeight;
+									//if( prop.propertyType == SerializedPropertyType.Vector3 ) {
+									//	rc1.y += EditorGUIUtility.singleLineHeight;
+									//	ii++;
+									//}
+									ii++;
+									if( prop.Next( false ) == false ) break;
+								} while( depth == prop.depth );
+
+								m_lst.elementHeight = ( EditorGUIUtility.singleLineHeight * ii ) + 4;
+							}
+							else {
+								var cont = EditorHelper.TempContent( $"0x{index:X02}:" );
+								var size = EditorStyles.label.CalcSize( cont );
+								rc1.width = 40;
+								EditorGUI.LabelField( rc1, cont );
+								var rc2 = rect;
+								rc2.x = rc1.xMax;
+								rc2.width = rect.width - 40;
+								rc2.y += 1;
+								rc2.height = EditorGUIUtility.singleLineHeight;
+								EditorGUI.PropertyField( rc2, prop, GUIContent.none );
+							}
+						}
 					}
-					else {
-						var cont = EditorHelper.TempContent( $"0x{index:X02}:" );
-						var size = EditorStyles.label.CalcSize( cont );
-						rc1.width = 40;
-						EditorGUI.LabelField( rc1, cont );
-						var rc2 = rect;
-						rc2.x = rc1.xMax;
-						rc2.width = rect.width - 40;
-						rc2.y += 1;
-						rc2.height = EditorGUIUtility.singleLineHeight;
-						EditorGUI.PropertyField( rc2, prop, GUIContent.none );
+					catch( NullReferenceException e ) {
+						Debug.LogException( e );
 					}
 					//if( !prop.hasChildren ) {
 					//	return;

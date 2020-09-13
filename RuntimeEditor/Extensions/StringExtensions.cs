@@ -34,6 +34,8 @@ namespace Hananoki.Extensions {
 			s1 = s1.Replace( "…", "_" );
 			s1 = s1.Replace( "#", "Sharp" );
 			s1 = s1.Replace( "！", "_" );
+			s1 = s1.Replace( "「", "_" );
+			s1 = s1.Replace( "」", "_" );
 
 
 			return s1;

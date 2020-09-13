@@ -28,6 +28,53 @@ namespace Hananoki {
 
 	public static class EditorHelper {
 
+		public static void MenuCopyPos( SerializedProperty prop ) {
+			Vector3 v;
+			if( prop.propertyType == SerializedPropertyType.Quaternion ) {
+				v = prop.quaternionValue.eulerAngles;
+			}
+			else {
+				v = prop.vector3Value;
+			}
+			GUIUtility.systemCopyBuffer = string.Format( "{0}, {1}, {2}", v.x, v.y, v.z );
+		}
+
+		public static void MenuPastePos( SerializedProperty prop ) {
+
+			var mm = Regex.Matches( GUIUtility.systemCopyBuffer, @"(-?[0-9]+\.*[0-9]*)[\s,]+(-?[0-9]+\.*[0-9]*)[\s,]+(-?[0-9]+\.*[0-9]*)" );
+			if( 0 < mm.Count ) {
+				if( mm[ 0 ].Groups.Count == 4 ) {
+					var a = float.Parse( mm[ 0 ].Groups[ 1 ].Value );
+					var b = float.Parse( mm[ 0 ].Groups[ 2 ].Value );
+					var c = float.Parse( mm[ 0 ].Groups[ 3 ].Value );
+
+					prop.serializedObject.Update();
+					if( prop.propertyType == SerializedPropertyType.Quaternion ) {
+						prop.quaternionValue = Quaternion.Euler( a, b, c );
+						//m_positionProperty.vector3Value = new Vector3( a, b, c );
+					}
+					else {
+						prop.vector3Value = new Vector3( a, b, c );
+					}
+					prop.serializedObject.ApplyModifiedProperties();
+				}
+			}
+			else {
+				Debug.LogWarning( "transform is parse failed" );
+			}
+		}
+
+
+		public static Type[] GetInheritType( Type type ) {
+			var types = new List<Type>();
+			EditorHelper.TravaseAllType( cb );
+			void cb( Type t ) {
+				if( !t.IsSubclassOf( type ) ) return;
+				types.Add( t );
+			}
+			return types.ToArray();
+		}
+
 		public static void TravaseAllType( Action<Type> action ) {
 			Debug.Assert( action != null, "EditorHelper.TravaseAllType is NULL" );
 			if( action == null ) return;
@@ -326,10 +373,21 @@ namespace Hananoki {
 		}
 
 
-		public static void Dirty( UnityObject obj, Action ff ) {
-			Undo.RecordObject( obj, obj.name );
+		public static void Dirty( UnityObject obj, string name, Action ff ) {
+			Undo.RecordObject( obj, name );
 			ff?.Invoke();
 			EditorUtility.SetDirty( obj );
+		}
+
+		public static void Dirty( UnityObject obj, Action ff ) => Dirty( obj, $"{obj.name} Changed", ff );
+
+
+		public static void Dirty<T>( UnityObject[] objs, Action<T> ff ) where T : UnityObject {
+			Undo.RecordObjects( objs, $"{objs.ToArray()} Changed" );
+			foreach( var p in objs ) {
+				ff?.Invoke( (T) p );
+				EditorUtility.SetDirty( p );
+			}
 		}
 
 		public static byte[] ReadBinaryFile( string path ) {
@@ -473,7 +531,7 @@ namespace Hananoki {
 		public static void ShowInspector( UnityObject uobj ) {
 			if( Selection.activeObject == uobj ) return;
 			Selection.activeObject = uobj;
-			UnityEditorProjectBrowser.lockOnce();
+			ProjectBrowserUtils.lockOnce();
 		}
 
 
