@@ -19,6 +19,7 @@ namespace Hananoki {
 
 
 		public static bool IsTwoColumns( object instance ) {
+			if( instance == null ) return false;
 			return instance.MethodInvoke<bool>( "IsTwoColumns", new object[] { } );
 		}
 

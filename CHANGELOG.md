@@ -1,5 +1,10 @@
 # Shared Module
 
+## [1.5.7] - 2020-09-14
+
+### Fixed
+- Fixed an error when the argument of UnityEditorProjectBrowser.IsTwoColumns was null
+
 ## [1.5.6] - 2020-09-13
 
 ### Added
