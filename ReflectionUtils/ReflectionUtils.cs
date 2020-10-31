@@ -105,6 +105,10 @@ namespace Hananoki.Reflection {
 			return (T) t.GetMethod( methodName, AllMembers ).Invoke( null, args );
 		}
 
+		public static void MethodInvoke( this Type t, string methodName, Type[] types, params object[] args ) {
+			t.GetMethod( methodName, AllMembers ).Invoke( null, args );
+		}
+
 		public static T MethodInvoke<T>( this Type t, Type generic, string methodName, params object[] args ) {
 			var mk = t.GetMethod( methodName, AllMembers ).MakeGenericMethod( generic );
 			return (T) mk.Invoke( null, args );

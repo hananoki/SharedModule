@@ -1,9 +1,5 @@
-﻿//#define ENABLE_LEGACY_PREFERENCE
-#if UNITY_2018_3_OR_NEWER
-//#undef ENABLE_LEGACY_PREFERENCE
-#endif
-
-using Hananoki.Reflection;
+﻿
+using Hananoki.Extensions;
 using System;
 using System.Linq;
 using UnityEditor;
@@ -38,33 +34,6 @@ namespace Hananoki {
 		}
 
 
-		//public static EditorWindow ShowConsoleWindow( bool utility = false ) {
-		//	return GetWindow( R.Type( "UnityEditor.ConsoleWindow" ), utility );
-		//}
-
-		//public static EditorWindow ShowAnimationWindow( bool utility = false ) {
-		//	return ShowWindow( UnityTypes.AnimationWindow, utility );
-		//}
-
-		//public static EditorWindow ShowAnimatorControllerTool( bool utility = false ) {
-		//	return ShowWindow( UnityTypes.AnimatorControllerTool, utility );
-		//}
-
-
-		//public static EditorWindow ShowProfilerWindow( bool utility = false ) {
-		//	return GetWindow( R.Type( "UnityEditor.ProfilerWindow" ), utility );
-		//}
-
-
-		//public static EditorWindow ShowTimelineWindow( bool utility = false ) {
-		//	return ShowWindow( UnityTypes.TimelineWindow, utility );
-		//}
-
-
-		//public static EditorWindow ShowGridPaintPaletteWindow( bool utility = false ) {
-		//	return ShowWindow( UnityTypes.GridPaintPaletteWindow, utility );
-		//}
-
 		public static EditorWindow ShowWindow( Type editorWindowType , bool utility = false ) {
 			return GetWindow( editorWindowType, utility );
 		}
@@ -78,6 +47,11 @@ namespace Hananoki {
 				return (EditorWindow) p;
 			}
 			return null;
+		}
+
+
+		public static void RepaintWindow( Type editorWindowType ) {
+			FindArray( editorWindowType ).RepaintArray();
 		}
 	}
 

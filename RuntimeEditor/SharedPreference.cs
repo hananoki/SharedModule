@@ -88,7 +88,7 @@ namespace Hananoki.SharedModule {
 			}
 			foreach( var m in s_localizeEvent ) m.Invoke( null, null );
 
-			EditorUtils.RepaintEditorWindow();
+			HEditorWindow.RepaintWindow( typeof( EditorWindow ) );
 		}
 	}
 

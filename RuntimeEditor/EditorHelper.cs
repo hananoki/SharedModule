@@ -28,6 +28,61 @@ namespace Hananoki {
 
 	public static class EditorHelper {
 
+		/// <summary>
+		/// Verify whether it can be converted to the specified component.
+		/// </summary>
+		public static bool CanConvertTo<T>( UnityEngine.Object context )
+		 where T : MonoBehaviour {
+			return context && context.GetType() != typeof( T );
+		}
+
+
+		/// <summary>
+		/// Convert to the specified component.
+		/// </summary>
+		public static void ConvertTo<T>( UnityEngine.Object context ) where T : MonoBehaviour {
+			var target = context as MonoBehaviour;
+			var so = new SerializedObject( target );
+			so.Update();
+
+			bool oldEnable = target.enabled;
+			target.enabled = false;
+
+			// Find MonoScript of the specified component.
+			foreach( var script in Resources.FindObjectsOfTypeAll<MonoScript>() ) {
+				if( script.GetClass() != typeof( T ) )
+					continue;
+
+				// Set 'm_Script' to convert.
+				so.FindProperty( "m_Script" ).objectReferenceValue = script;
+				so.ApplyModifiedProperties();
+				break;
+			}
+
+		 ( so.targetObject as MonoBehaviour ).enabled = oldEnable;
+		}
+
+
+		public static void SetGameObjectName<T>( T p, string prefix = "" ) where T : Component {
+			if( p.GetType() == UnityTypes.UnityEngine_UI_Image ) {
+				var sprite = p.GetProperty<Sprite>( "sprite" );
+				p.gameObject.name = $"{prefix}{sprite.name}";
+			}
+			else if( p.GetType() == UnityTypes.UnityEngine_UI_RawImage ) {
+				var texture = p.GetProperty<Texture>( "texture" );
+				p.gameObject.name = $"{prefix}{texture.name}";
+			}
+			else if( p.GetType().IsSubclassOf( UnityTypes.TMPro_TMP_Text )  ) {
+				var text = p.GetProperty<string>( "text" ); ;
+				Regex re = new Regex( "<.*?>", RegexOptions.Singleline );
+				text = re.Replace( text, "" );
+				text = text.Replace( "\n", " " );
+				text = $"{prefix} {text}";
+				text = text.TrimStart();
+				p.gameObject.name = text;
+			}
+		}
+
 		public static void MenuCopyPos( SerializedProperty prop ) {
 			Vector3 v;
 			if( prop.propertyType == SerializedPropertyType.Quaternion ) {

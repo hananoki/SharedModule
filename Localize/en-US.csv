@@ -20,6 +20,8 @@ Paste
 Duplicate
 Delete
 Rename
+Install
+Uninstall
 Copy to clipboard
 Please select a directory
 Is it OK?
@@ -65,3 +67,8 @@ Select Asset
 Edit Script
 Version Text Color
 Version Back Color
+Animation
+Animator
+Timeline
+Console
+Profiler

@@ -15,10 +15,14 @@ namespace Hananoki {
 		public static Assembly Unity2DTilemapEditor => Assembly.Load( "Unity.2D.Tilemap.Editor" );
 		public static Assembly UnityTimelineEditor => Assembly.Load( "Unity.Timeline.Editor" );
 		public static Assembly UnityEditorTimeline => Assembly.Load( "UnityEditor.Timeline.dll" );
+		public static Assembly UnityTextMeshPro => Assembly.Load( "Unity.TextMeshPro" );
 	}
 
 
 	public static partial class UnityTypes {
+
+		static Type _UnityEditor_CreateAssetUtility;
+
 
 		#region EditorWindow
 
@@ -112,19 +116,57 @@ namespace Hananoki {
 
 
 		#endregion
-
-
-
-		static Type _UnityEditor_CreateAssetUtility;
-		public static Type UnityEditor_CreateAssetUtility {
+		
+			static Type _UnityEngine_SpriteRenderer;
+		public static Type UnityEngine_SpriteRenderer {
 			get {
-				if( _UnityEditor_CreateAssetUtility == null ) {
-					_UnityEditor_CreateAssetUtility = UnityAssembly.UnityEditor.GetType( "UnityEditor.CreateAssetUtility" );
+				if( _UnityEngine_SpriteRenderer == null ) {
+					_UnityEngine_SpriteRenderer = Type.GetType( "UnityEngine.SpriteRenderer, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" );
 				}
-				return _UnityEditor_CreateAssetUtility;
+				return _UnityEngine_SpriteRenderer;
+			}
+		}
+		static Type _UnityEngine_UI_Image;
+		public static Type UnityEngine_UI_Image {
+			get {
+				if( _UnityEngine_UI_Image == null ) {
+					_UnityEngine_UI_Image = Type.GetType( "UnityEngine.UI.Image, UnityEngine.UI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" );
+				}
+				return _UnityEngine_UI_Image;
+			}
+		}
+		static Type _UnityEngine_UI_RawImage;
+		public static Type UnityEngine_UI_RawImage {
+			get {
+				if( _UnityEngine_UI_RawImage == null ) {
+					_UnityEngine_UI_RawImage = Type.GetType( "UnityEngine.UI.RawImage, UnityEngine.UI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" );
+				}
+				return _UnityEngine_UI_RawImage;
 			}
 		}
 
+		
+
+
+
+		static Type _TMPro_TMP_Text;
+		public static Type TMPro_TMP_Text {
+			get {
+				if( _TMPro_TMP_Text == null ) {
+					_TMPro_TMP_Text = Type.GetType( "TMPro.TMP_Text, Unity.TextMeshPro, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" );
+				}
+				return _TMPro_TMP_Text;
+			}
+		}
+		static Type _TMPro_TextMeshProUGUI;
+		public static Type TMPro_TextMeshProUGUI {
+			get {
+				if( _TMPro_TextMeshProUGUI == null ) {
+					_TMPro_TextMeshProUGUI = Type.GetType( "TMPro.TextMeshProUGUI, Unity.TextMeshPro, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" );
+				}
+				return _TMPro_TextMeshProUGUI;
+			}
+		}
 
 		static Type _UnityEditor_SearchFilter;
 		public static Type UnityEditor_SearchFilter {

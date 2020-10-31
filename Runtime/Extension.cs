@@ -90,5 +90,20 @@ namespace Hananoki.Extensions {
 		public static void Alpha( ref this Color col, float a ) {
 			col.a = a;
 		}
+
+
+		public static Component GetComponentFromType( this GameObject go, Type type ) {
+			if( go == null ) return null;
+			if( type == null ) return null;
+			return go.GetComponent( type );
+		}
+		public static Component InvokeComponentFromType( this GameObject go, Type type, Action<Component> action ) {
+			if( go == null ) return null;
+			if( type == null ) return null;
+			var comp = go.GetComponent( type );
+			if( comp == null ) return null;
+			action?.Invoke( comp );
+			return comp;
+		}
 	}
 }

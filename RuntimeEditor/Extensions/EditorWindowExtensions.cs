@@ -1,16 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Hananoki.Extensions;
-using Hananoki.Reflection;
-using UnityEditor;
-using UnityEngine;
-using System.Collections.Generic;
-using UnityEditor.Animations;
+﻿using Hananoki.Reflection;
 using System;
-using System.Reflection;
-using System.Collections.Generic;
-using UnityEngine;
+using UnityEditor;
 
 namespace Hananoki.Extensions {
 	public static partial class EditorWindowExtensions {

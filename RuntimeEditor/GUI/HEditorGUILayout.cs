@@ -174,9 +174,13 @@ namespace Hananoki {
 		#region ObjectFieldAndAction<T>
 
 		public static T ObjectField<T>( string label, UnityObject obj, bool allowSceneObjects = false, params GUILayoutOption[] options ) where T : UnityObject {
-			var labelCont = EditorHelper.TempContent( label );
-			var rc = GUILayoutUtility.GetRect( labelCont, EditorStyles.objectField, options );
-			rc = EditorGUI.PrefixLabel( rc, GUIUtility.GetControlID( FocusType.Passive ), new GUIContent( label ) );
+			return ObjectField<T>( EditorHelper.TempContent( label ), obj, allowSceneObjects ,  options );
+		}
+
+		public static T ObjectField<T>( GUIContent content, UnityObject obj, bool allowSceneObjects = false, params GUILayoutOption[] options ) where T : UnityObject {
+			//var labelCont = EditorHelper.TempContent( label );
+			var rc = GUILayoutUtility.GetRect( content, EditorStyles.objectField, options );
+			rc = EditorGUI.PrefixLabel( rc, GUIUtility.GetControlID( FocusType.Passive ), content );
 
 			using( new GUIBackgroundColorScope() ) {
 				if( obj == null ) {

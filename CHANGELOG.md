@@ -1,5 +1,15 @@
 # Shared Module
 
+## [1.5.8] - 2020-11-01
+
+### Added
+- Added Extensions.GetComponentFromType
+- Added Extensions.InvokeComponentFromType
+- Added UnityTypes ... SpriteRenderer, Image, RawImage, TMP_Text, TextMeshProUGUI
+
+### Changed
+- Refactoring, etc.
+
 ## [1.5.7] - 2020-09-14
 
 ### Fixed

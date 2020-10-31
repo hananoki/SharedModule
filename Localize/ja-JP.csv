@@ -20,6 +20,8 @@ Paste	ペースト
 Duplicate	複製
 Delete	削除
 Rename	名前の変更
+Install	インストール
+Uninstall	アンインストール
 Copy to clipboard	クリップボードにコピー
 Please select a directory	ディレクトリを選択してください
 Is it OK?	よろしいですか?
@@ -65,3 +67,8 @@ Select Asset	アセットを選択
 Edit Script	スクリプトを編集
 Version Text Color	Version 文字色
 Version Back Color	Version 背景色
+Animation	アニメーション
+Animator	アニメーター
+Timeline	タイムライン
+Console	コンソール
+Profiler	プロファイラー

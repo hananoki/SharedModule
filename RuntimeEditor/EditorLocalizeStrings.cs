@@ -31,6 +31,8 @@ namespace Hananoki.SharedModule {
 		public static string _Duplicate => L.Tr( "Duplicate" );
 		public static string _Delete => L.Tr( "Delete" );
 		public static string _Rename => L.Tr( "Rename" );
+		public static string _Install => L.Tr( "Install" );
+		public static string _Uninstall => L.Tr( "Uninstall" );
 		public static string _Copytoclipboard => L.Tr( "Copy to clipboard" );
 		public static string _Pleaseselectadirectory => L.Tr( "Please select a directory" );
 		public static string _IsitOK_ => L.Tr( "Is it OK?" );
@@ -76,5 +78,10 @@ namespace Hananoki.SharedModule {
 		public static string _EditScript => L.Tr( "Edit Script" );
 		public static string _VersionTextColor => L.Tr( "Version Text Color" );
 		public static string _VersionBackColor => L.Tr( "Version Back Color" );
+		public static string _Animation => L.Tr( "Animation" );
+		public static string _Animator => L.Tr( "Animator" );
+		public static string _Timeline => L.Tr( "Timeline" );
+		public static string _Console => L.Tr( "Console" );
+		public static string _Profiler => L.Tr( "Profiler" );
 	}
 }

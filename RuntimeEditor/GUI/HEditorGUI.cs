@@ -138,6 +138,7 @@ namespace Hananoki {
 		public static string FolderFiled( Rect position, string path ) {
 			return FolderFiled( position, null, path );
 		}
+
 		public static string FolderFiled( Rect position, GUIContent content, string path ) {
 			var name = path.IsEmpty() ? "None (Folder)" : path;
 			var rcL = position;
@@ -151,7 +152,11 @@ namespace Hananoki {
 				EditorGUI.LabelField( rcL, EditorHelper.TempContent( name ), HEditorStyles.folderField );
 			}
 			if( IconButton( position.AlignR( 16 ), EditorIcon.folder, 1 ) ) {
-				path = EditorUtility.OpenFolderPanel( "Select Folder", "", "" );
+				var path2 = EditorUtility.OpenFolderPanel( "Select Folder", "", "" );
+				if( !path2.IsEmpty() && path != path2 ) {
+					path = path2;
+					GUI.changed = true;
+				}
 			}
 			HEditorGUI.lastRect = rcL;
 
@@ -286,13 +291,15 @@ namespace Hananoki {
 			return ObjectFieldAndAction<T>( position, null, obj, addButton, allowSceneObjects );
 		}
 
-
 		public static T ObjectField<T>( Rect position, string label, UnityObject obj, bool allowSceneObjects = false ) where T : UnityObject {
+			return ObjectField<T>( position, EditorHelper.TempContent( label ), obj, allowSceneObjects );
+		}
+		public static T ObjectField<T>( Rect position, GUIContent content, UnityObject obj, bool allowSceneObjects = false ) where T : UnityObject {
 			try {
-				if( label.IsEmpty() ) {
+				if( content.text.IsEmpty() ) {
 					return (T) EditorGUI.ObjectField( position, obj, typeof( T ), allowSceneObjects );
 				}
-				return (T) EditorGUI.ObjectField( position, EditorHelper.TempContent( label ), obj, typeof( T ), allowSceneObjects );
+				return (T) EditorGUI.ObjectField( position, content, obj, typeof( T ), allowSceneObjects );
 			}
 			catch( ExitGUIException ) {
 			}
@@ -300,7 +307,7 @@ namespace Hananoki {
 		}
 
 		public static T ObjectField<T>( Rect position, UnityObject obj, bool allowSceneObjects = false ) where T : UnityObject {
-			return ObjectField<T>( position, null, obj, allowSceneObjects );
+			return ObjectField<T>( position, string.Empty, obj, allowSceneObjects );
 		}
 
 		#endregion

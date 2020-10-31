@@ -64,9 +64,15 @@ namespace Hananoki.Extensions {
 			return (Texture2D) AssetDatabase.GetCachedIcon( s );
 		}
 
+		[System.Obsolete( "Use GetAssetPathAtGUID" )]
 		public static string GetAssetPath( this string s ) {
 			return AssetDatabase.GUIDToAssetPath( s );
 		}
+
+		public static string GetAssetPathAtGUID( this string s ) {
+			return AssetDatabase.GUIDToAssetPath( s );
+		}
+
 
 		[System.Obsolete( "Use LoadAssetAtGUID" )]
 		public static Object LoadAsset( this string s ) {

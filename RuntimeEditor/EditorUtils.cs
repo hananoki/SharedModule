@@ -53,23 +53,6 @@ namespace Hananoki {
 			}
 		}
 
-		//public static bool CheckDefineFolder() {
-		//	var dia = AssetDatabase.GUIDToAssetPath( LocalSettings.i.m_folderDefine );
-		//	if( string.IsNullOrEmpty( dia ) ) {
-		//		if( EditorUtility.DisplayDialog( "確認", "LocalSettings.m_folderDefine\nフォルダーが設定されていません", "OK" ) ) {
-		//			Selection.activeObject = LocalSettings.i;
-		//			return false;
-		//		}
-		//	}
-		//	return true;
-		//}
-
-
-		public static void RepaintEditorWindow() {
-			foreach( EditorWindow a in Resources.FindObjectsOfTypeAll( typeof( EditorWindow ) ) ) {
-				a.Repaint();
-			}
-		}
 
 
 		/// <summary>
@@ -99,60 +82,7 @@ namespace Hananoki {
 		}
 
 
-		//public static void Refresh() {
-		//	AssetDatabase.SaveAssets();
-		//	AssetDatabase.Refresh();
-		//}
 
-
-		#region EditorWindow
-
-
-
-		public static EditorWindow ProjectBrowser() {
-			var t = typeof( UnityEditor.EditorWindow ).Assembly.GetType( "UnityEditor.ProjectBrowser" );
-
-			return EditorWindow.GetWindow( t, false, "Project", false );
-		}
-
-		public static EditorWindow SceneHierarchyWindow() {
-			var t = typeof( UnityEditor.EditorWindow ).Assembly.GetType( "UnityEditor.SceneHierarchyWindow" );
-
-			return EditorWindow.GetWindow( t, false, "Hierarchy", false );
-		}
-
-
-
-
-
-
-		public static Type AnimatorWindowType {
-			get {
-				var asm = Assembly.Load( "UnityEditor.Graphs" );
-				Module editorGraphModule = asm.GetModule( "UnityEditor.Graphs.dll" );
-				return editorGraphModule.GetType( "UnityEditor.Graphs.AnimatorControllerTool" );
-			}
-		}
-
-		public static EditorWindow AnimatorWindow() {
-			return EditorWindow.GetWindow( AnimatorWindowType, false, "Animator", false );
-		}
-
-
-		public static EditorWindow ConsoleWindow() {
-			var asm = Assembly.Load( "UnityEditor" );
-			var typeConslWindow = asm.GetType( "UnityEditor.ConsoleWindow" );
-			return EditorWindow.GetWindow( typeConslWindow, true, "Console", false );
-		}
-
-		public static EditorWindow AssetStoreWindow( bool utility = false ) {
-			//アセットストアウィンドウ
-			var asm = Assembly.Load( "UnityEditor" );
-			var typeAssetWindow = asm.GetType( "UnityEditor.AssetStoreWindow" );
-			return EditorWindow.GetWindow( typeAssetWindow, utility, "Asset Store", false );
-		}
-
-		#endregion
 
 
 		#region ScreenCapture
@@ -198,46 +128,7 @@ namespace Hananoki {
 		#endregion
 
 
-		/// <summary>
-		/// Verify whether it can be converted to the specified component.
-		/// </summary>
-		public static bool CanConvertTo<T>( UnityEngine.Object context )
-		 where T : MonoBehaviour {
-			return context && context.GetType() != typeof( T );
-		}
-
-
-		/// <summary>
-		/// Convert to the specified component.
-		/// </summary>
-		public static void ConvertTo<T>( UnityEngine.Object context ) where T : MonoBehaviour {
-			var target = context as MonoBehaviour;
-			var so = new SerializedObject( target );
-			so.Update();
-
-			bool oldEnable = target.enabled;
-			target.enabled = false;
-
-			// Find MonoScript of the specified component.
-			foreach( var script in Resources.FindObjectsOfTypeAll<MonoScript>() ) {
-				if( script.GetClass() != typeof( T ) )
-					continue;
-
-				// Set 'm_Script' to convert.
-				so.FindProperty( "m_Script" ).objectReferenceValue = script;
-				so.ApplyModifiedProperties();
-				break;
-			}
-
-		 ( so.targetObject as MonoBehaviour ).enabled = oldEnable;
-		}
-	}
-
-	public class HEditorApplication {
-		public static void RepaintInspectorWindow() {
-			HEditorWindow.FindArray( UnityTypes.InspectorWindow ).RepaintArray();
-			//EditorWindowUtils.InspectorWindow?.Repaint();
-		}
+		
 	}
 }
 
