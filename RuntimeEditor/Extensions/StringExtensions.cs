@@ -1,5 +1,6 @@
 ﻿
 using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -31,6 +32,7 @@ namespace Hananoki.Extensions {
 			s1 = s1.Replace( ")", "_" );
 			s1 = s1.Replace( "+", "_" );
 			s1 = s1.Replace( "\"", "_" );
+			s1 = s1.Replace( "$", "_" );
 			s1 = s1.Replace( "…", "_" );
 			s1 = s1.Replace( "#", "Sharp" );
 			s1 = s1.Replace( "！", "_" );
@@ -69,8 +71,19 @@ namespace Hananoki.Extensions {
 			return AssetDatabase.GUIDToAssetPath( s );
 		}
 
-		public static string GetAssetPathAtGUID( this string s ) {
-			return AssetDatabase.GUIDToAssetPath( s );
+		/// <summary>
+		/// GUIDからアセットパスを取得します
+		/// </summary>
+		/// <param name="s"></param>
+		/// <returns></returns>
+		public static string GetAssetPathAtGUID( this string guid ) {
+			return AssetDatabase.GUIDToAssetPath( guid );
+		}
+
+		public static string[] GetFilesFromAssetPath( this string assetPath ) {
+			return DirectoryUtils.GetFiles( assetPath, "*", SearchOption.AllDirectories )
+				.Where( x => !x.EndsWith( ".meta" ) )
+				.ToArray();
 		}
 
 
@@ -79,7 +92,7 @@ namespace Hananoki.Extensions {
 			return (Object) GUIDUtils.LoadAssetAtGUID<Object>( s );
 		}
 
-		public static Object LoadAssetAtGUID( this string s )  {
+		public static Object LoadAssetAtGUID( this string s ) {
 			return (Object) GUIDUtils.LoadAssetAtGUID<Object>( s );
 		}
 

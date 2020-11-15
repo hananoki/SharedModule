@@ -81,6 +81,11 @@ namespace Hananoki.Extensions {
 		//	v.z = 0;
 		//}
 
+		public static bool IsEmpty<T>( this T[] s ) {
+			if( s == null ) return true;
+			if( s.Length == 0 ) return true;
+			return false;
+		}
 
 		public static bool IsEmpty( this string s ) {
 			return string.IsNullOrEmpty( s );

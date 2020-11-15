@@ -10,7 +10,11 @@ namespace Hananoki {
 
 	public static class DirectoryUtils {
 
+		#region GetFiles
+
 		public static string[] GetFiles( string path ) {
+			if( !Directory.Exists( path ) ) return new string[ 0 ];
+
 			return Directory
 					.GetFiles( path )
 					.Select( c => Prettyfy( c ) )
@@ -18,6 +22,8 @@ namespace Hananoki {
 		}
 
 		public static string[] GetFiles( string path, string searchPattern ) {
+			if( !Directory.Exists( path ) ) return new string[ 0 ];
+
 			return Directory
 					.GetFiles( path, searchPattern )
 					.Select( c => Prettyfy( c ) )
@@ -25,11 +31,41 @@ namespace Hananoki {
 		}
 
 		public static string[] GetFiles( string path, string searchPattern, SearchOption searchOption ) {
+			if( !Directory.Exists( path ) ) return new string[ 0 ];
+
 			return Directory
 					.GetFiles( path, searchPattern, searchOption )
 					.Select( c => Prettyfy( c ) )
 					.ToArray();
 		}
+
+		#endregion
+
+
+
+		#region GetDirectories
+
+		public static string[] GetDirectories( string path ) {
+			if( !Directory.Exists( path ) ) return new string[ 0 ];
+
+			return Directory.GetDirectories( path );
+		}
+
+		public static string[] GetDirectories( string path, string searchPattern ) {
+			if( !Directory.Exists( path ) ) return new string[ 0 ];
+
+			return Directory.GetDirectories( path, searchPattern );
+		}
+
+		public static string[] GetDirectories( string path, string searchPattern, SearchOption searchOption ) {
+			if( !Directory.Exists( path ) ) return new string[0];
+
+			return Directory.GetDirectories( path, searchPattern, searchOption );
+		}
+
+		#endregion
+
+
 
 		public static string Prettyfy( string dir ) {
 			return dir.Replace( "\\", "/" ).TrimEnd( '/' );
@@ -42,6 +78,53 @@ namespace Hananoki {
 			}
 			return ss;
 		}
+
+		//ディレクトリのコピー
+		public static void DirectoryCopy( string sourcePath, string destinationPath ) {
+			DirectoryInfo sourceDirectory = new DirectoryInfo( sourcePath );
+			DirectoryInfo destinationDirectory = new DirectoryInfo( destinationPath );
+
+			//コピー先のディレクトリがなければ作成する
+			if( destinationDirectory.Exists == false ) {
+				destinationDirectory.Create();
+				destinationDirectory.Attributes = sourceDirectory.Attributes;
+			}
+
+			//ファイルのコピー
+			foreach( FileInfo fileInfo in sourceDirectory.GetFiles() ) {
+				//同じファイルが存在していたら、常に上書きする
+				fileInfo.CopyTo( destinationDirectory.FullName + @"\" + fileInfo.Name, true );
+			}
+
+			//ディレクトリのコピー（再帰を使用）
+			foreach( System.IO.DirectoryInfo directoryInfo in sourceDirectory.GetDirectories() ) {
+				DirectoryCopy( directoryInfo.FullName, destinationDirectory.FullName + @"\" + directoryInfo.Name );
+			}
+		}
+
+		/// <summary>
+		/// フォルダのサイズを取得する
+		/// </summary>
+		/// <param name="dirInfo">サイズを取得するフォルダ</param>
+		/// <returns>フォルダのサイズ（バイト）</returns>
+		static long _GetDirectorySize( DirectoryInfo dirInfo ) {
+			long size = 0;
+
+			//フォルダ内の全ファイルの合計サイズを計算する
+			foreach( FileInfo fi in dirInfo.GetFiles() )
+				size += fi.Length;
+
+			//サブフォルダのサイズを合計していく
+			foreach( DirectoryInfo di in dirInfo.GetDirectories() )
+				size += _GetDirectorySize( di );
+
+			//結果を返す
+			return size;
+		}
+		public static long GetDirectorySize( string path ) {
+			if( !Directory.Exists( path ) ) return -1;
+			return _GetDirectorySize( new DirectoryInfo( path ) );
+		}
 	}
 
 
@@ -53,14 +136,14 @@ namespace Hananoki {
 			}
 		}
 		public static void mv( string src, string dst ) {
-			
+
 			if( File.Exists( src ) ) {
 				if( File.Exists( dst ) ) {
 					File.Delete( dst );
 				}
 				File.Move( src, dst );
 			}
-			
+
 			if( Directory.Exists( src ) ) {
 				if( Directory.Exists( dst ) ) {
 					Directory.Delete( dst );

@@ -75,6 +75,7 @@ namespace Hananoki.Reflection {
 		public static MethodInfo Method( string methodName, Type t ) {
 			return t.GetMethod( methodName, AllMembers );
 		}
+		
 		#region MethodInvoke
 		static MethodInfo _MethodInvoke( object obj, string propertyName ) {
 			if( obj == null ) throw new ArgumentNullException( "obj" );
@@ -106,7 +107,7 @@ namespace Hananoki.Reflection {
 		}
 
 		public static void MethodInvoke( this Type t, string methodName, Type[] types, params object[] args ) {
-			t.GetMethod( methodName, AllMembers ).Invoke( null, args );
+			t.GetMethod( methodName, AllMembers, null, types, null ).Invoke( null, args );
 		}
 
 		public static T MethodInvoke<T>( this Type t, Type generic, string methodName, params object[] args ) {

@@ -256,7 +256,7 @@ namespace Hananoki {
 
 			var rr = lastRect.AlignCenter( 12, 12 );
 			//rr.y -= 1;
-			GUI.DrawTexture( rr, Shared.Icon.Get( "icondropdown$" ), ScaleMode.ScaleToFit );
+			GUI.DrawTexture( rr, Shared.Icon.Get( Shared.EditorResource.icondropdown_ ), ScaleMode.ScaleToFit );
 			//EditorGUI.DrawRect( lastRect, new Color( 0, 0, 1, 0.5f ) );
 			return false;
 		}

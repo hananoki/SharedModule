@@ -1,6 +1,5 @@
 ﻿/// UnityEditor.ProjectBrowser : 2019.4.5f1
 
-#if UNITY_EDITOR
 
 using Hananoki.Reflection;
 using System;
@@ -51,5 +50,4 @@ namespace Hananoki {
 	}
 }
 
-#endif
 

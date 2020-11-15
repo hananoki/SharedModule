@@ -11,6 +11,8 @@ namespace Hananoki.SharedModule {
 	public static class S {
 		public static string _OK => L.Tr( "OK" );
 		public static string _Cancel => L.Tr( "Cancel" );
+		public static string _Yes => L.Tr( "Yes" );
+		public static string _No => L.Tr( "No" );
 		public static string _Apply => L.Tr( "Apply" );
 		public static string _Revert => L.Tr( "Revert" );
 		public static string _Confirm => L.Tr( "Confirm" );

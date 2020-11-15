@@ -5,6 +5,7 @@ using System.Reflection;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
+using System;
 
 namespace Hananoki {
 	public abstract class HTreeView<T> : TreeView where T : TreeViewItem {
@@ -87,8 +88,16 @@ namespace Hananoki {
 
 		new public void Reload() {
 			//if( m_registerItems.Count == 0 ) return;
-			base.Reload();
+			try {
+				base.Reload();
+			}
+			catch( UnityException ) {
+			}
+			catch( Exception e ) {
+				Debug.LogException( e );
+			}
 		}
+
 
 		protected override TreeViewItem BuildRoot() {
 			//Debug.Log( "BuildRoot" );
@@ -107,7 +116,7 @@ namespace Hananoki {
 			return root;
 		}
 
-		protected override void RowGUI( RowGUIArgs args ) {
+		sealed protected override void RowGUI( RowGUIArgs args ) {
 			if( args.item.id == -1 ) return;
 
 			OnRowGUI( args );

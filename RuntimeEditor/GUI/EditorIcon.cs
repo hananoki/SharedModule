@@ -29,13 +29,14 @@ namespace Hananoki {
 
 		public static Texture2D playButton => EditorIcon.playbutton;
 
-		public static Texture2D allowUp   => Shared.Icon.Get( "AllowUp$" );
-		public static Texture2D allowDown => Shared.Icon.Get( "AllowDown$" );
-		public static Texture2D minus     => Shared.Icon.Get( Icon.GetBuiltinPath( "ol_minus$" ) );
-		public static Texture2D plus      => Shared.Icon.Get( Icon.GetBuiltinPath( "ol_plus$" ) );
-		public static Texture2D burger    => Shared.Icon.Get( Icon.GetBuiltinPath( "burger$" ) );
-		public static Texture2D dopesheetBackground => Shared.Icon.Get( "DopesheetBackground$" );
+		public static Texture2D allowUp   => Shared.Icon.Get( Shared.EditorResource.AllowUp_ );
+		public static Texture2D allowDown => Shared.Icon.Get( Shared.EditorResource.AllowDown_ );
+		public static Texture2D minus     => Shared.Icon.Get( EditorGUIUtility.isProSkin? Shared.EditorResource.d_ol_minus_ : Shared.EditorResource.ol_minus_ );
+		public static Texture2D plus      => Shared.Icon.Get( EditorGUIUtility.isProSkin ? Shared.EditorResource.d_ol_plus_ : Shared.EditorResource.ol_plus_ );
+		public static Texture2D burger    => Shared.Icon.Get( EditorGUIUtility.isProSkin ? Shared.EditorResource.d_burger_ : Shared.EditorResource.burger_ );
+		public static Texture2D dopesheetBackground => Shared.Icon.Get( Shared.EditorResource.DopesheetBackground_ );
 
+		public static Texture2D installed => Icon.GetPackageManagerIcon( "installed" );
 
 		public static Texture2D[] s_waitspin;
 		public static Texture2D[] waitspin {
@@ -47,7 +48,12 @@ namespace Hananoki {
 			}
 		}
 
-
+		public static Texture2D lightmeter_lightrim => Icon.GetBuiltin( IconPath( "lightmeter/lightrim" ) );
+		public static Texture2D lightmeter_greenlight => Icon.GetBuiltin( IconPath( "lightmeter/greenlight" ) );
+		public static Texture2D lightmeter_orangelight => Icon.GetBuiltin( IconPath( "lightmeter/orangelight" ) );
+		public static Texture2D lightmeter_redlight => Icon.GetBuiltin( IconPath( "lightmeter/redlight" ) );
+		
+			
 		public static Texture2D search_icon => icons_processed_search_icon_asset;
 		public static Texture2D assetstore_icon => asset_store;
 		

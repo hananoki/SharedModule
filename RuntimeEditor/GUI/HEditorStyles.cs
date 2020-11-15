@@ -14,7 +14,7 @@ namespace Hananoki {
 				if( s_underLine != null ) return s_underLine;
 
 				s_underLine = new GUIStyle();
-				s_underLine.normal.background = Shared.Icon.Get( "under_line$" );
+				s_underLine.normal.background = Shared.Icon.Get( Shared.EditorResource.under_line_ );
 				s_underLine.stretchWidth = true;
 
 				return s_underLine;

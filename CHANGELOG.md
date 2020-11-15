@@ -1,5 +1,28 @@
 # Shared Module
 
+## [1.6.0] - 2020-11-15
+
+### Added
+- Added EditorResourceIcon
+- Added UnityEditorBuildPlayerWindow
+- Added UnityEditorModulesModuleManager
+- Added EditorExtensions.GetFilesFromAssetPath
+- Added EditorExtensions.stringModify character pattern
+- Added directory existence check in DirectoryUtils
+- Added DirectoryUtils.DirectoryCopy
+- Added DirectoryUtils.GetDirectorySize
+- Added platform verdict to UnitySymbol
+
+### Changed
+- Change the handling of embedded resources
+- Moved ManifestJsonUtils from ManifestJsonUtility
+- Changed to handle HTreeView.Reload exceptions
+- Changed  HTreeView.RowGUI to sealed
+- DirectoryUtils
+
+### Fixed
+- Fixed Method Invoke argument processing
+
 ## [1.5.8] - 2020-11-01
 
 ### Added

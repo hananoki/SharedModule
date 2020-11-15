@@ -3,15 +3,14 @@
 #pragma warning disable 618
 #endif
 
-using Hananoki.Reflection;
 using Hananoki.Extensions;
+using Hananoki.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
-
 using E = Hananoki.SharedModule.SettingsEditor;
 
 
@@ -26,7 +25,8 @@ namespace Hananoki.SharedModule {
 
 		public EditorColor versionTextColor = new EditorColor( ColorUtils.RGB( 72 ), ColorUtils.RGB( 173 ) );
 		public EditorColor versionBackColor = new EditorColor( ColorUtils.RGB( 242 ) , ColorUtils.RGB( 41 ) );
-
+		public bool utilityWindow;
+ 
 		static List<MethodInfo> s_localizeEvent;
 
 		static SettingsEditor() {
@@ -143,6 +143,8 @@ namespace Hananoki.SharedModule {
 			catch( ExitGUIException ) {
 			}
 
+			E.i.utilityWindow = EditorGUILayout.Toggle( "utilityWindow", E.i.utilityWindow );
+
 			HGUIScope.Horizontal(()=> {
 				GUILayout.FlexibleSpace();
 				if( GUILayout.Button( "Default" )){
@@ -217,37 +219,4 @@ namespace Hananoki.SharedModule {
 		}
 	}
 #endif
-}
-
-
-
-
-namespace Hananoki.Shared {
-	public static class Icon {
-		static Dictionary<string, Texture2D> icons;
-		public static Texture2D Get( string s ) {
-			if( icons == null ) {
-				icons = new Dictionary<string, Texture2D>();
-			}
-			bool load = false;
-			if( !icons.ContainsKey( s ) ) load = true;
-			else if( icons[ s ] == null ) load = true;
-			if( load ) {
-				for( int i = 0; i < SharedEmbed.num; i++ ) {
-					if( SharedEmbed.n[ i ] != s ) continue;
-					var bb = B64.Decode( "iVBORw0KGgoAAAAN" + SharedEmbed.i[ i ] );
-					var t = new Texture2D( SharedEmbed.x[ i ], SharedEmbed.y[ i ] );
-					t.LoadImage( bb );
-					t.hideFlags |= HideFlags.DontUnloadUnusedAsset;
-					if( icons.ContainsKey( s ) ) {
-						icons[ s ] = t;
-					}
-					else {
-						icons.Add( SharedEmbed.n[ i ], t );
-					}
-				}
-			}
-			return icons[ s ];
-		}
-	}
 }

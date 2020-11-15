@@ -26,59 +26,6 @@ namespace Hananoki {
 
 		#region EditorWindow
 
-		//static Type _SceneHierarchyWindow;
-
-		//public static Type SceneHierarchyWindow {
-		//	get {
-		//		if( _SceneHierarchyWindow == null ) {
-		//			_SceneHierarchyWindow = UnityAssembly.UnityEditor.GetType( "UnityEditor.SceneHierarchyWindow" );
-		//		}
-		//		return _SceneHierarchyWindow;
-		//	}
-		//}
-
-		//static Type _ProjectBrowser;
-		//public static Type ProjectBrowser {
-		//	get {
-		//		if( _ProjectBrowser == null ) {
-		//			_ProjectBrowser = UnityAssembly.UnityEditor.GetType( "UnityEditor.ProjectBrowser" );
-		//		}
-		//		return _ProjectBrowser;
-		//	}
-		//}
-
-		//static Type _LightingExplorerWindow;
-		//public static Type LightingExplorerWindow {
-		//	get {
-		//		if( _LightingExplorerWindow == null ) {
-		//			_LightingExplorerWindow = UnityAssembly.UnityEditor.GetType( "UnityEditor.LightingExplorerWindow" );
-		//		}
-		//		return _LightingExplorerWindow;
-		//	}
-		//}
-
-		//static Type _AnimationWindow;
-		//public static Type AnimationWindow {
-		//	get {
-		//		if( _AnimationWindow == null ) {
-		//			_AnimationWindow = UnityAssembly.UnityEditor.GetType( "UnityEditor.AnimationWindow" );
-		//		}
-		//		return _AnimationWindow;
-		//	}
-		//}
-
-		//static Type _AnimatorControllerTool;
-		//public static Type AnimatorControllerTool {
-		//	get {
-		//		if( _AnimatorControllerTool == null ) {
-		//			_AnimatorControllerTool = UnityAssembly.UnityEditorGraphs.GetType( "UnityEditor.Graphs.AnimatorControllerTool" );
-		//		}
-		//		return _AnimatorControllerTool;
-		//	}
-		//}
-
-
-
 		static Type _TimelineWindow;
 		public static Type TimelineWindow {
 			get {
@@ -116,8 +63,19 @@ namespace Hananoki {
 
 
 		#endregion
-		
-			static Type _UnityEngine_SpriteRenderer;
+
+		static Type _UnityEditor_Modules_ModuleManager;
+		public static Type UnityEditor_Modules_ModuleManager {
+			get {
+				if( _UnityEditor_Modules_ModuleManager == null ) {
+					_UnityEditor_Modules_ModuleManager = Type.GetType( "UnityEditor.Modules.ModuleManager, UnityEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" );
+				}
+				return _UnityEditor_Modules_ModuleManager;
+			}
+		}
+
+
+		static Type _UnityEngine_SpriteRenderer;
 		public static Type UnityEngine_SpriteRenderer {
 			get {
 				if( _UnityEngine_SpriteRenderer == null ) {

@@ -4,6 +4,26 @@ using UnityEngine;
 
 namespace Hananoki.Extensions {
 	public static partial class EditorExtensions {
+
+		public static void AddItemAndDisable( this GenericMenu menu, bool b, string s, GenericMenu.MenuFunction func ) {
+			if( b ) {
+				menu.AddItem( s, false, func );
+			}
+			else {
+				menu.AddDisabledItem( s );
+			}
+		}
+
+		public static void AddItemAndDisable( this GenericMenu menu, bool b, string s, GenericMenu.MenuFunction2 func, object userData ) {
+			if( b ) {
+				menu.AddItem( s, false, func, userData );
+			}
+			else {
+				menu.AddDisabledItem( s );
+			}
+		}
+
+
 		public static void AddItem( this GenericMenu menu, string s, GenericMenu.MenuFunction func ) {
 			menu.AddItem( s, false, func );
 		}
@@ -16,14 +36,7 @@ namespace Hananoki.Extensions {
 		}
 
 
-		public static void AddItemAndDisable( this GenericMenu menu, bool b, string s, GenericMenu.MenuFunction2 func, object userData ) {
-			if( b ) {
-				menu.AddItem( s, false, func, userData );
-			}
-			else {
-				menu.AddDisabledItem( s );
-			}
-		}
+		
 		
 		public static void AddItem( this GenericMenu menu, string s, GenericMenu.MenuFunction2 func, object userData ) {
 			menu.AddItem( s, false, func, userData );

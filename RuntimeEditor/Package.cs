@@ -5,7 +5,7 @@ namespace Hananoki.SharedModule {
   public static class Package {
     public const string name = "SharedModule";
     public const string editorPrefName = "Hananoki.SharedModule";
-    public const string version = "1.5.8";
+    public const string version = "1.6.0";
   }
   
 #if UNITY_EDITOR
