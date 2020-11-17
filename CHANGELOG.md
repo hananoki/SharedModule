@@ -1,5 +1,10 @@
 # Shared Module
 
+## [1.6.1] - 2020-11-17
+
+### Changed
+- Changed the language selection display
+
 ## [1.6.0] - 2020-11-15
 
 ### Added

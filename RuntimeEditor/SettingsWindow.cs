@@ -8,6 +8,8 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
+using SS = Hananoki.SharedModule.S;
+
 namespace Hananoki.SharedModule {
 	public class SettingsItem {
 		public int mode;
@@ -40,7 +42,7 @@ namespace Hananoki.SharedModule {
 		[MenuItem( "Window/Hananoki/Settings" )]
 		public static void Open() {
 			var window = GetWindow<SettingsWindow>();
-			window.SetTitle( new GUIContent( "Settings", EditorIcon.settings ) );
+			window.SetTitle( new GUIContent( SS._Settings, EditorIcon.settings ) );
 		}
 		//#endif
 

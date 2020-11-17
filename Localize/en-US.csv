@@ -13,6 +13,7 @@ Preferences
 Project Settings
 Settings (Editor)
 Settings (Project)
+Settings
 Add
 Replace
 Clear
@@ -27,6 +28,8 @@ Uninstall
 Copy to clipboard
 Please select a directory
 Is it OK?
+Start
+Stop
 Deprecated
 Warning
 Info
@@ -39,6 +42,8 @@ Back Color
 Text Color
 Font
 Font Style
+Tools
+Analysis
 Input
 Tags and Layers
 Audio
@@ -74,3 +79,8 @@ Animator
 Timeline
 Console
 Profiler
+Folder Setting
+Interface
+Utility Window Mode
+Return To Default
+Downloading

@@ -11,8 +11,9 @@ using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
-using E = Hananoki.SharedModule.SettingsEditor;
 
+using E = Hananoki.SharedModule.SettingsEditor;
+using SS = Hananoki.SharedModule.S;
 
 namespace Hananoki.SharedModule {
 	[InitializeOnLoad]
@@ -24,9 +25,9 @@ namespace Hananoki.SharedModule {
 		public static E i;
 
 		public EditorColor versionTextColor = new EditorColor( ColorUtils.RGB( 72 ), ColorUtils.RGB( 173 ) );
-		public EditorColor versionBackColor = new EditorColor( ColorUtils.RGB( 242 ) , ColorUtils.RGB( 41 ) );
+		public EditorColor versionBackColor = new EditorColor( ColorUtils.RGB( 242 ), ColorUtils.RGB( 41 ) );
 		public bool utilityWindow;
- 
+
 		static List<MethodInfo> s_localizeEvent;
 
 		static SettingsEditor() {
@@ -96,8 +97,13 @@ namespace Hananoki.SharedModule {
 
 	public class SettingsEditorWindow : HSettingsEditorWindow {
 
-		public static string[] localeFiles;
+
 		public static string[] localeFilesPopup;
+		public class Lang {
+			public string file;
+			public string popName;
+		}
+		public static List<Lang> localeFiles;
 
 		public static void Open() {
 			var w = GetWindow<SettingsEditorWindow>();
@@ -113,8 +119,13 @@ namespace Hananoki.SharedModule {
 			E.Load();
 
 			if( localeFiles == null ) {
-				localeFiles = DirectoryUtils.GetFileGUIDs( AssetDatabase.GUIDToAssetPath( "95cedfc7731853946b0b3650f175d73a" ), "*.csv" );
-				localeFilesPopup = localeFiles.Select( x => AssetDatabase.GUIDToAssetPath( x ).FileNameWithoutExtension() ).ToArray();
+				var files = DirectoryUtils.GetFileGUIDs( AssetDatabase.GUIDToAssetPath( "95cedfc7731853946b0b3650f175d73a" ), "*.csv" );
+				localeFiles = files
+					//.Select( x => AssetDatabase.GUIDToAssetPath( x ).FileNameWithoutExtension() )
+					.Select( x => new Lang { file = x, popName = (string) EditorLocalize.s_dic2[ AssetDatabase.GUIDToAssetPath( x ).FileNameWithoutExtension() ] } )
+					.ToList();
+				localeFiles = localeFiles.OrderBy( x => x.popName ).ToList();
+				//localeFilesPopup = localeFiles.Select( x => AssetDatabase.GUIDToAssetPath( x ).FileNameWithoutExtension() ).Select( x => (string) EditorLocalize.s_dic2[ x ] ).ToArray();
 			}
 			//if( UnitySymbol.Has( "UNITY_2018_3_OR_NEWER" ) ) {
 			//	EditorGUILayout.LabelField( "Support", "2018.3 - xxx" );
@@ -124,13 +135,13 @@ namespace Hananoki.SharedModule {
 			//}
 
 			EditorGUI.BeginChangeCheck();
-			int n = ArrayUtility.IndexOf( localeFiles, E.i.language );
+			int n = localeFiles.FindIndex( x => x.file == E.i.language );
 			if( n < 0 ) {
 				n = 0;
 			}
-			n = EditorGUILayout.Popup( S._Language, n, localeFilesPopup );
+			n = EditorGUILayout.Popup( S._Language, n, localeFiles.Select( x => x.popName ).ToArray() );
 
-			GUILayout.Space(4);
+			GUILayout.Space( 4 );
 			try {
 				E.i.versionTextColor.value = EditorGUILayout.ColorField( S._VersionTextColor, E.i.versionTextColor.value );
 			}
@@ -143,20 +154,21 @@ namespace Hananoki.SharedModule {
 			catch( ExitGUIException ) {
 			}
 
-			E.i.utilityWindow = EditorGUILayout.Toggle( "utilityWindow", E.i.utilityWindow );
+			E.i.utilityWindow = EditorGUILayout.ToggleLeft( SS._UtilityWindowMode, E.i.utilityWindow );
 
-			HGUIScope.Horizontal(()=> {
+			HGUIScope.Horizontal( () => {
 				GUILayout.FlexibleSpace();
-				if( GUILayout.Button( "Default" )){
+				if( GUILayout.Button( SS._ReturnToDefault ) ) {
 					E.i.versionTextColor = new EditorColor( ColorUtils.RGB( 72 ), ColorUtils.RGB( 173 ) );
 					E.i.versionBackColor = new EditorColor( ColorUtils.RGB( 242 ), ColorUtils.RGB( 41 ) );
+					E.i.utilityWindow = false;
 					E.Save();
 				}
 			} );
-			
+
 
 			if( EditorGUI.EndChangeCheck() ) {
-				E.i.language = localeFiles[ n ];
+				E.i.language = localeFiles[ n ].file;
 				E.LoadLocalize();
 				E.Save();
 			}
@@ -169,14 +181,14 @@ namespace Hananoki.SharedModule {
 			//}
 			GUILayout.Space( 8f );
 
-//#if ENABLE_HANANOKI_SETTINGS && LOCAL_TEST
-//			using( new GUILayout.HorizontalScope() ) {
-//				GUILayout.FlexibleSpace();
-//				if( GUILayout.Button( "Open Settings" ) ) {
-//					SettingsWindow.Open();
-//				}
-//			}
-//#endif
+			//#if ENABLE_HANANOKI_SETTINGS && LOCAL_TEST
+			//			using( new GUILayout.HorizontalScope() ) {
+			//				GUILayout.FlexibleSpace();
+			//				if( GUILayout.Button( "Open Settings" ) ) {
+			//					SettingsWindow.Open();
+			//				}
+			//			}
+			//#endif
 		}
 
 

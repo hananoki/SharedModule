@@ -24,6 +24,7 @@ namespace Hananoki.SharedModule {
 		public static string _ProjectSettings => L.Tr( "Project Settings" );
 		public static string _Settings_Editor_ => L.Tr( "Settings (Editor)" );
 		public static string _Settings_Project_ => L.Tr( "Settings (Project)" );
+		public static string _Settings => L.Tr( "Settings" );
 		public static string _Add => L.Tr( "Add" );
 		public static string _Replace => L.Tr( "Replace" );
 		public static string _Clear => L.Tr( "Clear" );
@@ -38,6 +39,8 @@ namespace Hananoki.SharedModule {
 		public static string _Copytoclipboard => L.Tr( "Copy to clipboard" );
 		public static string _Pleaseselectadirectory => L.Tr( "Please select a directory" );
 		public static string _IsitOK_ => L.Tr( "Is it OK?" );
+		public static string _Start => L.Tr( "Start" );
+		public static string _Stop => L.Tr( "Stop" );
 		public static string _Deprecated => L.Tr( "Deprecated" );
 		public static string _Warning => L.Tr( "Warning" );
 		public static string _Info => L.Tr( "Info" );
@@ -50,6 +53,8 @@ namespace Hananoki.SharedModule {
 		public static string _TextColor => L.Tr( "Text Color" );
 		public static string _Font => L.Tr( "Font" );
 		public static string _FontStyle => L.Tr( "Font Style" );
+		public static string _Tools => L.Tr( "Tools" );
+		public static string _Analysis => L.Tr( "Analysis" );
 		public static string _Input => L.Tr( "Input" );
 		public static string _TagsandLayers => L.Tr( "Tags and Layers" );
 		public static string _Audio => L.Tr( "Audio" );
@@ -85,5 +90,10 @@ namespace Hananoki.SharedModule {
 		public static string _Timeline => L.Tr( "Timeline" );
 		public static string _Console => L.Tr( "Console" );
 		public static string _Profiler => L.Tr( "Profiler" );
+		public static string _FolderSetting => L.Tr( "Folder Setting" );
+		public static string _Interface => L.Tr( "Interface" );
+		public static string _UtilityWindowMode => L.Tr( "Utility Window Mode" );
+		public static string _ReturnToDefault => L.Tr( "Return To Default" );
+		public static string _Downloading => L.Tr( "Downloading" );
 	}
 }

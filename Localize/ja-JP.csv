@@ -13,6 +13,7 @@ Preferences	環境設定
 Project Settings	プロジェクト設定
 Settings (Editor)	設定 (Editor)
 Settings (Project)	設定 (Project)
+Settings	設定
 Add	追加
 Replace	置換
 Clear	クリア
@@ -27,6 +28,8 @@ Uninstall	アンインストール
 Copy to clipboard	クリップボードにコピー
 Please select a directory	ディレクトリを選択してください
 Is it OK?	よろしいですか?
+Start	開始
+Stop	停止
 Deprecated	非推奨
 Warning	警告
 Info	情報
@@ -39,6 +42,8 @@ Back Color	背景の色
 Text Color	テキストの色
 Font	フォント
 Font Style	フォントスタイル
+Tools	ツール
+Analysis	分析
 Input	入力
 Tags and Layers	タグとレイヤー
 Audio	オーディオ
@@ -74,3 +79,8 @@ Animator	アニメーター
 Timeline	タイムライン
 Console	コンソール
 Profiler	プロファイラー
+Folder Setting	フォルダ設定
+Interface	インターフェース
+Utility Window Mode	ユーティリティ ウィンドウ モード
+Return To Default	デフォルトに戻す
+Downloading	ダウンロード中
