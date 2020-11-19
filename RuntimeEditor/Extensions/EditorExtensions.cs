@@ -19,7 +19,7 @@ namespace Hananoki.Extensions {
 		public static int ToInt( this object obj ) {
 			return obj.ToCast<int>();
 		}
-		
+
 		public static void SetTitle( this EditorWindow wnd, string text ) {
 			wnd.SetTitle( new GUIContent( text ) );
 		}
@@ -70,6 +70,10 @@ namespace Hananoki.Extensions {
 		//	object _property;
 		//	_property.GetProperty<string>
 		//}
+
+		public static void AddObjectToAsset( this UnityObject parent, UnityObject child ) {
+			AssetDatabase.AddObjectToAsset( child, parent );
+		}
 	}
 
 

@@ -1,5 +1,22 @@
 # Shared Module
 
+## [1.6.2] - 2020-11-19
+
+### Added
+- Added EditorLocalizeData
+- Added AssetDatabaseUtils
+- Added Extensions.IsExistsFile
+- Added Extensions.IsExistsDirectory
+- Added EditorHelper.LoadSerializedFileAll
+- Added EditorHelper.LoadSerializedFileAtName
+- Added EditorExtensions.AddObjectToAsset
+- Added EditorExtensions.GetFilesFromAssetGUID
+
+### Changed
+- Changed localization process from dictionary to array
+- Changed the processing when missing in GUIDString
+- Changed to check the existence of the source file with fs.cp
+
 ## [1.6.1] - 2020-11-17
 
 ### Changed

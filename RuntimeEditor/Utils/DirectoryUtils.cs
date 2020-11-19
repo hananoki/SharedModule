@@ -158,6 +158,7 @@ namespace Hananoki {
 			if( !Directory.Exists( Path.GetDirectoryName( dst ) ) ) {
 				Directory.CreateDirectory( Path.GetDirectoryName( dst ) );
 			}
+			if( !File.Exists( src ) ) return;
 			File.Copy( src, dst, overwrite );
 		}
 		public static void rm( string path, bool recursive = false ) {

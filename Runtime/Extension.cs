@@ -91,6 +91,13 @@ namespace Hananoki.Extensions {
 			return string.IsNullOrEmpty( s );
 		}
 
+		public static bool IsExistsFile( this string s ) {
+			return File.Exists(s);
+		}
+
+		public static bool IsExistsDirectory( this string s ) {
+			return Directory.Exists( s );
+		}
 
 		public static void Alpha( ref this Color col, float a ) {
 			col.a = a;

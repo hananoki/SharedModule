@@ -28,6 +28,23 @@ namespace Hananoki {
 
 	public static class EditorHelper {
 
+		public static UnityObject[] LoadSerializedFileAll( string path ) {
+			return UnityEditorInternal.InternalEditorUtility.LoadSerializedFileAndForget( path );
+		}
+
+		public static UnityObject LoadSerializedFileAtName( string path, string name ) {
+			return LoadSerializedFileAtName<UnityObject>( path, name );
+		}
+
+		public static T LoadSerializedFileAtName<T>( string path, string name ) where T : UnityObject {
+			foreach( var p in UnityEditorInternal.InternalEditorUtility.LoadSerializedFileAndForget( path ) ) {
+				if( p.name != name ) continue;
+				return (T) p;
+			}
+			return null;
+		}
+
+
 		/// <summary>
 		/// Verify whether it can be converted to the specified component.
 		/// </summary>

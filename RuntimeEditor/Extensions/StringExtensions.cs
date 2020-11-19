@@ -86,6 +86,9 @@ namespace Hananoki.Extensions {
 				.ToArray();
 		}
 
+		public static string[] GetFilesFromAssetGUID( this string guid ) {
+			return GetFilesFromAssetPath( guid.GetAssetPath() );
+		}
 
 		[System.Obsolete( "Use LoadAssetAtGUID" )]
 		public static Object LoadAsset( this string s ) {

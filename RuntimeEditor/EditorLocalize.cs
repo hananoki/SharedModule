@@ -4,129 +4,95 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 
+using E = Hananoki.SharedModule.SettingsEditor;
+
 namespace Hananoki {
+
 	public static class EditorLocalize {
-		public static Dictionary<string, EditorLocalizeDictionary> s_dic;
 
-		public static System.Collections.Hashtable s_dic2;
+		public class LCIDString {
+			public string LCID;
+			public string NAME;
+		}
 
-		public static EditorLocalizeDictionary GetPakage( string packageName ) => s_dic[ packageName ];
+		public static List<LCIDString> s_lcidTable;
+		public static Dictionary<string, EditorLocalizeData> s_editorLocalizeData;
 
-		public static EditorLocalizeDictionary Load( string packageName, string loadGUID, string defaultGUID ) {
-			if( s_dic == null ) {
-				s_dic = new Dictionary<string, EditorLocalizeDictionary>();
+		public static EditorLocalizeData GetPakage( string packageName ) => s_editorLocalizeData[ packageName ];
+
+		static void MakePopup() {
+			if( s_lcidTable != null ) return;
+
+			s_lcidTable = new List<LCIDString>();
+			s_lcidTable.Add( new LCIDString { LCID = "af", NAME = "Afrikaans (af)" } );
+			s_lcidTable.Add( new LCIDString { LCID = "ar", NAME = "Arabic (ar)" } );
+			s_lcidTable.Add( new LCIDString { LCID = "eu", NAME = "Basque (eu)" } );
+			s_lcidTable.Add( new LCIDString { LCID = "be", NAME = "Belarusian (be)" } );
+			s_lcidTable.Add( new LCIDString { LCID = "bg", NAME = "Bulgarian (bg)" } );
+			s_lcidTable.Add( new LCIDString { LCID = "ca", NAME = "Catalan (ca)" } );
+			s_lcidTable.Add( new LCIDString { LCID = "cs", NAME = "Czech (cs)" } );
+			s_lcidTable.Add( new LCIDString { LCID = "da", NAME = "Danish (da)" } );
+			s_lcidTable.Add( new LCIDString { LCID = "nl", NAME = "Dutch (nl)" } );
+			//s_dic2.Add( "en", "English (en)" );
+			s_lcidTable.Add( new LCIDString { LCID = "en-US", NAME = "English (en)" } );
+			s_lcidTable.Add( new LCIDString { LCID = "et", NAME = "Estonian (et)" } );
+			s_lcidTable.Add( new LCIDString { LCID = "fi", NAME = "Finnish (fi)" } );
+			s_lcidTable.Add( new LCIDString { LCID = "fr", NAME = "French (fr)" } );
+			s_lcidTable.Add( new LCIDString { LCID = "de", NAME = "German (de)" } );
+			s_lcidTable.Add( new LCIDString { LCID = "el", NAME = "Greek (el)" } );
+			s_lcidTable.Add( new LCIDString { LCID = "he", NAME = "Hebrew (he)" } );
+			s_lcidTable.Add( new LCIDString { LCID = "is", NAME = "Icelandic (is)" } );
+			s_lcidTable.Add( new LCIDString { LCID = "id", NAME = "Indonesian (id)" } );
+			s_lcidTable.Add( new LCIDString { LCID = "it", NAME = "Italian (it)" } );
+			//s_dic2.Add( "ja", "Japanese (ja)" );
+			s_lcidTable.Add( new LCIDString { LCID = "ja-JP", NAME = "Japanese (ja)" } );
+			s_lcidTable.Add( new LCIDString { LCID = "ko", NAME = "Korean (ko)" } );
+			s_lcidTable.Add( new LCIDString { LCID = "lv", NAME = "Latvian (lv)" } );
+			s_lcidTable.Add( new LCIDString { LCID = "lt", NAME = "Lithuanian (lt)" } );
+			s_lcidTable.Add( new LCIDString { LCID = "no", NAME = "Norwegian (no)" } );
+			s_lcidTable.Add( new LCIDString { LCID = "pl", NAME = "Polish (pl)" } );
+			s_lcidTable.Add( new LCIDString { LCID = "pt", NAME = "Portuguese (pt)" } );
+			s_lcidTable.Add( new LCIDString { LCID = "ro", NAME = "Romanian (ro)" } );
+			s_lcidTable.Add( new LCIDString { LCID = "ru", NAME = "Russian (ru)" } );
+			s_lcidTable.Add( new LCIDString { LCID = "sk", NAME = "Slovak (sk)" } );
+			s_lcidTable.Add( new LCIDString { LCID = "sl", NAME = "Slovenian (sl)" } );
+			s_lcidTable.Add( new LCIDString { LCID = "es", NAME = "Spanish (es)" } );
+			s_lcidTable.Add( new LCIDString { LCID = "sv", NAME = "Swedish (sv)" } );
+			s_lcidTable.Add( new LCIDString { LCID = "th", NAME = "Thai (th)" } );
+			s_lcidTable.Add( new LCIDString { LCID = "tr", NAME = "Turkish (tr)" } );
+			s_lcidTable.Add( new LCIDString { LCID = "uk", NAME = "Ukrainian (uk)" } );
+			s_lcidTable.Add( new LCIDString { LCID = "vi", NAME = "Vietnamese (vi)" } );
+			s_lcidTable.Add( new LCIDString { LCID = "zh-CN", NAME = "ChineseSimplified (zh-CN)" } );
+			s_lcidTable.Add( new LCIDString { LCID = "zh-TW", NAME = "ChineseTraditional (zh-TW)" } );
+			s_lcidTable.Add( new LCIDString { LCID = "hu", NAME = "Hungarian (hu)" } );
+		}
+
+
+		public static EditorLocalizeData Load( string packageName, string localizeDir ) {
+			return Load( packageName, localizeDir, E.i.LCID );
+		}
+
+
+		public static EditorLocalizeData Load( string packageName, string localizeDir, string LCID ) {
+			if( s_editorLocalizeData == null ) {
+				s_editorLocalizeData = new Dictionary<string, EditorLocalizeData>();
 			}
-			
-			if( s_dic2 == null ) {
-				s_dic2 = new System.Collections.Hashtable();
-				s_dic2.Add( "af", "Afrikaans (af)" );
-				s_dic2.Add( "ar", "Arabic (ar)" );
-				s_dic2.Add( "eu", "Basque (eu)" );
-				s_dic2.Add( "be", "Belarusian (be)" );
-				s_dic2.Add( "bg", "Bulgarian (bg)" );
-				s_dic2.Add( "ca", "Catalan (ca)" );
-				s_dic2.Add( "cs", "Czech (cs)" );
-				s_dic2.Add( "da", "Danish (da)" );
-				s_dic2.Add( "nl", "Dutch (nl)" );
-				s_dic2.Add( "en", "English (en)" );
-				s_dic2.Add( "en-US", "English (en)" );
-				s_dic2.Add( "et", "Estonian (et)" );
-				s_dic2.Add( "fi", "Finnish (fi)" );
-				s_dic2.Add( "fr", "French (fr)" );
-				s_dic2.Add( "de", "German (de)" );
-				s_dic2.Add( "el", "Greek (el)" );
-				s_dic2.Add( "he", "Hebrew (he)" );
-				s_dic2.Add( "is", "Icelandic (is)" );
-				s_dic2.Add( "id", "Indonesian (id)" );
-				s_dic2.Add( "it", "Italian (it)" );
-				s_dic2.Add( "ja", "Japanese (ja)" );
-				s_dic2.Add( "ja-JP", "Japanese (ja)" );
-				s_dic2.Add( "ko", "Korean (ko)" );
-				s_dic2.Add( "lv", "Latvian (lv)" );
-				s_dic2.Add( "lt", "Lithuanian (lt)" );
-				s_dic2.Add( "no", "Norwegian (no)" );
-				s_dic2.Add( "pl", "Polish (pl)" );
-				s_dic2.Add( "pt", "Portuguese (pt)" );
-				s_dic2.Add( "ro", "Romanian (ro)" );
-				s_dic2.Add( "ru", "Russian (ru)" );
-				s_dic2.Add( "sk", "Slovak (sk)" );
-				s_dic2.Add( "sl", "Slovenian (sl)" );
-				s_dic2.Add( "es", "Spanish (es)" );
-				s_dic2.Add( "sv", "Swedish (sv)" );
-				s_dic2.Add( "th", "Thai (th)" );
-				s_dic2.Add( "tr", "Turkish (tr)" );
-				s_dic2.Add( "uk", "Ukrainian (uk)" );
-				s_dic2.Add( "vi", "Vietnamese (vi)" );
-				s_dic2.Add( "zh-CN", "ChineseSimplified (zh-CN)" );
-				s_dic2.Add( "zh-TW", "ChineseTraditional (zh-TW)" );
-				s_dic2.Add( "hu", "Hungarian (hu)" );
-			}
 
-			var _localize = new EditorLocalizeDictionary();
-			_localize.Load( loadGUID.IsEmpty() ? defaultGUID : loadGUID );
+			MakePopup();
 
-			if( s_dic.ContainsKey( packageName ) ) {
-				s_dic[ packageName ] = _localize;
+			var fname = $"{localizeDir.GetAssetPathAtGUID()}/{LCID}.strings";
+			var strings = EditorHelper.LoadSerializedFileAtName<EditorLocalizeData>( fname, LCID );
+
+			if( s_editorLocalizeData.ContainsKey( packageName ) ) {
+				s_editorLocalizeData[ packageName ] = strings;
 			}
 			else {
-				s_dic.Add( packageName, _localize );
+				s_editorLocalizeData.Add( packageName, strings );
 			}
-			return _localize;
-		}
-
-		public static string GetLocalizeName() {
-			return GUIDUtils.GetAssetPath( Hananoki.SharedModule.SettingsEditor.i.language ).FileName();
-		}
-
-		public static string Tr( EditorLocalizeDictionary _localize, string s ) {
-			if( _localize == null ) return s;
-			if( _localize.m_dic.ContainsKey( s ) ) {
-				return _localize.m_dic[ s ];
-			}
-			return s;
-		}
-
-		public static string[] Tr( EditorLocalizeDictionary _localize, string[] ss ) {
-			if( _localize == null ) return ss;
-			var lst = new List<string>();
-			foreach( var s in ss ) {
-				if( _localize.m_dic.ContainsKey( s ) ) {
-					lst.Add( _localize.m_dic[ s ] );
-				}
-				else {
-					lst.Add( s );
-				}
-			}
-			return lst.ToArray();
+			return strings;
 		}
 	}
-
-
-
-	public class EditorLocalizeDictionary {
-
-		public Dictionary<string, string> m_dic = new Dictionary<string, string>();
-
-		public void Load( string guid ) {
-			var filepPath = AssetDatabase.GUIDToAssetPath( guid );
-			m_dic = new Dictionary<string, string>();
-			if( File.Exists( filepPath ) ) {
-				var ss = File.ReadAllText( filepPath ).Split( '\n' );
-				for( int i = 0; i < ss.Length; i++ ) {
-					var s = ss[ i ];
-					s = s.TrimEnd( '\r' );
-					if( string.IsNullOrEmpty( s ) ) continue;
-					if( s[ 0 ] == '#' ) continue;
-
-					var sss = s.Split( '	' );
-					if( sss.Length == 2 ) {
-						m_dic.Add( sss[ 0 ], sss[ 1 ] );
-					}
-				}
-			}
-		}
-	}
-
+	
 
 	[AttributeUsage( AttributeTargets.Class )]
 	public class EditorLocalizeClass : Attribute { }

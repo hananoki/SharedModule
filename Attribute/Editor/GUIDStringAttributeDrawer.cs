@@ -38,10 +38,20 @@ namespace Hananoki {
 				}
 			}
 
-			rc = EditorGUI.PrefixLabel( rc, GUIUtility.GetControlID( FocusType.Passive ), label );
-			GUI.changed = false;
+			if( m_scnCache == null && !string.IsNullOrEmpty( property.stringValue ) ) {
+				//var col = GUI.contentColor;
+				//GUI.contentColor = Color.red;
+				EditorGUI.DrawRect( rc , new Color(1,0,0,0.2f) );
+				rc = EditorGUI.PrefixLabel( rc, GUIUtility.GetControlID( FocusType.Passive ), new GUIContent( $"{label.text}: missing" ) );
+				//GUI.contentColor = col;
+			}
+			else {
+				rc = EditorGUI.PrefixLabel( rc, GUIUtility.GetControlID( FocusType.Passive ), label );
+			}
+			EditorGUI.BeginChangeCheck();
+			//if()
 			Object value = (UnityObject) EditorGUI.ObjectField( rc, m_scnCache, atb.m_type, false );
-			if( GUI.changed ) {
+			if( EditorGUI.EndChangeCheck() ) {
 				property.stringValue = AssetDatabase.AssetPathToGUID( AssetDatabase.GetAssetPath( value ) );
 			}
 		}
