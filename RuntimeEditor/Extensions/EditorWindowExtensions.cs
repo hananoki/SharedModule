@@ -42,7 +42,7 @@ namespace Hananoki.Extensions {
 		}
 
 		public static void AddIMGUIContainer( this EditorWindow ew, Action gui, bool parent = false ) {
-			var instance = Activator.CreateInstance( UnityTypes.IMGUIContainer, new object[] { gui } );
+			var instance = Activator.CreateInstance( UnityTypes.UnityEngine_UIElements_IMGUIContainer, new object[] { gui } );
 
 			AddIMGUIContainer( ew, instance, parent );
 		}

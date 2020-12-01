@@ -8,10 +8,14 @@ using System.Reflection;
 using Hananoki.Extensions;
 using System.Collections.Generic;
 using Hananoki.Reflection;
+using PropertyHandler = UnityReflection.UnityEditorPropertyHandler;
+using ScriptAttributeUtility = UnityReflection.UnityEditorScriptAttributeUtility;
+using UnityEditorInternalReorderableList = UnityReflection.UnityEditorInternalReorderableList;
 
 namespace Hananoki {
 	public class HReorderableList {
 		ReorderableList m_lst;
+		UnityEditorInternalReorderableList m_lstMethod;
 
 		SerializedObject m_serializedObject;
 		SerializedProperty m_serializedProperty;
@@ -34,6 +38,7 @@ namespace Hananoki {
 		public void Create<T>( List<T> list, string headerName, int heightNum = 1 ) where T : class {
 			m_headerName = headerName;
 			m_lst = new ReorderableList( list, typeof( T ) );
+			m_lstMethod = new UnityEditorInternalReorderableList( m_lst );
 
 			m_lst.drawHeaderCallback = ( rect ) => {
 				var rc1 = rect;
@@ -72,7 +77,7 @@ namespace Hananoki {
 			m_serializedProperty = serializedObject.FindProperty( propertyName );
 			m_headerName = headerName;
 			m_lst = new ReorderableList( serializedObject, m_serializedProperty );
-
+			m_lstMethod = new UnityEditorInternalReorderableList( m_lst );
 
 
 			if( drawer ) {
@@ -90,7 +95,7 @@ namespace Hananoki {
 					rc1.height = EditorGUIUtility.singleLineHeight;
 					var prop = serializedObject.FindProperty( propertyName + ".Array.data[" + index + "]" );
 
-					var hander = new UnityEditorPropertyHandler( UnityScriptAttributeUtility.GetHandler( prop ) );
+					var hander = new PropertyHandler( ScriptAttributeUtility.GetHandler( prop ) );
 
 					try {
 						if( hander.hasPropertyDrawer ) {
@@ -184,7 +189,7 @@ namespace Hananoki {
 					m_lst.DoLayoutList();
 				}
 				else {
-					m_lst.DoListHeader();
+					m_lst.DoListHeader( m_lstMethod );
 				}
 			}
 			else {
@@ -192,7 +197,7 @@ namespace Hananoki {
 					m_lst.DoLayoutList();
 				}
 				else {
-					m_lst.DoListHeader();
+					m_lst.DoListHeader( m_lstMethod );
 				}
 			}
 			if( EditorGUI.EndChangeCheck() ) {
@@ -205,21 +210,23 @@ namespace Hananoki {
 
 	public static class ReorderableListExtension {
 		static FieldInfo _s_Defaults;
-		static MethodInfo _DoListHeader;
+		//static MethodInfo _DoListHeader;
 
-		public static void DoListHeader( this ReorderableList r ) {
-			if( _s_Defaults == null ) {
-				_s_Defaults = R.Field<ReorderableList>( "s_Defaults" );// typeof( ReorderableList ).GetField( "s_Defaults", BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic );
-			}
-			if( _DoListHeader == null ) {
-				_DoListHeader = typeof( ReorderableList ).GetMethod( "DoListHeader", BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic );
-			}
+		public static void DoListHeader( this ReorderableList r, UnityEditorInternalReorderableList method ) {
 
-			if( _s_Defaults.GetValue( null ) == null ) {
+			//if( _DoListHeader == null ) {
+			//	_DoListHeader = typeof( ReorderableList ).GetMethod( "DoListHeader", BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic );
+			//}
+
+			//if( _s_Defaults.GetValue( null ) == null ) {
+			if( ReorderableList.defaultBehaviours == null ) {
+				if( _s_Defaults == null ) {
+					_s_Defaults = R.Field<ReorderableList>( "s_Defaults" );// typeof( ReorderableList ).GetField( "s_Defaults", BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic );
+				}
 				_s_Defaults.SetValue( null, new ReorderableList.Defaults() );
 			}
 			var rect = GUILayoutUtility.GetRect( 0f, 18f, GUILayout.ExpandWidth( true ) );
-			_DoListHeader.Invoke( r, new object[] { rect } );
+			method.DoListHeader( rect );
 		}
 	}
 }

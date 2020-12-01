@@ -60,7 +60,7 @@ namespace Hananoki {
 			}
 		}
 
-		public void Flip() {
+		public void Invert() {
 			Value = !Value;
 		}
 

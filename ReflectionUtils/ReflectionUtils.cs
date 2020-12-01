@@ -9,46 +9,48 @@ namespace Hananoki.Reflection {
 		public const BindingFlags InstanceMembers = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 		public const BindingFlags AllMembers = StaticMembers | InstanceMembers;
 
+		public static object[] nullarg = new object[] { };
 
 		static Dictionary<string, PropertyInfo> s_properties = new Dictionary<string, PropertyInfo>();
 
 
-		public static Assembly LoadAssembly( string dllName = "UnityEditor.dll" ) {
-			try {
-				return Assembly.Load( dllName );
-			}
-			catch( System.IO.FileNotFoundException ) {
-			}
-			catch( Exception e ) {
-				Debug.LogException( e );
-			}
-			return null;
-		}
+		//public static Assembly LoadAssembly( string dllName = "UnityEditor.dll" ) {
+		//	try {
+		//		return Assembly.Load( dllName );
+		//	}
+		//	catch( System.IO.FileNotFoundException ) {
+		//	}
+		//	catch( Exception e ) {
+		//		Debug.LogException( e );
+		//	}
+		//	return null;
+		//}
 
-		public static Type Type( string typeName, string dllName = "UnityEditor.dll" ) {
-			return Assembly.Load( dllName ).GetType( typeName );
-		}
 
-		public static EventInfo Event( string methodName, string typeName, string dllName = "UnityEditor.dll" ) {
-			var type = Assembly.Load( dllName ).GetType( typeName );
-			return type.GetEvent( methodName, AllMembers );
-		}
+		//public static Type Type( string typeName, string dllName = "UnityEditor.dll" ) {
+		//	return Assembly.Load( dllName ).GetType( typeName );
+		//}
+
+		//public static EventInfo Event( string methodName, string typeName, string dllName = "UnityEditor.dll" ) {
+		//	var type = Assembly.Load( dllName ).GetType( typeName );
+		//	return type.GetEvent( methodName, AllMembers );
+		//}
 
 
 		//	( typeof(Method_PlayClip ), null, type.GetMethod( "PlayClip", AllMembers, null, new System.Type[] { typeof(AudioClip ), typeof(Int32 ), typeof(Boolean )
 		//}, null ) );
 		//	}
 
-		public static MethodInfo Method( string methodName, string typeName, string dllName, params Type[] types ) {
-			try {
-				var type = Assembly.Load( dllName ).GetType( typeName );
-				return type.GetMethod( methodName, AllMembers, null, types, null );
-			}
-			catch( System.Exception ) {
-				//Debug.LogException( ee );
-			}
-			return null;
-		}
+		//public static MethodInfo Method( string methodName, string typeName, string dllName, params Type[] types ) {
+		//	try {
+		//		var type = Assembly.Load( dllName ).GetType( typeName );
+		//		return type.GetMethod( methodName, AllMembers, null, types, null );
+		//	}
+		//	catch( System.Exception ) {
+		//		//Debug.LogException( ee );
+		//	}
+		//	return null;
+		//}
 
 		public static MethodInfo Method( string methodName, string typeName, string dllName = "UnityEditor.dll" ) {
 			try {
@@ -62,9 +64,8 @@ namespace Hananoki.Reflection {
 					}
 				}
 				//*/
-
-
-				return Method( methodName, type );
+				return type.GetMethod( methodName, AllMembers );
+				//return Method( methodName, type );
 			}
 			catch( System.Exception ) {
 				//Debug.LogException( ee );
@@ -72,9 +73,8 @@ namespace Hananoki.Reflection {
 			return null;
 		}
 
-		public static MethodInfo Method( string methodName, Type t ) {
-			return t.GetMethod( methodName, AllMembers );
-		}
+
+
 		
 		#region MethodInvoke
 		static MethodInfo _MethodInvoke( object obj, string propertyName ) {
@@ -102,6 +102,9 @@ namespace Hananoki.Reflection {
 
 
 
+		public static void MethodInvoke( this Type t, string methodName, params object[] args ) {
+			t.GetMethod( methodName, AllMembers ).Invoke( null, args );
+		}
 		public static T MethodInvoke<T>( this Type t, string methodName, params object[] args ) {
 			return (T) t.GetMethod( methodName, AllMembers ).Invoke( null, args );
 		}
@@ -128,60 +131,6 @@ namespace Hananoki.Reflection {
 
 
 
-		public static MethodInfo[] Methods( string methodName, string typeName, string dllName = "UnityEditor.dll" ) {
-			return Methods( methodName, typeName, Assembly.Load( dllName ) );
-		}
-
-		public static MethodInfo[] Methods( string methodName, string typeName, Assembly assembly ) {
-			if( assembly == null ) throw new Exception( "assembly null" );
-			List<MethodInfo> lst = new List<MethodInfo>();
-			var type = assembly.GetType( typeName );
-			foreach( var mi in type.GetMethods( AllMembers ) ) {
-				if( mi.Name == methodName ) {
-					lst.Add( mi );
-				}
-			}
-			return lst.ToArray();
-		}
-
-
-
-		public static MethodInfo[] Methods( Type atbType, string typeName, string dllName = "UnityEditor.dll" ) {
-			return Methods( atbType, typeName, Assembly.Load( dllName ) );
-		}
-
-		public static MethodInfo[] Methods( Type atbType, string typeName, Assembly assembly ) {
-			if( assembly == null ) throw new Exception( "assembly null" );
-
-			try {
-				var type = assembly.GetType( typeName );
-				List<MethodInfo> lst = new List<MethodInfo>();
-
-				foreach( var method in type.GetMethods( AllMembers ) ) {
-					var attributes = method.GetCustomAttributes( atbType, true );
-					if( attributes.Length <= 0 ) continue;
-					foreach( var attr in attributes ) {
-						if( attr.GetType().Name != atbType.Name ) continue;
-						lst.Add( method );
-					}
-				}
-				return lst.ToArray();
-			}
-			catch( Exception ) {
-			}
-			return new MethodInfo[ 0 ];
-		}
-
-
-
-
-		//public static T Property<T>( string name, string typeName, string dllName = "UnityEditor.dll" ) {
-		//	return (T) PropertyInfo( name, typeName, dllName ).GetValue( null, null );
-		//}
-
-		//public static PropertyInfo FindProperty( this Type type, string propertyName, BindingFlags flags = FULL_BINDING ) {
-
-		//}
 
 		#region PropertyInfo
 
@@ -226,6 +175,7 @@ namespace Hananoki.Reflection {
 			return (T) p.GetValue( null, null );
 		}
 
+
 		public static T GetProperty<T>( this object obj, string propertyName ) {
 			if( obj == null ) throw new ArgumentNullException( "The argument obj is null." );
 			var t = obj.GetType();
@@ -248,14 +198,14 @@ namespace Hananoki.Reflection {
 
 
 
-		public static void Field<TObj, TValue>( this TObj obj, string name, TValue value ) {
-			obj.GetType().GetField( name, AllMembers ).SetValue( obj, value );
-		}
+		//public static void Field<TObj, TValue>( this TObj obj, string name, TValue value ) {
+		//	obj.GetType().GetField( name, AllMembers ).SetValue( obj, value );
+		//}
 
 
-		public static T Get<T>( this FieldInfo fieldInfo, object obj = null ) {
-			return (T) fieldInfo.GetValue( obj );
-		}
+		//public static T Get<T>( this FieldInfo fieldInfo, object obj = null ) {
+		//	return (T) fieldInfo.GetValue( obj );
+		//}
 
 
 		#region FieldInfo
@@ -282,6 +232,61 @@ namespace Hananoki.Reflection {
 			var t = obj.GetType();
 			var p = t.GetField( propertyName, InstanceMembers );
 			return (T) p.GetValue( obj );
+		}
+
+		#endregion
+
+
+
+
+
+
+		// いつか消すと思う
+		#region Methods
+
+
+		public static MethodInfo[] Methods( string methodName, string typeName, string dllName = "UnityEditor.dll" ) {
+			return Methods( methodName, typeName, Assembly.Load( dllName ) );
+		}
+
+		public static MethodInfo[] Methods( string methodName, string typeName, Assembly assembly ) {
+			if( assembly == null ) throw new Exception( "assembly null" );
+			List<MethodInfo> lst = new List<MethodInfo>();
+			var type = assembly.GetType( typeName );
+			foreach( var mi in type.GetMethods( AllMembers ) ) {
+				if( mi.Name == methodName ) {
+					lst.Add( mi );
+				}
+			}
+			return lst.ToArray();
+		}
+
+
+
+		public static MethodInfo[] Methods( Type atbType, string typeName, string dllName = "UnityEditor.dll" ) {
+			return Methods( atbType, typeName, Assembly.Load( dllName ) );
+		}
+
+		public static MethodInfo[] Methods( Type atbType, string typeName, Assembly assembly ) {
+			if( assembly == null ) throw new Exception( "assembly null" );
+
+			try {
+				var type = assembly.GetType( typeName );
+				List<MethodInfo> lst = new List<MethodInfo>();
+
+				foreach( var method in type.GetMethods( AllMembers ) ) {
+					var attributes = method.GetCustomAttributes( atbType, true );
+					if( attributes.Length <= 0 ) continue;
+					foreach( var attr in attributes ) {
+						if( attr.GetType().Name != atbType.Name ) continue;
+						lst.Add( method );
+					}
+				}
+				return lst.ToArray();
+			}
+			catch( Exception ) {
+			}
+			return new MethodInfo[ 0 ];
 		}
 
 		#endregion

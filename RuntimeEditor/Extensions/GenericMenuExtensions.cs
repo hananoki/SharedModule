@@ -36,8 +36,8 @@ namespace Hananoki.Extensions {
 		}
 
 
-		
-		
+
+
 		public static void AddItem( this GenericMenu menu, string s, GenericMenu.MenuFunction2 func, object userData ) {
 			menu.AddItem( s, false, func, userData );
 		}
@@ -45,6 +45,8 @@ namespace Hananoki.Extensions {
 		public static void AddItem( this GenericMenu menu, string s, bool on, GenericMenu.MenuFunction2 func, object userData ) {
 			menu.AddItem( new GUIContent( s ), on, func, userData );
 		}
+
+
 
 		public static void AddDisabledItem( this GenericMenu menu, string s ) {
 			menu.AddDisabledItem( new GUIContent( s ) );
@@ -59,7 +61,8 @@ namespace Hananoki.Extensions {
 		}
 
 
-		public static void DropDown( this GenericMenu menu ) {
+		public static void DropDownAtMousePosition( this GenericMenu menu ) {
+			if( Event.current == null ) return;
 			menu.DropDownPopupRect( new Rect( Event.current.mousePosition, new Vector2( 0, 0 ) ) );
 		}
 		public static void DropDownLastRect( this GenericMenu menu ) {
@@ -70,6 +73,6 @@ namespace Hananoki.Extensions {
 			GUI.FocusControl( "" );
 			Event.current.Use();
 		}
-		
+
 	}
 }

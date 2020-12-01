@@ -1,10 +1,11 @@
 ﻿#if UNITY_EDITOR
 
+using Hananoki.Extensions;
+using System;
 using System.IO;
 using System.Linq;
-using UnityEngine;
+using System.Text;
 using UnityEditor;
-//using HananokiEditor;
 
 namespace Hananoki {
 
@@ -58,7 +59,7 @@ namespace Hananoki {
 		}
 
 		public static string[] GetDirectories( string path, string searchPattern, SearchOption searchOption ) {
-			if( !Directory.Exists( path ) ) return new string[0];
+			if( !Directory.Exists( path ) ) return new string[ 0 ];
 
 			return Directory.GetDirectories( path, searchPattern, searchOption );
 		}
@@ -97,7 +98,7 @@ namespace Hananoki {
 			}
 
 			//ディレクトリのコピー（再帰を使用）
-			foreach( System.IO.DirectoryInfo directoryInfo in sourceDirectory.GetDirectories() ) {
+			foreach( DirectoryInfo directoryInfo in sourceDirectory.GetDirectories() ) {
 				DirectoryCopy( directoryInfo.FullName, destinationDirectory.FullName + @"\" + directoryInfo.Name );
 			}
 		}
@@ -182,7 +183,53 @@ namespace Hananoki {
 		public static string ReadAllText( string path ) {
 			if( !File.Exists( path ) ) return null;
 
-			return File.ReadAllText( path );
+			using( var fs = new FileStream( path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite ) ) {
+				using( var st = new StreamReader( fs, Encoding.UTF8 ) ) {
+					return st.ReadToEnd();
+				}
+			}
+		}
+
+		public static void WriteAllText( string path, string contents ) {
+			using( var fs = new FileStream( path, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite ) ) {
+				using( var st = new StreamWriter( fs, Encoding.UTF8 ) ) {
+					st.Write( contents );
+				}
+			}
+			//File.WriteAllText( path, contents );
+		}
+
+		/// <summary>
+		/// テキストファイルを書き出します
+		/// </summary>
+		/// <param name="fname">ファイルパス</param>
+		/// <param name="func">書き出しアクション</param>
+		/// <param name="autoRefresh">AssetDataBaseにリフレッシュを呼び出すかどうか</param>
+		/// <param name="utf8bom">UTF8のbomをつけるかどうか</param>
+		public static void WriteFile( string fname, Action<StringBuilder> func, bool autoRefresh = true, bool utf8bom = true, bool newLineLinux = true ) {
+			if( fname.IsEmpty() ) return;
+
+			var builder = new StringBuilder();
+
+			func( builder );
+
+			var directoryName = Path.GetDirectoryName( fname );
+			if( !directoryName.IsEmpty() && !Directory.Exists( directoryName ) ) {
+				Directory.CreateDirectory( directoryName );
+			}
+
+			var text = builder.ToString();
+			if( newLineLinux ) {
+				text = text.Replace( "\r\n", "\n" );
+			}
+
+			if( utf8bom )
+				File.WriteAllText( fname, text, Encoding.UTF8 );
+			else
+				File.WriteAllText( fname, text );
+			if( autoRefresh ) {
+				AssetDatabase.Refresh( ImportAssetOptions.ImportRecursive );
+			}
 		}
 	}
 }

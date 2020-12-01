@@ -13,9 +13,12 @@ using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+//using UnityReflection;
 
 using static System.Convert;
 using UnityObject = UnityEngine.Object;
+using EditorAssemblies = UnityReflection.UnityEditorEditorAssemblies;
+using CustomEditorAttributes = UnityReflection.UnityEditorCustomEditorAttributes;
 
 namespace Hananoki {
 
@@ -28,6 +31,142 @@ namespace Hananoki {
 
 	public static class EditorHelper {
 
+		#region ScreenCapture
+
+		static string MakeScreenCaptureFileName( int width, int height ) {
+			string fpath = string.Format( "{0}/ScreenShot/ScreenShot_{1}x{2}_{3}",
+													Directory.GetCurrentDirectory(),
+													width, height,
+													DateTime.Now.ToString( "yyyy-MM-dd_HH-mm-ss" ) );
+
+			string f = fpath;
+			int index = 1;
+
+			while( File.Exists( f + ".png" ) ) {
+				f = string.Format( "{0}_{1}", fpath, index );
+				index++;
+			}
+
+			return f + ".png";
+		}
+
+		public static int s_captureScale = 1;
+
+		public static void SaveScreenCapture() {
+			var dname = Directory.GetCurrentDirectory() + "/ScreenShot";
+			if( !Directory.Exists( dname ) ) {
+				Directory.CreateDirectory( dname );
+			}
+
+			string filename = MakeScreenCaptureFileName( (int) Handles.GetMainGameViewSize().x * s_captureScale, (int) Handles.GetMainGameViewSize().y * s_captureScale );
+#if UNITY_2017_1_OR_NEWER
+			ScreenCapture.CaptureScreenshot( filename, s_captureScale );
+#else
+			Application.CaptureScreenshot( filename, Multi );
+#endif
+			Debug.Log( $"SaveScreenCapture: {filename }" );
+
+			var gameview = EditorWindow.GetWindow( typeof( EditorWindow ).Assembly.GetType( "UnityEditor.GameView" ) );
+			// GameViewを再描画 
+			gameview.Repaint();
+		}
+
+		#endregion
+
+
+
+		public static void ForceReloadInspectors() {
+			var _ForceReloadInspectors = typeof( UnityEditor.EditorUtility ).GetMethod( "ForceReloadInspectors", BindingFlags.NonPublic | BindingFlags.Static );
+			_ForceReloadInspectors.Invoke( null, null );
+		}
+
+
+		public static void SetPrefabOverride( object userData ) {
+			SerializedProperty serializedProperty = (SerializedProperty) userData;
+
+			serializedProperty.serializedObject.Update();
+			serializedProperty.prefabOverride = false;
+			serializedProperty.serializedObject.ApplyModifiedProperties();
+
+			//Assembly assembly = typeof( UnityEditor.EditorUtility ).Assembly;
+
+			ForceReloadInspectors();
+			//EditorUtility.ForceReloadInspectors();
+			//Debug.Log(aaa);
+			GUI.FocusControl( "" );
+
+			serializedProperty.serializedObject.Update();
+			serializedProperty.prefabOverride = false;
+			serializedProperty.serializedObject.ApplyModifiedProperties();
+			ForceReloadInspectors();
+		}
+
+		public static void showNotification( string text ) {
+			if( SceneView.lastActiveSceneView ) {
+				GUIContent guiContent = new GUIContent();
+				guiContent.text = text;
+				guiContent.image = EditorGUIUtility.FindTexture( "SceneAsset Icon" );
+
+				//UnityEditor.SceneView.currentDrawingSceneView.ShowNotification( guiContent );
+				SceneView.lastActiveSceneView.ShowNotification( guiContent );
+				SceneView.RepaintAll();
+			}
+		}
+
+
+
+		// Example "Unity.Addressables.Editor"
+		public static bool IsLoadAssembly(string assemblyName ) {
+			foreach( var p in EditorAssemblies.loadedAssemblies ) {
+				if( p.FullName == assemblyName ) return true;
+			}
+			return false;
+		}
+
+
+		public static Type GetTypeFromString( string typeName ) {
+			var t = Type.GetType( typeName );
+			if( t != null ) return t;
+
+			var lst = EditorAssemblies.loadedTypes
+					.Where( x => x.FullName.Contains( typeName ) )
+					.Where( x => !x.FullName.Contains( "+" ) )
+					.ToList();
+
+			if( lst.Count == 0 ) return null;
+			if( lst.Count == 1 ) return lst[ 0 ];
+
+			var tt = typeName.Split( '.' );
+
+			foreach( var p in lst ) {
+				var ss = new List<string>( p.SplitFullName() );
+				if( ss.Count != tt.Length ) continue;
+				ss.AddRange( tt );
+				if( tt.Length == ss.Distinct().Count() ) return p;
+			}
+
+			return null;
+		}
+
+
+		/// <summary>
+		/// 指定したUnityObjectのEditor型を取得します
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="o"></param>
+		/// <returns></returns>
+		public static Type GetEditorType<T>( T o ) where T : UnityObject {
+			var t = CustomEditorAttributes.FindCustomEditorTypeByType( o.GetType(), false );
+			if( t == null ) return UnityTypes.UnityEditor_GenericInspector;
+			return t;
+		}
+
+
+		public static void Reboot() {
+			ShellUtils.Start( EditorApplication.applicationPath, $"-projectPath \"{Application.dataPath.DirectoryName()}\"" );
+			EditorApplication.Exit( 0 );
+		}
+
 		public static UnityObject[] LoadSerializedFileAll( string path ) {
 			return UnityEditorInternal.InternalEditorUtility.LoadSerializedFileAndForget( path );
 		}
@@ -37,9 +176,19 @@ namespace Hananoki {
 		}
 
 		public static T LoadSerializedFileAtName<T>( string path, string name ) where T : UnityObject {
-			foreach( var p in UnityEditorInternal.InternalEditorUtility.LoadSerializedFileAndForget( path ) ) {
-				if( p.name != name ) continue;
-				return (T) p;
+			try {
+				foreach( var p in UnityEditorInternal.InternalEditorUtility.LoadSerializedFileAndForget( path ) ) {
+					if( p == null ) {
+						Debug.LogWarning( $"path: {path}, name: {name}" );
+						continue;
+					}
+					if( p.name != name ) continue;
+					return (T) p;
+				}
+			}
+			catch( Exception e ) {
+				Debug.LogException( e );
+				Debug.LogError( $"path: {path}, name: {name}" );
 			}
 			return null;
 		}
@@ -139,29 +288,25 @@ namespace Hananoki {
 
 		public static Type[] GetInheritType( Type type ) {
 			var types = new List<Type>();
+#if UNITY_2018_3_OR_NEWER
 			EditorHelper.TravaseAllType( cb );
 			void cb( Type t ) {
 				if( !t.IsSubclassOf( type ) ) return;
 				types.Add( t );
 			}
+#endif
 			return types.ToArray();
 		}
 
-		public static void TravaseAllType( Action<Type> action ) {
-			Debug.Assert( action != null, "EditorHelper.TravaseAllType is NULL" );
-			if( action == null ) return;
 
-			float fval = 0.00f;
+		public static void TravaseAllType( Action<Type> action ) {
+			if( action == null ) return;
 
 			var assemblys = AppDomain.CurrentDomain.GetAssemblies();
 
 			foreach( Assembly assembly in assemblys ) {
-				float fmax = 1.00f / assemblys.Length;
-				EditorUtility.DisplayProgressBar( "TravaseAllType", assembly.FullName, fval );
-
 				try {
 					var types = assembly.GetTypes();
-					float fadd = fmax / types.Length;
 
 					foreach( Type t in types ) {
 						try {
@@ -178,9 +323,11 @@ namespace Hananoki {
 					Debug.LogException( ee );
 				}
 			}
-			EditorUtility.ClearProgressBar();
 		}
 
+
+
+#if UNITY_2018_3_OR_NEWER
 		public static EditorWindow GetWindow( Type windowT, params Type[] desiredDockNextTo ) {
 			return GetWindow( windowT, null, true, desiredDockNextTo );
 		}
@@ -201,7 +348,7 @@ namespace Hananoki {
 			}
 			return result;
 		}
-
+#endif
 		public static EditorWindow CreateWindow( Type windowT, string title, params Type[] desiredDockNextTo ) {
 			EditorWindow t = (EditorWindow) ScriptableObject.CreateInstance( windowT );
 			bool flag = title != null;
@@ -245,37 +392,48 @@ namespace Hananoki {
 			EditorSceneManager.MarkAllScenesDirty();
 		}
 
-		public static void EditScript( Type t ) {
-			var a = ScriptableObject.CreateInstance( t );
-			AssetDatabase.OpenAsset( MonoScript.FromScriptableObject( a ) );
-			UnityObject.DestroyImmediate( a );
+		//public static void EditScript( Type t ) {
+		//	var a = ScriptableObject.CreateInstance( t );
+		//	AssetDatabase.OpenAsset( MonoScript.FromScriptableObject( a ) );
+		//	UnityObject.DestroyImmediate( a );
+		//}
+
+		public static void EditScript( UnityObject obj ) {
+			if( obj.IsSubclassOf( UnityTypes.UnityEngine_ScriptableObject ) ) {
+				EditScriptIsScriptableObject( (ScriptableObject) obj );
+			}
+			else {
+				EditScriptIsMonoBehaviour( (MonoBehaviour) obj );
+			}
 		}
 
-		public static void EditScript( ScriptableObject obj ) {
+		public static void EditScriptIsScriptableObject( ScriptableObject obj ) {
 			AssetDatabase.OpenAsset( MonoScript.FromScriptableObject( obj ) );
 		}
 
-		public static void EditScript( MonoBehaviour obj ) {
+		public static void EditScriptIsMonoBehaviour( MonoBehaviour obj ) {
 			AssetDatabase.OpenAsset( MonoScript.FromMonoBehaviour( obj ) );
 		}
 
-		public static void PingObject( Type t ) {
-			var a = ScriptableObject.CreateInstance( t );
-			PingObject( MonoScript.FromScriptableObject( a ) );
-			UnityObject.DestroyImmediate( a );
+
+		//public static void PingObject( Type t ) {
+		//	var a = ScriptableObject.CreateInstance( t );
+		//	PingObject( MonoScript.FromScriptableObject( a ) );
+		//	UnityObject.DestroyImmediate( a );
+		//}
+
+
+
+		public static void PingObject( object context ) {
+			EditorGUIUtility.PingObject( context.ContextToObject() );
 		}
 
-		public static void PingObject( UnityObject obj ) {
-			EditorGUIUtility.PingObject( obj );
-		}
-		public static void PingObject( string path ) {
-			PingObject( AssetDatabase.LoadAssetAtPath<UnityObject>( path ) );
+		public static void PingAndSelectObject( object context ) {
+			var o = context.ContextToObject();
+			EditorGUIUtility.PingObject( o );
+			Selection.activeObject = o;
 		}
 
-		public static void PingAndSelectObject( UnityObject obj ) {
-			EditorGUIUtility.PingObject( obj );
-			Selection.activeObject = obj;
-		}
 
 		public static bool IsDefine( string symbol ) {
 			foreach( var s in EditorUserBuildSettings.activeScriptCompilationDefines ) {
@@ -289,6 +447,7 @@ namespace Hananoki {
 			return EditorApplication.isPlaying || Application.isPlaying || EditorApplication.isCompiling;
 		}
 
+#if false
 		public static Texture2D LoadIcon( string name ) {
 			Texture2D icon = null;
 
@@ -330,10 +489,14 @@ namespace Hananoki {
 
 			return icon;
 		}
+#endif
 
 
-
-
+		/// <summary>
+		/// 指定したメニューの文字列が存在するかチェックします
+		/// </summary>
+		/// <param name="menuName"></param>
+		/// <returns></returns>
 		public static bool HasMenuItem( string menuName ) {
 			var menuTop = menuName.Split( '/' )[ 0 ];
 			var ss = Unsupported.GetSubmenus( menuTop );
@@ -343,6 +506,8 @@ namespace Hananoki {
 			return false;
 		}
 
+
+#if false
 		public static void TraverseHierarchyObjects( Action<GameObject> func ) {
 			foreach( GameObject obj in Resources.FindObjectsOfTypeAll( typeof( GameObject ) ) ) {
 				string path = AssetDatabase.GetAssetOrScenePath( obj );
@@ -351,6 +516,7 @@ namespace Hananoki {
 				}
 			}
 		}
+#endif
 
 		public static List<string> IsMissingProperty( GameObject gameObject ) {
 			var lst = new List<string>();
@@ -594,12 +760,6 @@ namespace Hananoki {
 		//	}
 		//}
 
-
-		public static void ForceReloadInspectors() {
-			var _ForceReloadInspectors = typeof( EditorUtility ).GetMethod( "ForceReloadInspectors", BindingFlags.NonPublic | BindingFlags.Static );
-			_ForceReloadInspectors.Invoke( null, null );
-		}
-
 		public static void ShowInspector( UnityObject uobj ) {
 			if( Selection.activeObject == uobj ) return;
 			Selection.activeObject = uobj;
@@ -613,38 +773,19 @@ namespace Hananoki {
 			var t = typeof( Editor ).Assembly.GetType( "UnityEditor.InspectorWindow" );
 			var inspector = ScriptableObject.CreateInstance( t ) as EditorWindow;
 
-			inspector.titleContent = new GUIContent( uobj.name, LoadIcon( "UnityEditor.InspectorWindow" ) );
+			inspector.titleContent = new GUIContent( uobj.name, EditorIcon.unityeditor_inspectorwindow );
 			inspector.Show( true );
 			inspector.Repaint();
 
 			if( UnitySymbol.Has( "UNITY_2018_3_OR_NEWER" ) ) {
-				R.Property( "isLocked", "UnityEditor.InspectorWindow" ).SetValue( inspector, (object) true );
+				inspector.SetProperty( "isLocked", true );
 			}
 			else {
-				R.Method( "FlipLocked", "UnityEditor.InspectorWindow" ).Invoke( inspector, null );
+				inspector.MethodInvoke( "FlipLocked" );
 			}
 		}
 
 
-		public static void SetPrefabOverride( object userData ) {
-			SerializedProperty serializedProperty = (SerializedProperty) userData;
-
-			serializedProperty.serializedObject.Update();
-			serializedProperty.prefabOverride = false;
-			serializedProperty.serializedObject.ApplyModifiedProperties();
-
-			//Assembly assembly = typeof( UnityEditor.EditorUtility ).Assembly;
-
-			ForceReloadInspectors();
-			//EditorUtility.ForceReloadInspectors();
-			//Debug.Log(aaa);
-			GUI.FocusControl( "" );
-
-			serializedProperty.serializedObject.Update();
-			serializedProperty.prefabOverride = false;
-			serializedProperty.serializedObject.ApplyModifiedProperties();
-			ForceReloadInspectors();
-		}
 
 		//public static UnityObject DuplicateAsset( UnityObject obj, string prefix = "" ) {
 		//	Type type = obj.GetType();
@@ -662,6 +803,10 @@ namespace Hananoki {
 		//}
 
 		// preview
+
+#if UNITY_2018_3_OR_NEWER
+
+		// IsSubAsset
 		public static UnityObject DuplicateAsset2( UnityObject obj, string prefix = "" ) {
 
 			if( !AssetDatabase.IsSubAsset( obj ) ) {
@@ -694,7 +839,7 @@ namespace Hananoki {
 
 			var path = AssetDatabase.GetAssetPath( obj );
 			var dir = Path.GetDirectoryName( path );
-			var fname = obj.name;
+			var fname = obj.name.IsEmpty() ? type.Name : obj.name;
 			var newPath = $"{dir}/{prefix}{fname}.asset";
 			var uniquePath = AssetDatabase.GenerateUniqueAssetPath( newPath );
 			//AssetDatabase.CopyAsset( path, uniquePath );
@@ -708,7 +853,7 @@ namespace Hananoki {
 
 			return asset;
 		}
-
+#endif
 		public static T DuplicateAsset<T>( T obj, string prefix = "" ) where T : UnityObject {
 			var path = AssetDatabase.GetAssetPath( obj );
 			var dir = Path.GetDirectoryName( path );
@@ -725,7 +870,7 @@ namespace Hananoki {
 
 
 
-
+#if false
 		public static bool AnimationControllerIsRegistered( UnityEditor.Animations.AnimatorController controller, AnimationClip clip ) {
 			var st = controller.layers[ 0 ].stateMachine.states;
 
@@ -741,8 +886,10 @@ namespace Hananoki {
 			}
 			return false;
 		}
+#endif
 
 
+#if false
 		public static void showNotification( string text ) {
 			if( SceneView.lastActiveSceneView ) {
 				GUIContent guiContent = new GUIContent();
@@ -754,6 +901,7 @@ namespace Hananoki {
 				SceneView.RepaintAll();
 			}
 		}
+#endif
 
 		/// <summary>
 		/// EditorBuildSettingsからシーン名の配列を取得する
@@ -776,6 +924,7 @@ namespace Hananoki {
 		}
 
 
+#if false
 		public static void ReadLine( string fname, char sepa, Action<string[]> func ) {
 			var sss = fs.ReadAllText( fname );
 			if( sss.IsEmpty() ) return;
@@ -792,40 +941,10 @@ namespace Hananoki {
 				}
 			}
 		}
+#endif
 
 
-		/// <summary>
-		/// テキストファイルを書き出します
-		/// </summary>
-		/// <param name="fname">ファイルパス</param>
-		/// <param name="func">書き出しアクション</param>
-		/// <param name="autoRefresh">AssetDataBaseにリフレッシュを呼び出すかどうか</param>
-		/// <param name="utf8bom">UTF8のbomをつけるかどうか</param>
-		public static void WriteFile( string fname, Action<StringBuilder> func, bool autoRefresh = true, bool utf8bom = true ) {
-			if( fname.IsEmpty() ) return;
-
-			var builder = new StringBuilder();
-
-			func( builder );
-
-			var directoryName = Path.GetDirectoryName( fname );
-			if( !directoryName.IsEmpty() && !Directory.Exists( directoryName ) ) {
-				Directory.CreateDirectory( directoryName );
-			}
-
-			if( utf8bom )
-				File.WriteAllText( fname, builder.ToString().Replace( "\r\n", "\n" ), Encoding.UTF8 );
-			else
-				File.WriteAllText( fname, builder.ToString().Replace( "\r\n", "\n" ) );
-			if( autoRefresh ) {
-				AssetDatabase.Refresh( ImportAssetOptions.ImportRecursive );
-			}
-		}
-
-
-
-
-
+#if false
 		public static ModelImporter[] GetUpdateRigList() {
 			var type = Assembly.Load( "UnityEditor.dll" ).GetType( "UnityEditor.ModelImporterRigEditor" );
 			MethodInfo mi = type.GetMethod( "DoesHumanDescriptionMatch", BindingFlags.NonPublic | BindingFlags.Static );
@@ -868,54 +987,8 @@ namespace Hananoki {
 			EditorUtility.ClearProgressBar();
 
 			return output;
-
 		}
-
-
-
-		#region インスペクタ
-
-		//		static Type typeFoldoutTitlebar;
-		//		static MethodInfo methodInfoFoldoutTitlebar;
-		//		static MethodInfo EditorGUI_FoldoutTitlebar;
-
-		//		public static bool FoldoutTitlebar( bool foldout, GUIContent label, bool skipIconSpacing ) {
-		//			if( methodInfoFoldoutTitlebar == null ) {
-		//#if UNITY_5_5 || UNITY_5_6 || UNITY_2017_1_OR_NEWER
-		//				typeFoldoutTitlebar = Assembly.Load( "UnityEditor.dll" ).GetType( "UnityEditor.EditorGUILayout" );
-		//#else
-		//				typeFoldoutTitlebar = Types.GetType( "UnityEditor.EditorGUILayout", "UnityEditor.dll" );
-		//#endif
-		//				methodInfoFoldoutTitlebar = typeFoldoutTitlebar.GetMethod( "FoldoutTitlebar", BindingFlags.NonPublic | BindingFlags.Static );
-		//			}
-
-		//			var obj = methodInfoFoldoutTitlebar.Invoke( null, new object[] { foldout, label, skipIconSpacing } );
-		//			return ToBoolean( obj );
-		//		}
-		//		public static bool FoldoutTitlebar( bool foldout, string label, bool skipIconSpacing ) {
-		//			return FoldoutTitlebar( foldout, TempContent( label ), skipIconSpacing );
-		//		}
-
-
-		//		public static bool FoldoutTitlebar( Rect rect, bool foldout, GUIContent label, bool skipIconSpacing ) {
-		//			if( EditorGUI_FoldoutTitlebar == null ) {
-		//#if UNITY_5_5 || UNITY_5_6 || UNITY_2017_1_OR_NEWER
-		//				var t = Assembly.Load( "UnityEditor.dll" ).GetType( "UnityEditor.EditorGUI" );
-		//#else
-		//				typeFoldoutTitlebar = Types.GetType( "UnityEditor.EditorGUILayout", "UnityEditor.dll" );
-		//#endif
-		//				EditorGUI_FoldoutTitlebar = t.GetMethod( "FoldoutTitlebar", BindingFlags.NonPublic | BindingFlags.Static );
-		//			}
-
-		//			var obj = EditorGUI_FoldoutTitlebar.Invoke( null, new object[] { rect, label, foldout, skipIconSpacing } );
-		//			return ToBoolean( obj );
-		//		}
-
-		//		public static bool FoldoutTitlebar( Rect rect, bool foldout, string label, bool skipIconSpacing ) {
-		//			return FoldoutTitlebar( rect, foldout, TempContent( label ), skipIconSpacing );
-		//		}
-
-		#endregion
+#endif
 	}
 
 
@@ -941,6 +1014,10 @@ namespace Hananoki {
 
 	// preview
 	public static class HGUIUtility {
+
+		public static void DisableFocus() {
+			GUI.FocusControl( "" );
+		}
 
 		// GUIToScreenRectは2019.1から
 		public static Rect GUIToScreenRect( Rect guiRect ) {

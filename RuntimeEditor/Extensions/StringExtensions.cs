@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityObject = UnityEngine.Object;
 
 namespace Hananoki.Extensions {
 	public static partial class EditorExtensions {
@@ -10,9 +11,23 @@ namespace Hananoki.Extensions {
 		public static string quote( this string s ) {
 			return '"' + s + '"';
 		}
+		public static string separatorToOS( this string s ) {
+			return s.Replace( '/', Path.DirectorySeparatorChar );
+		}
 
-		public static string pathSeparator( this string s ) {
-			return s.Replace( '/', '\\' );
+		public static string separatorToSlash( this string s ) {
+			return s.Replace( Path.DirectorySeparatorChar, '/' );
+		}
+
+
+		/// <summary>
+		/// 入力パスをいい感じのディレクトリ名にする
+		/// </summary>
+		public static string PrettyDirectoryName( this string s ) {
+			s = s.TrimEnd( '/', '\\' );
+			s = s.FileToDirectory();
+			s = s.separatorToSlash();
+			return s;
 		}
 
 		public static string nicify( this string s ) {
@@ -66,19 +81,26 @@ namespace Hananoki.Extensions {
 			return (Texture2D) AssetDatabase.GetCachedIcon( s );
 		}
 
-		[System.Obsolete( "Use GetAssetPathAtGUID" )]
-		public static string GetAssetPath( this string s ) {
-			return AssetDatabase.GUIDToAssetPath( s );
-		}
+		//[System.Obsolete( "Use GetAssetPathAtGUID" )]
+		//public static string GetAssetPath( this string s ) {
+		//	return AssetDatabase.GUIDToAssetPath( s );
+		//}
+
 
 		/// <summary>
 		/// GUIDからアセットパスを取得します
 		/// </summary>
-		/// <param name="s"></param>
+		/// <param name="guid">GUID</param>
 		/// <returns></returns>
-		public static string GetAssetPathAtGUID( this string guid ) {
-			return AssetDatabase.GUIDToAssetPath( guid );
-		}
+		public static string ToAssetPath( this string guid ) => AssetDatabase.GUIDToAssetPath( guid );
+
+
+
+		public static string ToGUID( this string path ) => AssetDatabase.AssetPathToGUID( path );
+
+
+
+
 
 		public static string[] GetFilesFromAssetPath( this string assetPath ) {
 			return DirectoryUtils.GetFiles( assetPath, "*", SearchOption.AllDirectories )
@@ -87,21 +109,38 @@ namespace Hananoki.Extensions {
 		}
 
 		public static string[] GetFilesFromAssetGUID( this string guid ) {
-			return GetFilesFromAssetPath( guid.GetAssetPath() );
+			return GetFilesFromAssetPath( guid.ToAssetPath() );
 		}
 
-		[System.Obsolete( "Use LoadAssetAtGUID" )]
-		public static Object LoadAsset( this string s ) {
-			return (Object) GUIDUtils.LoadAssetAtGUID<Object>( s );
+
+		public static bool StartWithAssets( this string p ) {
+			if( p[ 1 ] == 's' || p[ 1 ] == 'S' ) return true;
+			if( p[ 0 ] == 'P' || p[ 1 ] == 'p' ) return true;
+			return false;
 		}
 
-		public static Object LoadAssetAtGUID( this string s ) {
-			return (Object) GUIDUtils.LoadAssetAtGUID<Object>( s );
+		public static T LoadAsset<T>( this string s ) where T : UnityObject {
+			if( s.IsEmpty() ) return null;
+			if( s.StartWithAssets() ) return AssetDatabase.LoadAssetAtPath<T>( s );
+
+			return AssetDatabaseUtils.LoadAssetAtGUID<T>( s );
 		}
 
-		public static Object LoadAssetAtPath( this string s ) {
-			return (Object) AssetDatabase.LoadAssetAtPath<Object>( s );
+		public static UnityObject LoadAsset( this string s ) => LoadAsset<UnityObject>( s );
+
+
+
+		public static UnityObject[] LoadAllAssets( this string s ) {
+			if( s.StartWithAssets() ) return AssetDatabase.LoadAllAssetsAtPath( s );
+
+			return AssetDatabase.LoadAllAssetsAtPath( s.ToAssetPath() );
 		}
+
+
+		public static UnityObject[] LoadAllSubAssets( this string s ) {
+			return AssetDatabaseUtils.LoadAllSubAssets( s );
+		}
+
 
 		public static Vector2 CalcSizeFromLabel( this string s ) {
 			return EditorStyles.label.CalcSize( EditorHelper.TempContent( s ) );
@@ -142,9 +181,36 @@ namespace Hananoki.Extensions {
 			return s.Replace( oldValue, newValue );
 		}
 
-		public static string colorTag( this string s, string color ) {
-			return "<color=" + s + ">" + s + "</color>";
+
+		public static bool IsExistsFile( this string s ) {
+			return File.Exists( s );
 		}
+
+		public static bool IsExistsDirectory( this string s ) {
+			return Directory.Exists( s );
+		}
+
+		public static string FileToDirectory( this string s ) {
+			if( s.IsExistsFile() ) {
+				s = s.DirectoryName();
+			}
+			return s;
+		}
+
+		public static string ReadAllText( this string path ) {
+			if( !path.IsExistsFile() ) return string.Empty;
+			return fs.ReadAllText( path );
+		}
+
+		public static void WriteAllText( this string path, string contents ) {
+			//if( !path.IsExistsFile() ) return string.Empty;
+			fs.WriteAllText( path, contents );
+		}
+
+
+		//public static string colorTag( this string s, string color ) {
+		//	return "<color=" + s + ">" + s + "</color>";
+		//}
 
 
 		/// <summary>

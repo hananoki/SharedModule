@@ -9,6 +9,10 @@ namespace Hananoki {
 	public class HEditorWindow : EditorWindow {
 		protected Action drawGUI;
 
+		public void SetTitle( string text ) => this.SetTitle( new GUIContent( text ) );
+
+		public void SetTitle( string text, Texture2D image ) => this.SetTitle( new GUIContent( text, image ) );
+
 		public void SetPositionCenter( EditorWindow parent ) {
 			SetPositionCenter( parent, position.width, position.height );
 		}
@@ -33,8 +37,30 @@ namespace Hananoki {
 			}
 		}
 
+		public void OnGUI() {
+			HGUIScope.Reset();
+			try {
+				OnDefaultGUI();
+			}
+			catch( ExitGUIException ) {
+			}
+			//catch( MissingReferenceException ) {
+			//}
+			catch( Exception e ) {
+				Debug.LogException( e );
+			}
+			HGUIScope.SafePop();
+		}
 
-		public static EditorWindow ShowWindow( Type editorWindowType , bool utility = false ) {
+		public virtual void OnDefaultGUI() { }
+
+		//public void DefaultDrawToolBar( Action draw ) {
+		//	GUILayout.BeginHorizontal( EditorStyles.toolbar );
+		//	draw?.Invoke();
+		//	GUILayout.EndHorizontal();
+		//}
+
+		public static EditorWindow ShowWindow( Type editorWindowType, bool utility = false ) {
 			return GetWindow( editorWindowType, utility );
 		}
 
@@ -53,6 +79,11 @@ namespace Hananoki {
 		public static void RepaintWindow( Type editorWindowType ) {
 			FindArray( editorWindowType ).RepaintArray();
 		}
+
+
+		public static void RepaintProjectWindow() => EditorApplication.RepaintProjectWindow();
+		public static void RepaintHierarchyWindow() => EditorApplication.RepaintHierarchyWindow();
+		public static void RepaintAnimationWindow() => EditorApplication.RepaintAnimationWindow();
 	}
 
 
@@ -89,7 +120,7 @@ namespace Hananoki {
 			GUILayout.EndHorizontal();
 		}
 
-		void OnGUI() {
+		public override void OnDefaultGUI() {
 			DrawTitleBar();
 
 			scrollPos = EditorGUILayout.BeginScrollView( scrollPos );

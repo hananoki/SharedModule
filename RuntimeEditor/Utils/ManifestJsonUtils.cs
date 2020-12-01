@@ -11,12 +11,12 @@ namespace Hananoki {
 		const string kPATH = "Packages/manifest.json";
 
 		public static void Load() {
-			s_manifest = UnityEditorJson.Deserialize( File.ReadAllText( kPATH ) ) as Dictionary<string, object>;
+			s_manifest = EditorJson.Deserialize( File.ReadAllText( kPATH ) ) as Dictionary<string, object>;
 		}
 
 
 		public static void Save() {
-			File.WriteAllText( kPATH, UnityEditorJson.Serialize( s_manifest, true ) );
+			File.WriteAllText( kPATH, EditorJson.Serialize( s_manifest, true ) );
 			AssetDatabase.Refresh();
 		}
 

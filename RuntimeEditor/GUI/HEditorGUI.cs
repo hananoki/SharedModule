@@ -11,6 +11,14 @@ namespace Hananoki {
 	public static class HEditorGUI {
 		public static Rect lastRect;
 
+		public static void DrawDebugRect( Rect position ) {
+			EditorGUI.DrawRect( position, new Color( 0, 0, 1, 0.2f ) );
+		}
+		public static void DrawDebugRectAtLastRect() {
+			DrawDebugRect( GUILayoutUtility.GetLastRect() );
+		}
+
+
 		#region MiniLabelR
 
 		public static void MiniLabelR( Rect position, string title ) {
@@ -32,7 +40,7 @@ namespace Hananoki {
 
 		#region HeaderTitle
 
-		static void DrawLiine( Rect rc ) {
+		public static void DrawLine( Rect rc ) {
 			using( new GUIColorScope() ) {
 				if( EditorGUIUtility.isProSkin )
 					GUI.color = ColorUtils.RGB( 176 );
@@ -48,7 +56,7 @@ namespace Hananoki {
 				position.height = 18;
 				//position.y += 4;
 				EditorGUI.LabelField( position, title, EditorStyles.boldLabel );
-				DrawLiine( position );
+				DrawLine( position );
 			}
 			catch( ExitGUIException ) {
 			}
@@ -108,10 +116,15 @@ namespace Hananoki {
 		public static string FileFiled( Rect position, string path, string[] filters ) {
 			return FileFiled( position, null, path, filters );
 		}
+		// フォームのファイル拡張子 { "Image files", "png,jpg,jpeg", "All files", "*" }。
 		public static string FileFiled( Rect position, GUIContent content, string path, string[] filters ) {
 			var name = path.IsEmpty() ? "None (File)" : path;
 			var rcL = position;
 			rcL.width -= 18;
+
+			//if( !path.IsEmpty() && !path.IsExistsFile() ) {
+			//	HEditorGUI.DrawDebugRect( position );
+			//}
 
 			if( content == null ) {
 				EditorGUI.LabelField( rcL, GUIContent.none, EditorHelper.TempContent( name ), HEditorStyles.folderField );
@@ -122,7 +135,12 @@ namespace Hananoki {
 			}
 			if( IconButton( position.AlignR( 16 ), EditorIcon.folder, 1 ) ) {
 				// new string[] { "Image files", "png,jpg,jpeg", "All files", "*" }
-				path = EditorUtility.OpenFilePanelWithFilters( "Select File", "", filters );
+				var path2 = EditorUtility.OpenFilePanelWithFilters( "Select File", "", filters );
+				if( !path2.IsEmpty() && path != path2 ) {
+					path = path2;
+					GUI.changed = true;
+				}
+				//throw new ExitGUIException();
 			}
 			HEditorGUI.lastRect = rcL;
 
@@ -256,7 +274,7 @@ namespace Hananoki {
 
 			var rr = lastRect.AlignCenter( 12, 12 );
 			//rr.y -= 1;
-			GUI.DrawTexture( rr, Shared.Icon.Get( Shared.EditorResource.icondropdown_ ), ScaleMode.ScaleToFit );
+			GUI.DrawTexture( rr, SharedModule.Icon.icondropdown_, ScaleMode.ScaleToFit );
 			//EditorGUI.DrawRect( lastRect, new Color( 0, 0, 1, 0.5f ) );
 			return false;
 		}

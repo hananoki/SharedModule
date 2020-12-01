@@ -8,11 +8,167 @@ using UnityObject = UnityEngine.Object;
 
 namespace Hananoki {
 
+	public static class HGUILayout {
+		public static void Label( string text, Texture image, params GUILayoutOption[] options ) {
+			var style = EditorStyles.label;
+			style.fixedHeight = EditorGUIUtility.singleLineHeight;
+			GUILayout.Label( EditorHelper.TempContent( text, image ), style, options );
+		}
+
+		public static void Label( string text, Texture image, GUIStyle style, params GUILayoutOption[] options ) {
+			GUILayout.Label( EditorHelper.TempContent( text, image ), style, options );
+		}
+
+
+		public static bool Toggle( bool value, string text, params GUILayoutOption[] options ) {
+			return Toggle( value, EditorHelper.TempContent( text ), EditorStyles.toggle, options );
+		}
+		public static bool Toggle( bool value, string text, GUIStyle style, params GUILayoutOption[] options ) {
+			return Toggle( value, EditorHelper.TempContent( text ), style, options );
+		}
+
+		public static bool Toggle( bool value, GUIContent content, GUIStyle style, params GUILayoutOption[] options ) {
+
+			var position = GUILayoutUtility.GetRect( content, style, options );
+			var result = EditorHelper.HasMouseClick( position );
+
+			if( value )
+				EditorGUI.DrawRect( position, Color.white );
+			var b = GUI.Toggle( position, value, content, style );
+
+			return result;
+		}
+
+
+		static GUIStyle s_ToggleBox;
+		public static GUIStyle toggleBox {
+			get {
+				if( s_ToggleBox == null ) {
+					s_ToggleBox = new GUIStyle( EditorStyles.helpBox );
+					s_ToggleBox.padding = new RectOffset( 4, 4, 2, 2 );
+					s_ToggleBox.margin = new RectOffset( 3, 3, 2, 2 );
+					s_ToggleBox.onNormal= s_ToggleBox.normal;
+				}
+				return s_ToggleBox;
+			}
+		}
+
+		public static bool ToggleBox( bool value, string text, params GUILayoutOption[] options ) {
+			return ToggleBox( value, EditorHelper.TempContent( text ), options );
+		}
+
+		public static bool ToggleBox( bool value, GUIContent content, params GUILayoutOption[] options ) {
+
+			var position = GUILayoutUtility.GetRect( content, toggleBox, options );
+			var result = EditorHelper.HasMouseClick( position );
+
+			var backgroundColor = GUI.backgroundColor;
+			//if( value ) {
+			//	GUI.backgroundColor = ColorUtils.RGB( 169, 201, 255 );
+			//}
+
+			//if( value )
+			//	EditorGUI.DrawRect( position, Color.white );
+			using( new GUIBackgroundColorScope() ) {
+				if( value ) {
+					//GUI.backgroundColor = ColorUtils.RGB( 169, 201, 255 );
+					var r=position;
+					r.x += 1;
+					r.width -= 2;
+					EditorGUI.DrawRect( r, EditorGUIUtility.isProSkin ? ColorUtils.RGB( 128, 128, 128 ) : Color.white );
+					//GUI.backgroundColor = ColorUtils.RGB( 200, 200, 200 );
+				}
+				var b = GUI.Toggle( position, value, content, toggleBox );
+
+				return result;
+			}
+		}
+	}
+
+
+
+
 	public static class HEditorGUILayout {
 
+		#region LabelField
+
+		public static void LabelField( string text, Texture image, params GUILayoutOption[] options ) {
+			var style = EditorStyles.label;
+			style.fixedHeight = EditorGUIUtility.singleLineHeight;
+			EditorGUILayout.LabelField( EditorHelper.TempContent( text, image ), style, options );
+		}
+
+		public static void LabelField( string text, Texture image, GUIStyle style, params GUILayoutOption[] options ) {
+			EditorGUILayout.LabelField( EditorHelper.TempContent( text, image ), style, options );
+		}
+
+		#endregion
+
 		#region HeaderTitle
+		public static bool ToggleBox( string title, bool value, Texture2D iconButton = null, Action actionButton = null ) {
+			return ToggleBox( value, title, false, iconButton, actionButton );
+		}
+
+		public static bool ToggleBox( bool value, string title, bool boldFont, Texture2D iconButton = null, Action actionButton = null ) {
+			bool result = value;
+			var backgroundColor = GUI.backgroundColor;
+			if( value ) {
+				GUI.backgroundColor = ColorUtils.RGB( 169, 201, 255 );
+			}
+
+			GUILayout.BeginHorizontal( EditorStyles.helpBox );
+			if( boldFont ) {
+				GUI.skin.toggle.fontStyle = FontStyle.Bold;
+			}
+			result = GUILayout.Toggle( value, title );
+			GUILayout.FlexibleSpace();
+
+			if( iconButton != null ) {
+				if( IconButton( iconButton ) ) {
+					actionButton?.Invoke();
+				}
+			}
+
+			GUILayout.EndHorizontal();
+			GUI.skin.toggle.fontStyle = FontStyle.Normal;
+			GUI.backgroundColor = backgroundColor;
+
+			return result;
+		}
 
 
+		public static bool ToggleBox( bool value, Texture2D ico, string text, bool boldFont = false ) {
+			bool result = value;
+			var backgroundColor = GUI.backgroundColor;
+			if( value ) {
+				GUI.backgroundColor = ColorUtils.RGB( 169, 201, 255 );
+			}
+			GUILayout.BeginHorizontal( EditorStyles.helpBox );
+			if( boldFont ) {
+				GUI.skin.toggle.fontStyle = FontStyle.Bold;
+			}
+			result = GUILayout.Toggle( value, ico );
+			var r = GUILayoutUtility.GetLastRect();
+			r.x += 56;
+			GUI.Label( r, text, EditorStyles.boldLabel );
+			//GUILayout.FlexibleSpace();
+
+			//if( iconButton != null ) {
+			//	if( IconButton( iconButton ) ) {
+			//		actionButton?.Invoke();
+			//	}
+			//}
+
+			GUILayout.EndHorizontal();
+			GUI.skin.toggle.fontStyle = FontStyle.Normal;
+			GUI.backgroundColor = backgroundColor;
+
+			return result;
+		}
+
+		#endregion
+
+		#region HeaderTitle
 
 		public static void HeaderTitle( string title, float space = 4 ) {
 			var labelCont = EditorHelper.TempContent( title );
@@ -22,6 +178,8 @@ namespace Hananoki {
 		}
 
 		#endregion
+
+
 
 		public static string TextFieldAndAction( string label, string text, Action buttonAction, bool safeCheck = true, params GUILayoutOption[] options ) {
 			var labelCont = EditorHelper.TempContent( label );
@@ -44,11 +202,48 @@ namespace Hananoki {
 		}
 
 
+
+		public static string FileFiled( string label, string file, string[] filters, params GUILayoutOption[] options ) {
+			EditorGUILayout.LabelField( label/*, EditorStyles.boldLabel*/ );
+			var backgroundColor = GUI.backgroundColor;
+			if( !file.IsEmpty() && !file.IsExistsFile() ) {
+				GUI.backgroundColor = HEditorStyles.helpBoxInvalidColor;
+			}
+			HGUIScope.Horizontal( EditorStyles.helpBox );
+			var rect = GUILayoutUtility.GetRect( GUIContent.none, HEditorStyles.folderField, options );
+			var newfile = HEditorGUI.FileFiled( rect, GUIContent.none, file, filters );
+			HGUIScope.End();
+
+			GUI.backgroundColor = backgroundColor;
+
+			return newfile;
+		}
+
+
 		public static string FolderFiled( string label, string path, params GUILayoutOption[] options ) {
 			var rect = GUILayoutUtility.GetRect( GUIContent.none, HEditorStyles.folderField, options );
 
 			return HEditorGUI.FolderFiled( rect, EditorHelper.TempContent( label ), path );
 		}
+
+
+		public static void PreviewFolder(/* string label, */string path, Action presetAction = null ) {
+			HGUIScope.Horizontal( EditorStyles.helpBox );
+			GUILayout.Label( path );
+			GUILayout.FlexibleSpace();
+			if( presetAction != null ) {
+				if( IconButton( EditorIcon.preset_context ) ) {
+					presetAction.Invoke();
+				}
+			}
+			HGUIScope.Disable( !path.IsExistsDirectory() );
+			if( IconButton( EditorIcon.icons_processed_folderempty_icon_asset ) ) {
+				ShellUtils.OpenDirectory( path );
+			}
+			HGUIScope.End();
+			HGUIScope.End();
+		}
+
 
 
 		public static float FrameSlider( float value, int leftValue, int rightValue, params GUILayoutOption[] options ) {
@@ -134,18 +329,19 @@ namespace Hananoki {
 		}
 
 		public static bool ToggleLeft( string s, bool b, float heighOffset = 0 ) {
-			using( new GUILayout.HorizontalScope() ) {
-				GUILayout.Space( 15 * EditorGUI.indentLevel );
+			GUILayout.BeginHorizontal();
+			GUILayout.Space( 15 * EditorGUI.indentLevel );
 
-				var rt = EditorHelper.GetLayout( "", EditorStyles.toggle, GUILayout.Width( 16 ) );
-				rt.y += heighOffset;
-				bool b11 = GUI.Toggle( rt, b, "" );
-				var r = EditorHelper.GetLayout( s, EditorStyles.label );
-				r.x -= 5;
-				r.y += heighOffset;
-				GUI.Label( r, s, EditorStyles.label );
-				return b11;
-			}
+			var rt = EditorHelper.GetLayout( "", EditorStyles.toggle, GUILayout.Width( 16 ), GUILayout.Height( EditorGUIUtility.singleLineHeight ) );
+			rt.y += heighOffset;
+			bool b11 = GUI.Toggle( rt, b, "" );
+			var r = EditorHelper.GetLayout( s, EditorStyles.label );
+			r.x -= 5;
+			r.y += heighOffset;
+			//if( b11 ) HEditorGUI.DrawDebugRect( r );
+			GUI.Label( r, s, EditorStyles.label );
+			GUILayout.EndHorizontal();
+			return b11;
 		}
 
 
@@ -174,7 +370,7 @@ namespace Hananoki {
 		#region ObjectFieldAndAction<T>
 
 		public static T ObjectField<T>( string label, UnityObject obj, bool allowSceneObjects = false, params GUILayoutOption[] options ) where T : UnityObject {
-			return ObjectField<T>( EditorHelper.TempContent( label ), obj, allowSceneObjects ,  options );
+			return ObjectField<T>( EditorHelper.TempContent( label ), obj, allowSceneObjects, options );
 		}
 
 		public static T ObjectField<T>( GUIContent content, UnityObject obj, bool allowSceneObjects = false, params GUILayoutOption[] options ) where T : UnityObject {
@@ -253,52 +449,6 @@ namespace Hananoki {
 
 	}
 
-
-
-
-	public static class HGUIScope {
-		public static void Area( Rect rect, Action action, params GUILayoutOption[] options ) {
-			if( action == null ) return;
-			GUILayout.BeginArea( rect );
-			action.Invoke();
-			GUILayout.EndArea();
-		}
-
-		public static void Horizontal( Action action, params GUILayoutOption[] options ) {
-			if( action == null ) return;
-			GUILayout.BeginHorizontal();
-			action.Invoke();
-			GUILayout.EndHorizontal();
-		}
-
-		public static void Horizontal( GUIStyle style, Action action, params GUILayoutOption[] options ) {
-			if( action == null ) return;
-			GUILayout.BeginHorizontal( style );
-			action.Invoke();
-			GUILayout.EndHorizontal();
-		}
-
-		public static void Vertical( Action action, params GUILayoutOption[] options ) {
-			if( action == null ) return;
-			GUILayout.BeginVertical();
-			action.Invoke();
-			GUILayout.EndVertical();
-		}
-		public static void Vertical( GUIStyle style, Action action, params GUILayoutOption[] options ) {
-			if( action == null ) return;
-			GUILayout.BeginVertical( style );
-			action.Invoke();
-			GUILayout.EndVertical();
-		}
-
-		public static void Disable( bool disabled, Action action ) {
-			if( action == null ) return;
-
-			EditorGUI.BeginDisabledGroup( disabled );
-			action.Invoke();
-			EditorGUI.EndDisabledGroup();
-		}
-	}
 
 
 

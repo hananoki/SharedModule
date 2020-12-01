@@ -1,5 +1,61 @@
 # Shared Module
 
+## [1.7.0] - 2020-12-02
+
+### Added
+- Added Helper Class
+- Added EditorContextHandler Class
+- Added EditorFolder Class
+- Added ObjectExtensions Class
+- Added StopwatchScope Class
+- Added ProgressBarScope Class
+- Added Clipboard Class
+- Added ShellUtils Class
+- Added EditorHelper Method
+  - IsLoadAssembly
+  - GetTypeFromString
+  - GetEditorType
+  - Reboot
+- Added HGUIUtility Method
+  - DisableFocus
+- Added EditorExtensions Method
+  - separatorToOS
+  - separatorToSlash
+  - PrettyDirectoryName
+  - StartWithAssets
+  - LoadAsset
+  - LoadAllAssets
+  - LoadAllSubAssets
+  - FileToDirectory
+  - ReadAllText
+  - WriteAllText
+- Added HEditorWindow Method
+  - OnDefaultGUI <- OnGUI wrapper
+  - RepaintProjectWindow
+  - RepaintHierarchyWindow
+  - RepaintAnimationWindow
+- Added HTreeView Method
+  - SetExpandedFollowParents
+- Added ProjectBrowserUtils Method
+  - ProjectBrowserUtils
+- Added CreateScriptAssetFromTemplateFile
+
+### Changed
+- EditorExtensions Method
+  - LoadAssetAtPath, LoadAssetAtGUID have been integrated into LoadAsset
+  - IsExistsFile, IsExistsDirectory moved from Extensions
+- Unified asset path acquisition to ToAssetPath
+- Unified GUID acquisition to ToGUID
+- HGUILayoutToolbar changed to EditorStyles base as HGUIToolbar
+- Commented on unused methods in EditorHelper
+- EditorResourceIcon -> PackageResourceIcon
+- We are organizing ReflectionUtils, which is still ongoing.
+- Separation of reflection into UnityReflection namespace
+  - Replace Delegate with Action
+
+### Fixed
+- Fixed iOS and Universal Windows Platform icon acquisition mistakes
+
 ## [1.6.2] - 2020-11-19
 
 ### Added

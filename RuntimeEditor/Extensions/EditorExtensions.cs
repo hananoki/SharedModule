@@ -1,11 +1,12 @@
-﻿
+﻿#pragma warning disable 618
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using System.Text.RegularExpressions;
-using Hananoki.Reflection;
+using Hananoki.Extensions;
 
 using UnityObject = UnityEngine.Object;
 
@@ -13,12 +14,53 @@ namespace Hananoki.Extensions {
 
 	public static partial class EditorExtensions {
 
-		public static T ToCast<T>( this object obj ) {
-			return (T) obj;
+		public static Type ContextToType( this object context ) {
+			Type result = context as Type;
+
+			if( result !=null) return result;
+
+			if( Type.GetTypeHandle( context ).Equals( typeof( string ).TypeHandle ) ) {
+				var s = (string) context;
+				result = Type.GetType( s );
+				if( result == null ) {
+					result = EditorHelper.GetTypeFromString(s);
+				}
+			}
+
+			return result;
 		}
-		public static int ToInt( this object obj ) {
-			return obj.ToCast<int>();
+
+		public static string ContextToAssetPath( this object context ) {
+			string result;
+
+			if( Type.GetTypeHandle( context ).Equals( typeof( string ).TypeHandle ) ) {
+				var s = (string) context;
+				if( s.StartWithAssets() ) {
+					result = s;
+				}
+				else {
+					result = s.ToAssetPath();
+				}
+			}
+			else {
+				result = ( (UnityObject) context ).ToAssetPath();
+			}
+			return result;
 		}
+
+		public static UnityObject ContextToObject( this object context ) {
+			UnityObject result;
+			if( Type.GetTypeHandle( context ).Equals( typeof( string ).TypeHandle ) ) {
+				var s = (string) context;
+
+				result = s.LoadAsset();
+			}
+			else {
+				result = (UnityObject) context;
+			}
+			return result;
+		}
+
 
 		public static void SetTitle( this EditorWindow wnd, string text ) {
 			wnd.SetTitle( new GUIContent( text ) );
@@ -29,35 +71,15 @@ namespace Hananoki.Extensions {
 		}
 
 		public static void SetTitle( this EditorWindow wnd, GUIContent cont ) {
-			var property = typeof( EditorWindow ).GetProperty( "titleContent" );
-
-			if( property != null ) {
-				// インスタンスの値を取得
-				var beforeName = property.GetValue( wnd, null );
-
-				// インスタンスに値を設定
-				property.SetValue( wnd, cont, null );
+			if( UnitySymbol.UNITY_5_3_OR_NEWER ) {
+				wnd.titleContent = cont;
 			}
 			else {
-#if UNITY_5_0
 				wnd.title = cont.text;
-#else
-				wnd.titleContent = cont;
-#endif
 			}
 		}
 
-		public static Texture2D GetCachedIcon( this UnityObject obj ) {
-			return (Texture2D) AssetDatabase.GetCachedIcon( obj.GetAssetPath() );
-		}
 
-		public static string GetAssetPath( this UnityObject obj ) {
-			return AssetDatabase.GetAssetPath( obj );
-		}
-
-		public static string GetGUID( this UnityObject obj ) {
-			return AssetDatabase.AssetPathToGUID( GetAssetPath( obj ) );
-		}
 
 		public static string GetPropertyType( this SerializedProperty property ) {
 			var type = property.type;
@@ -71,8 +93,9 @@ namespace Hananoki.Extensions {
 		//	_property.GetProperty<string>
 		//}
 
-		public static void AddObjectToAsset( this UnityObject parent, UnityObject child ) {
-			AssetDatabase.AddObjectToAsset( child, parent );
+
+		public static void Field( this SerializedProperty property ) {
+			EditorGUILayout.PropertyField( property );
 		}
 	}
 

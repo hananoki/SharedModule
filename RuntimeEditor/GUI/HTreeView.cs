@@ -1,4 +1,5 @@
 ﻿using Hananoki.Reflection;
+using Hananoki.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -24,11 +25,11 @@ namespace Hananoki {
 		}
 
 		public T[] GetSelectionItems() {
-			return GetSelection().Select( _id => (T) FindItem( _id, rootItem ) ).ToArray();
+			return GetSelection().Select( _id => (T) FindItem( _id, rootItem ) ).Where( x => x != null ).ToArray();
 		}
 
 		public T FindItem( int id ) {
-			return (T)FindItem( id, rootItem );
+			return (T) FindItem( id, rootItem );
 		}
 
 		public void InitID() {
@@ -41,15 +42,28 @@ namespace Hananoki {
 		}
 
 
+		public void SetExpandedFollowParents( TreeViewItem item ) {
+			while( item.parent != null ) {
+				SetExpanded( item.parent.id, true );
+				item = item.parent;
+			}
+		}
+
+
 		public void DisableSelectionStyle() {
 			// 2019.3以降はm_SelectionStyleで独立してるので書き換えれる
-			if( UnitySymbol.Has( "UNITY_2019_3_OR_NEWER" ) ) {
-				object _obj = this;
-				var tt = typeof( TreeView );
-				var p = tt.GetField( "m_TreeView", BindingFlags.Instance | BindingFlags.NonPublic );
-				var _treeView = p.GetValue( _obj );
-				var _gui = _treeView.GetProperty<object>( "gui" );
-				_gui.SetProperty( "selectionStyle", EditorStyles.label );
+			try {
+				if( UnitySymbol.Has( "UNITY_2019_3_OR_NEWER" ) ) {
+					object _obj = this;
+					var tt = typeof( TreeView );
+					var p = tt.GetField( "m_TreeView", BindingFlags.Instance | BindingFlags.NonPublic );
+					var _treeView = p.GetValue( _obj );
+					var _gui = _treeView.GetProperty<object>( "gui" );
+					_gui.SetProperty( "selectionStyle", EditorStyles.label );
+				}
+			}
+			catch(Exception e) {
+				Debug.LogException( e );
 			}
 		}
 
@@ -58,7 +72,8 @@ namespace Hananoki {
 			GUILayout.Box( "", HEditorStyles.treeViweArea, GUILayout.ExpandWidth( true ), GUILayout.ExpandHeight( true ) );
 
 			var dropRc = GUILayoutUtility.GetLastRect();
-
+			//dropRc.x += 1;
+			//dropRc.width -= 2;
 			OnGUI( dropRc );
 		}
 
@@ -129,6 +144,43 @@ namespace Hananoki {
 		}
 
 
+		#region m_ContextOnItem
+		bool _ContextOnItem = false;
+
+		protected virtual void OnContextClicked() { }
+		protected virtual void OnContextClickedItem( int id ) { }
+
+		sealed protected override void ContextClicked() {
+			if( _ContextOnItem ) {
+				_ContextOnItem = false;
+				return;
+			}
+			OnContextClicked();
+		}
+
+
+		sealed protected override void ContextClickedItem( int id ) {
+			_ContextOnItem = true;
+			base.ContextClickedItem( id );
+			OnContextClickedItem( id );
+		}
+
+		#endregion
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		public GUIStyle ControlLabel;
 
 		void _Label( Rect rect, GUIContent content, GUIStyle style, RowGUIArgs args ) {
@@ -136,6 +188,7 @@ namespace Hananoki {
 				style.Draw( rect, content, false, false, args.selected, args.selected );
 			}
 		}
+
 		protected void Label( Rect rect, GUIContent content, RowGUIArgs args ) {
 			if( ControlLabel == null ) {
 				ControlLabel = new GUIStyle( "TV Line" );
@@ -147,6 +200,21 @@ namespace Hananoki {
 		}
 		protected void Label( Rect rect, string text, RowGUIArgs args ) {
 			Label( rect, EditorHelper.TempContent( text ), args );
+		}
+	}
+
+	public abstract class HTreeViewContextMenu<T> where T : TreeViewItem {
+		protected Action<T[]> m_action;
+		protected GenericMenu m;
+
+		public void Invoke( T[] item ) {
+			m = new GenericMenu();
+			m_action?.Invoke( item );
+			//m.DropDownAtMousePosition();
+			m.DropDown( new Rect( Event.current.mousePosition, new Vector2( 0, 0 ) ) );
+			Event.current.Use();
+			//m.ShowAsContext();
+			//Event.current.Use();
 		}
 	}
 }

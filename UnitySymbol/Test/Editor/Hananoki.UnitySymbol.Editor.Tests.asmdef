@@ -1,0 +1,15 @@
+{
+    "name": "Hananoki.UnitySymbol.Editor.Tests",
+    "references": [
+        "Hananoki.UnitySymbol.Editor"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ],
+    "defineConstraints": [
+        "ENABLE_TEST_RUNNER"
+    ]
+}

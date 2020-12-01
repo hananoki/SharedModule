@@ -13,6 +13,7 @@ using UnityRandom = UnityEngine.Random;
 
 namespace Hananoki.Extensions {
 	public static partial class Extensions {
+#if UNITY_2018_3_OR_NEWER
 
 		public static bool Invert( ref this bool b ) {
 			b = !b;
@@ -80,7 +81,7 @@ namespace Hananoki.Extensions {
 		//	v.y = 0;
 		//	v.z = 0;
 		//}
-
+#endif
 		public static bool IsEmpty<T>( this T[] s ) {
 			if( s == null ) return true;
 			if( s.Length == 0 ) return true;
@@ -91,18 +92,12 @@ namespace Hananoki.Extensions {
 			return string.IsNullOrEmpty( s );
 		}
 
-		public static bool IsExistsFile( this string s ) {
-			return File.Exists(s);
-		}
 
-		public static bool IsExistsDirectory( this string s ) {
-			return Directory.Exists( s );
-		}
-
+#if UNITY_2018_3_OR_NEWER
 		public static void Alpha( ref this Color col, float a ) {
 			col.a = a;
 		}
-
+#endif
 
 		public static Component GetComponentFromType( this GameObject go, Type type ) {
 			if( go == null ) return null;

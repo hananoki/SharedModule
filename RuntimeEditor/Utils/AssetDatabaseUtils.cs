@@ -35,7 +35,7 @@ namespace Hananoki {
 		#region RemoveSubAssetAll
 
 		public static void RemoveSubAssetAll( UnityObject asset, Action exitAction = null ) {
-			RemoveSubAssetAll( asset.GetAssetPath(), exitAction );
+			RemoveSubAssetAll( asset.ToAssetPath(), exitAction );
 		}
 
 		public static void RemoveSubAssetAll( string assetPath, Action exitAction = null ) {
@@ -52,14 +52,33 @@ namespace Hananoki {
 
 
 
-		#region LoadAllSubAssetsAtPath
+		#region LoadAssetAtGUID
 
-		public static UnityObject[] LoadAllSubAssetsAtPath( UnityObject asset ) {
-			return LoadAllSubAssetsAtPath( asset.GetAssetPath() );
+		public static T LoadAssetAtGUID<T>( string guid ) where T : UnityObject {
+			return (T) LoadAssetAtGUID( guid, typeof( T ) );
 		}
 
-		public static UnityObject[] LoadAllSubAssetsAtPath( string assetPath ) {
-			return AssetDatabase.LoadAllAssetsAtPath( assetPath ).Where( x => !AssetDatabase.IsMainAsset( x ) ).ToArray();
+		public static UnityObject LoadAssetAtGUID( string guid ) {
+			return LoadAssetAtGUID( guid, typeof( UnityObject ) );
+		}
+
+		public static UnityObject LoadAssetAtGUID( string guid, Type type ) {
+			return AssetDatabase.LoadAssetAtPath( guid.ToAssetPath(), type );
+		}
+
+		#endregion
+
+
+
+		#region LoadAllSubAssetsAtPath
+
+		//public static UnityObject[] LoadAllSubAssetsAtPath( UnityObject asset ) {
+		//	return LoadAllSubAssetsAtPath( asset.ToAssetPath() );
+		//}
+
+		public static UnityObject[] LoadAllSubAssets( object obj ) {
+			var assetPath = obj.ContextToAssetPath();
+			return AssetDatabase.LoadAllAssetsAtPath( assetPath ).Where( x => !x.IsMainAsset() ).ToArray();
 		}
 
 		#endregion
@@ -68,8 +87,15 @@ namespace Hananoki {
 
 		#region LoadSubAssetAtName
 
-		public static T LoadSubAssetAtName<T>( UnityObject asset, string name ) where T : UnityObject {
-			foreach( var p in LoadAllSubAssetsAtPath( asset ) ) {
+		/// <summary>
+		/// name が一致するサブアセットを取得します
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="asset">メインアセット</param>
+		/// <param name="name">サブアセット名</param>
+		/// <returns></returns>
+		public static T LoadSubAssetAtName<T>( object obj, string name ) where T : UnityObject {
+			foreach( var p in LoadAllSubAssets( obj ) ) {
 				if( p.name == name ) {
 					return (T) p;
 				}
@@ -77,8 +103,8 @@ namespace Hananoki {
 			return null;
 		}
 
-		public static UnityObject LoadSubAssetAtName( UnityObject asset, string name ) {
-			return LoadSubAssetAtName<UnityObject>( asset, name );
+		public static UnityObject LoadSubAssetAtName( object obj, string name ) {
+			return LoadSubAssetAtName<UnityObject>( obj, name );
 		}
 
 		#endregion

@@ -1,6 +1,7 @@
 ﻿#if UNITY_EDITOR
 
 using System;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -58,11 +59,16 @@ namespace Hananoki {
 		SerializedObject _so;
 
 		public SerializedObjectScope( SerializedObject so ) {
+			if( Helper.IsNull( so.targetObject ) ) return;
+			if( 0 < so.targetObjects.Length ) {
+				if( 0 < so.targetObjects.Where( x => Helper.IsNull( x ) ).ToArray().Length ) return;
+			}
 			_so = so;
 			_so.Update();
 		}
 
 		protected override void CloseScope() {
+			if( _so == null ) return;
 			_so.ApplyModifiedProperties();
 		}
 	}
@@ -96,6 +102,41 @@ namespace Hananoki {
 	}
 
 
+
+	public class StopwatchScope : GUI.Scope {
+		System.Diagnostics.Stopwatch m_sw;
+		public StopwatchScope() {
+			m_sw = new System.Diagnostics.Stopwatch();
+			m_sw.Start();
+		}
+		protected override void CloseScope() {
+			m_sw.Stop();
+			TimeSpan ts = m_sw.Elapsed;
+			Debug.Log( $"　{m_sw.ElapsedMilliseconds}ミリ秒" );
+		}
+	}
+
+
+	public class ProgressBarScope : GUI.Scope {
+		float m_fval;
+		float m_fadd;
+		string m_name;
+		public ProgressBarScope( string name, int max ) {
+			m_name = name;
+			m_fval = 0.00f;
+			m_fadd = 1.00f / (float) max;
+		}
+
+		public void Next( string message ) {
+			m_fval += m_fadd;
+			if( 1.00f < m_fval ) m_fval = 1.00f;
+			EditorUtility.DisplayProgressBar( m_name, message, m_fval );
+		}
+
+		protected override void CloseScope() {
+			EditorUtility.ClearProgressBar();
+		}
+	}
 }
 
 #endif

@@ -8,13 +8,15 @@ using UnityEditor;
 using UnityEngine;
 
 namespace Hananoki {
-	public class EditorResourceIcon {
-		static Dictionary<int, Texture2D> icons;
+	public class PackageResourceIcon {
+		public Dictionary<int, Texture2D> icons;
 		public string[] i;
 
-		public EditorResourceIcon( string[] i ) {
+
+		public PackageResourceIcon( string[] i ) {
 			this.i = i;
 		}
+
 
 		public Texture2D Get( int n ) {
 			if( icons == null ) {
@@ -45,61 +47,10 @@ namespace Hananoki {
 			}
 			return icons[ n ];
 		}
+
+
+		public static Texture2D GetSelect( Texture2D light, Texture2D dark ) => EditorGUIUtility.isProSkin ? dark : light;
 	}
-
-#if false
-
-	public class __EditorResourceIcon {
-		string guid;
-		Dictionary<string, Texture2D> icons;
-
-		public __EditorResourceIcon( string guid ) {
-			this.guid = guid;
-		}
-
-		public Texture2D Get( string s ) {
-			if( icons == null ) {
-				icons = new Dictionary<string, Texture2D>();
-			}
-			bool load = false;
-			if( !icons.ContainsKey( s ) ) load = true;
-			else if( icons[ s ] == null ) load = true;
-
-			if( load ) {
-				var loadAssets = AssetDatabase.LoadAllAssetsAtPath( guid.GetAssetPathAtGUID() );
-				foreach( var p in loadAssets ) {
-					if( p.GetType() != typeof( EditorResourceBinary ) ) continue;
-
-					var pp = (EditorResourceBinary) p;
-					if( pp.name != s ) continue;
-
-					const int wOff = 16;
-					const int hOff = 20;
-					if( pp.m_Bytes.IsEmpty() ) continue;
-
-					var Widht = BitConverter.ToInt32( new[] { pp.m_Bytes[ wOff + 3 ], pp.m_Bytes[ wOff + 2 ], pp.m_Bytes[ wOff + 1 ], pp.m_Bytes[ wOff + 0 ], }, 0 );
-					var Height = BitConverter.ToInt32( new[] { pp.m_Bytes[ hOff + 3 ], pp.m_Bytes[ hOff + 2 ], pp.m_Bytes[ hOff + 1 ], pp.m_Bytes[ hOff + 0 ], }, 0 );
-
-					var t = new Texture2D( Widht, Height );
-					t.LoadImage( pp.m_Bytes );
-					t.hideFlags |= HideFlags.DontUnloadUnusedAsset;
-					t.hideFlags |= HideFlags.HideInHierarchy;
-					t.hideFlags |= HideFlags.HideInInspector;
-					if( icons.ContainsKey( s ) ) {
-						icons[ s ] = t;
-					}
-					else {
-						icons.Add( s, t );
-					}
-				}
-			}
-			Texture2D tex = null;
-			icons.TryGetValue( s, out tex );
-			return tex;
-		}
-	}
-
-#endif
 
 
 	/// <summary>
@@ -114,6 +65,7 @@ namespace Hananoki {
 		static Icon() {
 			s_iconCache = new Dictionary<string, Texture2D>();
 		}
+
 
 
 		public static Texture2D Get( string lightskin, string darkskin ) {

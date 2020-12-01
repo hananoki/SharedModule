@@ -5,12 +5,14 @@
 
 #if UNITY_EDITOR
 
+
 using Hananoki.Reflection;
 using Hananoki.SharedModule;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityReflection;
 
 namespace Hananoki {
 	public static class PlatformUtils {
@@ -49,7 +51,7 @@ namespace Hananoki {
 		/// <param name="group"></param>
 		/// <returns></returns>
 		public static bool SwitchActiveBuildTarget( BuildTargetGroup group ) {
-			var target = UnityEditorUserBuildSettingsUtils.CalculateSelectedBuildTarget( group );
+			var target = UnityEditorEditorUserBuildSettingsUtils.CalculateSelectedBuildTarget( group );
 			return SwitchActiveBuildTarget( group, target );
 		}
 
@@ -70,48 +72,46 @@ namespace Hananoki {
 
 
 		public static Texture2D GetIconSmall( BuildTargetGroup platform ) {
-			return (Texture2D) IconContent( platform )?.image;
+			return (Texture2D) GetIcon( platform );
 		}
 
 		public static Texture2D GetIcon( BuildTargetGroup platform ) {
-			return (Texture2D) IconContent( platform )?.image;
-		}
-		public static Texture2D GetIcon( int platform ) {
-			return (Texture2D) IconContent( (BuildTargetGroup) platform )?.image;
-		}
-
-		public static GUIContent IconContent( BuildTargetGroup platform ) {
 			var name = platform.ToString();
 			if( name == "Standalone" )
-				return EditorGUIUtility.IconContent( "BuildSettings.Standalone" );
+				return (Texture2D) EditorGUIUtility.IconContent( "BuildSettings.Standalone" ).image;
 			if( name == "Android" )
-				return EditorGUIUtility.IconContent( "BuildSettings.Android" );
-			if( name == "iOS" )
-				return EditorGUIUtility.IconContent( "BuildSettings.iPhone" );
+				return (Texture2D) EditorGUIUtility.IconContent( "BuildSettings.Android" ).image;
+			if( name == "iPhone" || name == "iOS" )
+				return (Texture2D) EditorGUIUtility.IconContent( "BuildSettings.iPhone" ).image;
 			if( name == "WebGL" )
-				return EditorGUIUtility.IconContent( "BuildSettings.WebGL" );
+				return (Texture2D) EditorGUIUtility.IconContent( "BuildSettings.WebGL" ).image;
 			if( name == "PS4" )
-				return EditorGUIUtility.IconContent( "BuildSettings.PS4" );
+				return (Texture2D) EditorGUIUtility.IconContent( "BuildSettings.PS4" ).image;
 			if( name == "XboxOne" )
-				return EditorGUIUtility.IconContent( "BuildSettings.XboxOne" );
+				return (Texture2D) EditorGUIUtility.IconContent( "BuildSettings.XboxOne" ).image;
 			if( name == "Facebook" ) {
 				if( UnitySymbol.Has( "UNITY_2019_3_OR_NEWER" ) ) {
 					return null; // アイコンあるけどビルド出来ない
 				}
-				return EditorGUIUtility.IconContent( "BuildSettings.Facebook" );
+				return (Texture2D) EditorGUIUtility.IconContent( "BuildSettings.Facebook" ).image;
 			}
 			if( name == "tvOS" )
-				return EditorGUIUtility.IconContent( "BuildSettings.tvOS" );
-			if( name == "WSA" )
-				return EditorGUIUtility.IconContent( "BuildSettings.Metro" );
+				return (Texture2D) EditorGUIUtility.IconContent( "BuildSettings.tvOS" ).image;
+			if( name == "WSA" || name == "Metro" )
+				return (Texture2D) EditorGUIUtility.IconContent( "BuildSettings.Metro" ).image;
 			if( name == "Switch" )
-				return EditorGUIUtility.IconContent( "BuildSettings.Switch" );
+				return (Texture2D) EditorGUIUtility.IconContent( "BuildSettings.Switch" ).image;
 			if( name == "Lumin" )
-				return EditorGUIUtility.IconContent( "BuildSettings.Lumin" );
+				return (Texture2D) EditorGUIUtility.IconContent( "BuildSettings.Lumin" ).image;
 			if( name == "Stadia" )
-				return EditorGUIUtility.IconContent( "BuildSettings.Stadia" );
+				return (Texture2D) EditorGUIUtility.IconContent( "BuildSettings.Stadia" ).image;
 			return null;
 		}
+
+		public static Texture2D GetIcon( int platform ) {
+			return GetIcon( (BuildTargetGroup) platform );
+		}
+
 
 
 		public static List<BuildTargetGroup> GetSupportList() {
@@ -129,17 +129,20 @@ namespace Hananoki {
 
 			//	lst.Add( e );
 			//}
+			var instance = UnityTypes.UnityEditor_Build_BuildPlatforms.GetProperty<object>( "instance" );
 
-			var instance = R.Property( "instance", "UnityEditor.Build.BuildPlatforms" );
-			var buildPlatforms = R.Field( "buildPlatforms", "UnityEditor.Build.BuildPlatforms" );
+			//var instance = R.Property( "instance", "UnityEditor.Build.BuildPlatforms" );
 
-			var forceShowTarget = R.Field( "forceShowTarget", "UnityEditor.Build.BuildPlatform" );
-			var targetGroup = R.Field( "targetGroup", "UnityEditor.Build.BuildPlatform" );
+			var buildPlatforms = instance.GetField<ICollection>( "buildPlatforms" );
+			//var buildPlatforms = R.Field( "buildPlatforms", "UnityEditor.Build.BuildPlatforms" );
 
-			var lst = buildPlatforms.Get<IList>( instance.GetValue( null ) );
-			foreach( var ab in lst ) {
-				if( forceShowTarget.Get<bool>( ab ) ) {
-					s_buildTargetGroup.Add( targetGroup.Get<BuildTargetGroup>( ab ) );
+			//var forceShowTarget = R.Field( "forceShowTarget", "UnityEditor.Build.BuildPlatform" );
+			//var targetGroup = R.Field( "targetGroup", "UnityEditor.Build.BuildPlatform" );
+
+			//var lst = buildPlatforms.Get<IList>( instance.GetValue( null ) );
+			foreach( var ab in buildPlatforms ) {
+				if(  ab.GetField<bool>( "forceShowTarget" )  ) {
+					s_buildTargetGroup.Add( ab.GetField<BuildTargetGroup>( "targetGroup" ) /*targetGroup.Get<BuildTargetGroup>( ab )*/ );
 				}
 			}
 			s_buildTargetGroup.Sort();

@@ -2,45 +2,52 @@
 using UnityEngine;
 using UnityEditor;
 using Hananoki.Extensions;
-
+using Hananoki.Reflection;
 using System.Reflection;
-using System;
+using UnityReflection;
+//using ProjectBrowser = UnityReflection.UnityEditorProjectBrowser;
 
 namespace Hananoki {
 	public static partial class ProjectBrowserUtils {
 
-		static EditorWindow ProjectBrowserWindow => HEditorWindow.Find( UnityTypes.ProjectBrowser );
-
-
-
-
+		static UnityEditorProjectBrowser s_projectBrowser;
 		static PropertyInfo s_ProjectBrowser_isLocked;
 		static FieldInfo s_ProjectBrowser_m_IsLocked;
-
-
 
 
 		/// <summary>
 		/// 
 		/// </summary>
-		static void init() {
-			if( UnityTypes.ProjectBrowser != null ) {
-				if( UnitySymbol.Has( "UNITY_2018_1_OR_NEWER" ) ) {
-					s_ProjectBrowser_isLocked = UnityTypes.ProjectBrowser.GetProperty( "isLocked", BindingFlags.NonPublic | BindingFlags.Instance );
-				}
-				else {
-					s_ProjectBrowser_m_IsLocked = UnityTypes.ProjectBrowser.GetField( "m_IsLocked", BindingFlags.NonPublic | BindingFlags.Instance );
+		static bool init() {
+
+			if( s_projectBrowser == null ) {
+				s_projectBrowser = new UnityEditorProjectBrowser();
+			}
+			if( Helper.IsNull( s_projectBrowser.m_instance ) ) {
+				s_projectBrowser = null;
+			}
+
+			if( UnitySymbol.Has( "UNITY_2018_1_OR_NEWER" ) ) {
+				if( s_ProjectBrowser_isLocked == null ) {
+					s_ProjectBrowser_isLocked = UnityTypes.UnityEditor_ProjectBrowser.GetProperty( "isLocked", BindingFlags.NonPublic | BindingFlags.Instance );
 				}
 			}
+			else {
+				if( s_ProjectBrowser_m_IsLocked == null ) {
+					s_ProjectBrowser_m_IsLocked = UnityTypes.UnityEditor_ProjectBrowser.GetField( "m_IsLocked", BindingFlags.NonPublic | BindingFlags.Instance );
+				}
+			}
+			return s_projectBrowser != null ? true : false;
 		}
 
 
-		public static string currentProjectFolderPath {
+		public static string activeFolderPath {
 			get {
-				var window = ProjectBrowserWindow;
+				if( !init() ) return string.Empty;
+
 				string s;
-				if( UnityEditorProjectBrowser.IsTwoColumns( window ) ) {
-					s = UnityEditorProjectBrowser.GetActiveFolderPath( window );
+				if( s_projectBrowser.IsTwoColumns() ) {
+					s = s_projectBrowser.GetActiveFolderPath();
 				}
 				else {
 					s = UnityEditorProjectBrowser.GetSelectedPath();
@@ -52,8 +59,21 @@ namespace Hananoki {
 			}
 		}
 
+
+		public static void CreateScriptAssetFromTemplateFile( string templatePath ) {
+			var filepath = $"{activeFolderPath}/{templatePath.Split( '-' )[ 2 ].FileNameWithoutExtension()}";
+			if( UnitySymbol.UNITY_2019_1_OR_NEWER ) {
+				//ProjectWindowUtil.CreateScriptAssetFromTemplateFile( templatePath, filepath );
+				UnityEditorProjectWindowUtil.CreateScriptAssetFromTemplateFile( templatePath, filepath );
+			}
+			else {
+				UnityEditorProjectWindowUtil.CreateScriptAsset( templatePath, filepath );
+			}
+		}
+
+
 		public static void CreateFolder( string name ) {
-			string s = currentProjectFolderPath;
+			string s = activeFolderPath;
 
 			var ss = AssetDatabase.GenerateUniqueAssetPath( $"{s}/{name}" );
 			AssetDatabase.CreateFolder( System.IO.Path.GetDirectoryName( ss ), System.IO.Path.GetFileName( ss ) );
@@ -65,31 +85,43 @@ namespace Hananoki {
 		/// プロジェクトブラウザの検索文字列を指定します
 		/// </summary>
 		/// <param name="searchString"></param>
-		public static void SetSearch( string searchString ) => UnityEditorProjectBrowser.SetSearch( ProjectBrowserWindow, searchString );
+		public static void SetSearch( string searchString ) {
+			if( !init() ) return;
+
+			s_projectBrowser.SetSearch( searchString );
+		}
 
 
-		public static bool IsTwoColumns() => UnityEditorProjectBrowser.IsTwoColumns( ProjectBrowserWindow );
+		public static bool IsTwoColumns() {
+			if( !init() ) return false;
+
+			return s_projectBrowser.IsTwoColumns();
+		}
 
 
 
-
-		public static bool m_IsLocked {
+		static bool m_IsLocked {
 			get {
-				init();
+				if( !init() ) return false;
+
 				if( UnitySymbol.Has( "UNITY_2018_1_OR_NEWER" ) ) {
-					return (bool) s_ProjectBrowser_isLocked.GetValue( ProjectBrowserWindow );
+					return s_projectBrowser.isLocked;
 				}
 				else {
-					return (bool) s_ProjectBrowser_m_IsLocked.GetValue( ProjectBrowserWindow );
+					return (bool) s_ProjectBrowser_m_IsLocked.GetValue( s_projectBrowser.m_instance );
 				}
 			}
 			set {
-				init();
+				if( !init() ) return ;
+
+				var browser = new UnityEditorProjectBrowser();
+				if( browser.m_instance == null ) return;
+
 				if( UnitySymbol.Has( "UNITY_2018_1_OR_NEWER" ) ) {
-					s_ProjectBrowser_isLocked.SetValue( ProjectBrowserWindow, value );
+					s_ProjectBrowser_isLocked.SetValue( s_projectBrowser.m_instance, value );
 				}
 				else {
-					s_ProjectBrowser_m_IsLocked.SetValue( ProjectBrowserWindow, value );
+					s_ProjectBrowser_m_IsLocked.SetValue( s_projectBrowser.m_instance, value );
 				}
 			}
 		}
@@ -120,7 +152,7 @@ namespace Hananoki {
 		public static void SelectionChangedLockProjectWindow( string path ) {
 			if( string.IsNullOrEmpty( path ) ) return;
 
-			ProjectBrowserUtils.m_IsLocked = true;
+			m_IsLocked = true;
 			Selection.selectionChanged += unlock;
 
 			Selection.activeObject = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>( path );
@@ -128,24 +160,9 @@ namespace Hananoki {
 
 
 		public static void lockOnce() {
-			ProjectBrowserUtils.m_IsLocked = true;
+			m_IsLocked = true;
 			Selection.selectionChanged += unlock;
 		}
 
-
-		public static void ShowFolderContents( string assetPath, bool revealAndFrameInFolderTree ) {
-			var obj = assetPath.LoadAssetAtPath();
-			if( obj == null ) return;
-
-			UnityEditorProjectBrowser.ShowFolderContents( ProjectBrowserWindow, obj.GetInstanceID(), true );
-		}
-
-
-
-
-		//public static string ValidateCreateNewAssetPath( string pathName ) {
-		//	var obj = ProjectBrowser_ValidateCreateNewAssetPath.Invoke( ProjectBrowserWindow, new object[] { pathName } );
-		//	return obj as string;
-		//}
 	}
 }

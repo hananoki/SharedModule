@@ -10,7 +10,8 @@ namespace Hananoki {
 	public class SessionStateBool {
 		public string __name;
 		public string __label;
-		public bool initValue;
+		[SerializeField]
+		bool initValue;
 		public SessionStateBool( string name, string label = "", bool initValue = false ) {
 			this.__name = name;
 			if( string.IsNullOrEmpty( label ) ) {
@@ -30,9 +31,10 @@ namespace Hananoki {
 				SessionState.SetBool( __name, value );
 			}
 		}
-		//public void Toggle( bool b ) {
-		//	Value( !Value() );
-		//}
+
+		public void Invert() {
+			Value = !Value;
+		}
 
 		public static implicit operator bool( SessionStateBool c ) { return c.Value; }
 	}

@@ -10,6 +10,16 @@ namespace Hananoki {
 			if( s_lst == null ) s_lst = EditorUserBuildSettings.activeScriptCompilationDefines.Where( x => x.StartsWith( "UNITY_" ) ).ToList();
 			return s_lst.Contains( symbol );
 		}
+		
+		public static bool UNITY_5_3_OR_NEWER => Has( "UNITY_5_3_OR_NEWER" );
+		public static bool UNITY_5_4_OR_NEWER => Has( "UNITY_5_4_OR_NEWER" );
+		public static bool UNITY_5_5_OR_NEWER => Has( "UNITY_5_5_OR_NEWER" );
+		public static bool UNITY_5_6_OR_NEWER => Has( "UNITY_5_6_OR_NEWER" );
+
+		public static bool UNITY_2017_1_OR_NEWER => Has( "UNITY_2017_1_OR_NEWER" );
+		public static bool UNITY_2017_2_OR_NEWER => Has( "UNITY_2017_2_OR_NEWER" );
+		public static bool UNITY_2017_3_OR_NEWER => Has( "UNITY_2017_3_OR_NEWER" );
+		public static bool UNITY_2017_4_OR_NEWER => Has( "UNITY_2017_4_OR_NEWER" );
 
 		public static bool UNITY_2018_1_OR_NEWER => Has( "UNITY_2018_1_OR_NEWER" );
 		public static bool UNITY_2018_2_OR_NEWER => Has( "UNITY_2018_2_OR_NEWER" );

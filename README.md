@@ -19,6 +19,59 @@
 ```
 
 ## Description
+- It summarizes useful processing for editor extension
+
+#### EditorExtension
+- I want to omit the argument, I want to make it as short as possible, it is a mass of laziness
+```cs
+var path = "Assets/sample.asset";
+var obj1 = path.LoadAsset(); // Can be read
+var guid = "bfb0d91c07d48f140962d6de9b6fef33";
+var obj2 = path.LoadAsset(); // Can be read
+var m = new GenericMenu();
+m.AddItem("Menu", ()=>{ Debug.Log("GUIContent is a hassle") } );
+m.DropDownAtMousePosition(); // I also call Event.current.Use()
+```
+
+#### EditorIcon
+- Over 1000 Unity Icon Resources Available
+- Automatically switches according to the skin
+```cs
+GUILayout.Label( EditorIcon.customtool );
+```
+
+#### UnityTypes
+- Get internal type without using reflection
+- Considering version compatibility
+```cs
+EditorWindow.GetWindow( UnityTypes.UnityEditor_ProjectBrowser );
+```
+
+#### UnityReflection
+- Access private features
+- Delegate.CreateDelegate whenever possible
+```cs
+AudioClip clip;
+UnityEditorAudioUtil.PlayClip( clip );
+
+// Why is it internal?
+BuildTargetGroup group = UnityEditorEditorUserBuildSettings.activeBuildTargetGroup;
+
+// Splitter used in AnimatobWindow etc.
+var splitter = new UnityEditorSplitterState( 0.20f, 0.80f );
+UnityEditorSplitterGUILayout.BeginHorizontalSplit( splitter );
+GUILayout.BeginVertical()
+... GUI Function
+GUILayout.EndVertical()
+GUILayout.BeginVertical()
+... GUI Function
+GUILayout.EndVertical()
+UnityEditorSplitterGUILayout.EndHorizontalSplit();
+```
+
+- I introduced some functions by excerpting
+
+## Other Tools
 - Introduction of packages that use this module
 
 ### [BuildAssist](https://github.com/hananoki/BuildAssist)

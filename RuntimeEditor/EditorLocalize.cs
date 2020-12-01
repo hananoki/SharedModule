@@ -80,8 +80,9 @@ namespace Hananoki {
 
 			MakePopup();
 
-			var fname = $"{localizeDir.GetAssetPathAtGUID()}/{LCID}.strings";
-			var strings = EditorHelper.LoadSerializedFileAtName<EditorLocalizeData>( fname, LCID );
+			var fname = $"{localizeDir.ToAssetPath()}/{LCID}.csv";
+			//var strings = EditorHelper.LoadSerializedFileAtName<EditorLocalizeDataOld>( fname, LCID );
+			var strings = EditorLocalizeData.Load( fname );
 
 			if( s_editorLocalizeData.ContainsKey( packageName ) ) {
 				s_editorLocalizeData[ packageName ] = strings;

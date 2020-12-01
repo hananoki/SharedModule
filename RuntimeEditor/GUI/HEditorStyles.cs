@@ -14,7 +14,7 @@ namespace Hananoki {
 				if( s_underLine != null ) return s_underLine;
 
 				s_underLine = new GUIStyle();
-				s_underLine.normal.background = Shared.Icon.Get( Shared.EditorResource.under_line_ );
+				s_underLine.normal.background = SharedModule.Icon.under_line_;
 				s_underLine.stretchWidth = true;
 
 				return s_underLine;
@@ -36,6 +36,22 @@ namespace Hananoki {
 				return s_fieldInvalidColor.Value;
 			}
 		}
+		static Color? s_helpBoxInvalidColor;
+		public static Color helpBoxInvalidColor {
+			get {
+				if( s_helpBoxInvalidColor != null ) return s_helpBoxInvalidColor.Value;
+
+				if( UnitySymbol.Has( "UNITY_2019_3_OR_NEWER" ) ) {
+					s_helpBoxInvalidColor = new Color( 1, 0, 0, 0.50f );
+				}
+				else {
+					s_helpBoxInvalidColor = new Color( 1, 0, 0, 0.50f );
+				}
+
+				return s_helpBoxInvalidColor.Value;
+			}
+		}
+
 
 
 		static GUIStyle s_folderField;
