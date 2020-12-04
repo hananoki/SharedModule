@@ -80,5 +80,12 @@ namespace Hananoki.Extensions {
 		public static void zero( this RectOffset self ) {
 			self = new RectOffset( 0, 0, 0, 0 );
 		}
+
+
+		public static void Draw( this GUIStyle style, Rect rc ) {
+			if( Event.current.type != EventType.Repaint ) return;
+
+			style.Draw( rc, false, false, false, false );
+		}
 	}
 }

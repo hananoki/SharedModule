@@ -37,6 +37,11 @@ namespace Hananoki {
 			}
 		}
 
+		//protected virtual void ShowButton( Rect r ) {
+		//	//r.x -= 16;
+		//	HEditorGUI.DrawDebugRect( r );
+		//}
+
 		public void OnGUI() {
 			HGUIScope.Reset();
 			try {

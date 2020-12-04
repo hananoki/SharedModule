@@ -1,4 +1,6 @@
 ﻿
+#define ENABLE_HANANOKI_SETTINGS
+
 #if ENABLE_HANANOKI_SETTINGS
 
 using Hananoki.Extensions;
@@ -7,12 +9,13 @@ using System;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
+using System.Linq;
 
 using SS = Hananoki.SharedModule.S;
 using E = Hananoki.SharedModule.SettingsEditor;
 using UnityEditorSplitterState = UnityReflection.UnityEditorSplitterState;
 using UnityEditorSplitterGUILayout = UnityReflection.UnityEditorSplitterGUILayout;
-
+using EditorAssemblies = UnityReflection.UnityEditorEditorAssemblies;
 
 namespace Hananoki.SharedModule {
 	public class SettingsItem {
@@ -20,6 +23,8 @@ namespace Hananoki.SharedModule {
 		public string displayName;
 		public string version;
 		public Action gui;
+
+		public int hashCode => displayName.GetHashCode() + mode;
 	}
 
 	public class SettingsWindow : HEditorWindow {
@@ -34,8 +39,7 @@ namespace Hananoki.SharedModule {
 
 		UnityEditorSplitterState m_HorizontalSplitter;
 
-		SettingsTreeView m_treeViewEditor;
-		SettingsTreeView m_treeViewProject;
+		SettingsTreeView m_treeView;
 
 
 		//Mode mode;
@@ -52,14 +56,14 @@ namespace Hananoki.SharedModule {
 
 		public static void OpenEditor( string displayName ) {
 			E.i.selectSettingMode = Mode.Editor;
-			Open( $"{displayName}" );
+			Open( $"{displayName}", 0 );
 		}
 		public static void OpenProject( string displayName ) {
 			E.i.selectSettingMode = Mode.Project;
-			Open( $"{displayName}" );
+			Open( $"{displayName}", 1 );
 		}
 
-		public static void Open( string displayName ) {
+		public static void Open( string displayName, int mode ) {
 			Open();
 			E.i.selectSettingName = displayName;
 			selectionOpen = true;
@@ -79,83 +83,62 @@ namespace Hananoki.SharedModule {
 			s_instance = this;
 
 			m_HorizontalSplitter = new UnityEditorSplitterState( 0.3f, 0.7f );
-			//Debug.Log( R.Type( "UnityEditor.SplitterState", "UnityEditor.dll" ).AssemblyQualifiedName );
 
-			m_treeViewEditor = new SettingsTreeView();
-			m_treeViewProject = new SettingsTreeView();
+			m_treeView = new SettingsTreeView();
 
-			if( s_settingsItem == null ) {
-				var lst = new System.Collections.Generic.List<SettingsItem>();
-				var t = typeof( SettingsClass );
-				foreach( Assembly assembly in AppDomain.CurrentDomain.GetAssemblies() ) {
-					try {
-						foreach( Type type in assembly.GetTypes() ) {
-							try {
-								if( type.GetCustomAttribute( t ) == null ) continue;
-								var mm = R.Methods( typeof( SettingsMethod ), type.FullName, assembly.FullName.Split( ',' )[ 0 ] );
-								//s_localizeEvent.AddRange( mm );
-								var item = (SettingsItem) mm[ 0 ].Invoke( null, null );
-								lst.Add( item );
-							}
-							catch( Exception ee ) {
-								Debug.LogException( ee );
-							}
-						}
-					}
-					catch( ReflectionTypeLoadException ) {
-					}
-					catch( Exception e ) {
-						Debug.LogError( e );
-					}
-				}
-				s_settingsItem = lst.ToArray();
-			}
+			var settingsMethods = EditorAssemblies.GetAllMethodsWithAttribute<SettingsMethod>();
+			s_settingsItem = settingsMethods.Select( x => (SettingsItem) x.Invoke( null, null ) ).ToArray();
+			//foreach( var p in settingsMethods ) {
+			//	//Debug.Log( p.FullName );
+			//}
+			//if( s_settingsItem == null ) {
+			//	var lst = new System.Collections.Generic.List<SettingsItem>();
+			//	var t = typeof( SettingsClass );
+			//	foreach( Assembly assembly in AppDomain.CurrentDomain.GetAssemblies() ) {
+			//		try {
+			//			foreach( Type type in assembly.GetTypes() ) {
+			//				try {
+			//					if( type.GetCustomAttribute( t ) == null ) continue;
+			//					var mm = R.Methods( typeof( SettingsMethod ), type.FullName, assembly.FullName.Split( ',' )[ 0 ] );
+			//					//s_localizeEvent.AddRange( mm );
+			//					var item = (SettingsItem) mm[ 0 ].Invoke( null, null );
+			//					lst.Add( item );
+			//				}
+			//				catch( Exception ee ) {
+			//					Debug.LogException( ee );
+			//				}
+			//			}
+			//		}
+			//		catch( ReflectionTypeLoadException ) {
+			//		}
+			//		catch( Exception e ) {
+			//			Debug.LogError( e );
+			//		}
+			//	}
+			//	s_settingsItem = lst.ToArray();
+			//}
+
 			if( s_settingsItem != null ) {
 				foreach( var item in s_settingsItem ) {
-					if( item.mode == 0 ) {
-						m_treeViewEditor.AddItem( item );
-					}
-					else {
-						m_treeViewProject.AddItem( item );
-					}
+					m_treeView.AddItem( item );
 				}
 			}
 
-			m_treeViewEditor.ReloadAndSorting();
-			m_treeViewEditor.ExpandAll();
-			m_treeViewProject.ReloadAndSorting();
-			m_treeViewProject.ExpandAll();
+			m_treeView.ReloadAndSorting();
+			m_treeView.ExpandAll();
 			selectionOpen = true;
 		}
 
 
-		//public void BeginHorizontalSplit( params GUILayoutOption[] options ) {
-		//	R.Method( 2, "BeginHorizontalSplit", "UnityEditor.SplitterGUILayout", "UnityEditor.dll" ).Invoke( null, new object[] { m_HorizontalSplitter, options } );
-		//}
-
-
-		//public void EndHorizontalSplit() {
-		//	R.Method( "EndHorizontalSplit", "UnityEditor.SplitterGUILayout", "UnityEditor.dll" ).Invoke( null, null );
-		//}
 
 
 		void DrawLeftPane() {
 			if( selectionOpen ) {
-				if( E.i.selectSettingMode == 0 ) {
-					m_treeViewEditor.SelectAndExpand( E.i.selectSettingName );
-				}
-				else {
-					m_treeViewProject.SelectAndExpand( E.i.selectSettingName );
-				}
+				m_treeView.SelectAndExpand( E.i.selectSettingName, (int)E.i.selectSettingMode );
 				selectionOpen = false;
 			}
 
-			if( E.i.selectSettingMode == 0 ) {
-				m_treeViewEditor.DrawLayoutGUI();
-			}
-			else {
-				m_treeViewProject.DrawLayoutGUI();
-			}
+			m_treeView.DrawLayoutGUI();
 		}
 
 
@@ -163,31 +146,11 @@ namespace Hananoki.SharedModule {
 			try {
 				using( var sc = new GUILayout.ScrollViewScope( m_scroll ) ) {
 					m_scroll = sc.scrollPosition;
-					using( new GUILayout.HorizontalScope() ) {
-						GUILayout.Space( 8 );
-						//GUILayout.Space( 4 );
-						using( new GUILayout.VerticalScope() ) {
-							GUILayout.Space( 4 );
-							//EditorGUIUtility.hierarchyMode = true;
 
-							//if( m_treeView.currentEditor != null ) {
-							//	if( m_treeView.currentEditor.target == null ) {
-							//		EditorGUILayout.HelpBox( S._SerializedObjecttargethasbeendestroyed, MessageType.Error );
-							//		return;
-							//	}
-							//	else {
-							//		m_treeView.currentEditor.OnInspectorGUI();
-							//	}
-							//}
-							if( E.i.selectSettingMode == 0 ) {
-								m_treeViewEditor.DrawCurrent();
-							}
-							else {
-								m_treeViewProject.DrawCurrent();
-							}
-						}
-						GUILayout.Space( 4 );
-					}
+					HGUIScope.Layout();
+					GUILayout.Space( 4 );
+					m_treeView.DrawCurrent();
+					HGUIScope.End();
 				}
 			}
 			catch( ArgumentException ) {
@@ -218,16 +181,18 @@ namespace Hananoki.SharedModule {
 
 		public override void OnDefaultGUI() {
 			//P.Load();
-			DrawToolBar();
+			//DrawToolBar();
 
 			UnityEditorSplitterGUILayout.BeginHorizontalSplit( m_HorizontalSplitter );
-			using( new GUILayout.VerticalScope() ) {
-				DrawLeftPane();
-			}
 
-			using( new GUILayout.VerticalScope( HEditorStyles.dopesheetBackground ) ) {
-				DrawRightPane();
-			}
+			HGUIScope.Vertical();
+			DrawLeftPane();
+			HGUIScope.End();
+
+			HGUIScope.Vertical( HEditorStyles.dopesheetBackground );
+			DrawRightPane();
+			HGUIScope.End();
+
 			UnityEditorSplitterGUILayout.EndHorizontalSplit();
 		}
 	}

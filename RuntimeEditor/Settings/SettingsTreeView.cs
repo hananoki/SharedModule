@@ -1,4 +1,6 @@
-﻿#if ENABLE_HANANOKI_SETTINGS
+﻿#define  ENABLE_HANANOKI_SETTINGS
+
+#if ENABLE_HANANOKI_SETTINGS
 
 using Hananoki.Extensions;
 using System.Collections.Generic;
@@ -16,23 +18,50 @@ namespace Hananoki.SharedModule {
 	public class SettingsTreeViewItem : TreeViewItem {
 		public string guid;
 		public SettingsItem settings;
+
+		public bool root;
 	}
 
 
 	public class SettingsTreeView : HTreeView<Item> {
 
+		List<Item> m_rootItems;
+
 		public SettingsTreeView() : base( new TreeViewState() ) {
 			//showAlternatingRowBackgrounds = true;
 			m_registerItems = new List<Item>();
 			InitID();
+
+
+			m_rootItems = new List<Item>();
+
+			m_rootItems.Add( new Item() {
+				id = "Editor".GetHashCode(),
+				displayName = "Editor",
+				//settings = settings,
+				depth = 0,
+				icon=EditorIcon.settings,
+				root=true,
+			} );
+			m_rootItems.Add( new Item() {
+				id = "Project".GetHashCode(),
+				displayName = "Project",
+				//settings = settings,
+				depth = 0,
+				icon = EditorIcon.settings,
+				root = true,
+			} );
+
+			foreach( var p in m_rootItems )
+				m_registerItems.Add( p );
 		}
 
 
-		public void SelectAndExpand( string itemName ) {
+		public void SelectAndExpand( string itemName, int mode ) {
 			if( itemName.IsEmpty() ) return;
 
-			var item = FindItem( itemName.GetHashCode() );
-			
+			var item = FindItem( itemName.GetHashCode()+mode );
+
 			//var item = m_registerItems.Find( x => x.displayName == itemName );
 			if( item == null ) return;
 			//SetExpandedFollowParents( item );
@@ -44,19 +73,24 @@ namespace Hananoki.SharedModule {
 			var ss = settings.displayName.Split( '/' );
 
 			if( ss.Length == 1 ) {
-				m_registerItems.Add( new Item() {
-					id = settings.displayName.GetHashCode(),
+				var item = new Item() {
+					id = settings.hashCode,
 					displayName = settings.displayName,
 					settings = settings,
-				} );
+					depth = 1,
+					//icon = EditorIcon.settings,
+				};
+				m_rootItems[ settings.mode ].AddChild( item );
 			}
 			else {
-				var it = m_registerItems.Find( x => x.displayName == ss[ 0 ] );
+				var it=m_rootItems[ settings.mode ].children.Find( x => x.displayName == ss[ 0 ] );
+
+				//var it = m_registerItems.Find( x => x.displayName == ss[ 0 ] );
 				var newi = new Item() {
-					id = ss[ 1 ].GetHashCode(),
+					id = settings.hashCode,
 					displayName = ss[ 1 ],
 					settings = settings,
-					depth = 1,
+					depth = 2,
 				};
 				it.AddChild( newi );
 			}
@@ -64,14 +98,25 @@ namespace Hananoki.SharedModule {
 
 
 		public void ReloadAndSorting() {
-			m_registerItems = m_registerItems.OrderBy( x => x.displayName ).ToList();
+			for( int i = 0; i < m_rootItems.Count; i++ ) {
+				if( !m_rootItems[ i ].hasChildren ) continue;
+				m_rootItems[ i ].children = m_rootItems[ i ].children.OrderBy( x => x.displayName ).ToList();
+			}
+			//m_registerItems = m_registerItems.OrderBy( x => x.displayName ).ToList();
 			Reload();
 		}
 
+
 		protected override void OnRowGUI( RowGUIArgs args ) {
+			var item = (Item) args.item;
+			if( item.root && !args.selected ) {
+				//HEditorGUI.DrawDebugRect(args.rowRect);
+				var r = new GUIStyle( "SceneTopBarBg" );
+				r.Draw( args.rowRect );
+			}
+
 			DefaultRowGUI( args );
 
-			var item = (Item) args.item;
 			//if( item.guid.IsEmpty() ) return;
 
 			//var r = args.rowRect;
@@ -80,6 +125,7 @@ namespace Hananoki.SharedModule {
 			//if( EditorHelper.HasMouseClick( r ) ) {
 			//	EditorHelper.PingObject( GUIDUtils.GetAssetPath( item.guid ) );
 			//}
+			if( item.settings == null ) return;
 			if( item.settings.version.IsEmpty() ) return;
 
 			var lrc = args.rowRect;
@@ -101,7 +147,7 @@ namespace Hananoki.SharedModule {
 
 
 		public void DrawCurrent() {
-			currentItem?.settings.gui();
+			currentItem?.settings?.gui();
 		}
 
 

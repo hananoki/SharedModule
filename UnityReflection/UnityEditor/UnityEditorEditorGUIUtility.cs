@@ -7,6 +7,15 @@ using System;
 namespace UnityReflection {
   public sealed partial class UnityEditorEditorGUIUtility {
     
+
+		public static int skinIndex {
+			get {
+				if( __skinIndex == null ) {
+					__skinIndex = (Func<int>) Delegate.CreateDelegate( typeof( Func<int> ), null, UnityTypes.UnityEditor_EditorGUIUtility.GetMethod( "get_skinIndex", R.StaticMembers ) );
+				}
+				return __skinIndex();
+			}
+		}
 		public static UnityEngine.GUIContent TrTextContent( string key, string text, string tooltip, UnityEngine.Texture icon ) {
 			if( __TrTextContent_0_4 == null ) {
 				__TrTextContent_0_4 = (Func<string,string,string,UnityEngine.Texture, UnityEngine.GUIContent>) Delegate.CreateDelegate( typeof( Func<string,string,string,UnityEngine.Texture, UnityEngine.GUIContent> ), null, UnityTypes.UnityEditor_EditorGUIUtility.GetMethod( "TrTextContent", R.StaticMembers, null, new Type[]{ typeof( string ), typeof( string ), typeof( string ), typeof( UnityEngine.Texture ) }, null ) );
@@ -72,6 +81,7 @@ namespace UnityReflection {
 		
 		
 		
+		static Func<int> __skinIndex;
 		static Func<string,string,string,UnityEngine.Texture, UnityEngine.GUIContent> __TrTextContent_0_4;
 		static Func<string,string,UnityEngine.Texture, UnityEngine.GUIContent> __TrTextContent_1_3;
 		static Func<string,string,string, UnityEngine.GUIContent> __TrTextContent_2_3;

@@ -160,5 +160,8 @@ namespace Hananoki {
 		static Type _UnityEditor_IMGUI_Controls_TreeView;
 		public static Type UnityEditor_IMGUI_Controls_TreeView => Get( ref _UnityEditor_IMGUI_Controls_TreeView, "UnityEditor.IMGUI.Controls.TreeView", "UnityEditor" );
 
+		static Type _UnityEditor_WindowLayout;
+		public static Type UnityEditor_WindowLayout => Get( ref _UnityEditor_WindowLayout, "UnityEditor.WindowLayout", "UnityEditor" );
+
 	}
 }

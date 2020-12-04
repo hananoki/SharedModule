@@ -1,5 +1,20 @@
 # Shared Module
 
+## [1.7.1] - 2020-12-04
+
+### Added
+- Added Class
+  - PlayerSettingsUtils
+  - UnityEditorWindowLayout
+- Added EditorExtensions Method
+  - Draw( this GUIStyle style, Rect rc )
+
+### Changed
+- Changed the tree display of Hananoki.SharedModule.SettingsWindow
+- Changed UnityEditorEditorAssemblies generic types to work
+- Changed ENABLE_HANANOKI_SETTINGS to be set automatically
+- Remove Tests
+
 ## [1.7.0] - 2020-12-02
 
 ### Added

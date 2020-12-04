@@ -1,4 +1,5 @@
-﻿
+﻿#define ENABLE_HANANOKI_SETTINGS
+
 #if ENABLE_HANANOKI_SETTINGS
 #pragma warning disable 618
 #endif
@@ -59,6 +60,12 @@ namespace Hananoki.SharedModule {
 
 
 		static SettingsEditor() {
+			var lst = PlayerSettingsUtils.GetScriptingDefineSymbolsAtList();
+			if( lst.IndexOf( "ENABLE_HANANOKI_SETTINGS" ) < 0 ) {
+				Debug.Log( "SetScriptingDefineSymbols: ENABLE_HANANOKI_SETTINGS ... 1.7.1 or later required" );
+				lst.Add( "ENABLE_HANANOKI_SETTINGS" );
+				PlayerSettingsUtils.SetScriptingDefineSymbols( lst );
+			}
 			Load();
 		}
 

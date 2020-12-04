@@ -9,7 +9,6 @@ using System.Reflection;
 namespace UnityReflection {
   public sealed partial class UnityEditorEditorAssemblies {
     
-
 		public static System.Reflection.Assembly[] loadedAssemblies {
 			get {
 				if( __loadedAssemblies == null ) {
@@ -27,20 +26,6 @@ namespace UnityReflection {
 				return __loadedTypes();
 			}
 		}
-		public static IEnumerable<MethodInfo> GetAllMethodsWithAttribute( System.Reflection.BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic ) {
-			if( __GetAllMethodsWithAttribute_0_1 == null ) {
-				__GetAllMethodsWithAttribute_0_1 = (Func<System.Reflection.BindingFlags, IEnumerable<MethodInfo>>) Delegate.CreateDelegate( typeof( Func<System.Reflection.BindingFlags, IEnumerable<MethodInfo>> ), null, UnityTypes.UnityEditor_EditorAssemblies.GetMethod( "GetAllMethodsWithAttribute", R.StaticMembers, null, new Type[]{ typeof( System.Reflection.BindingFlags ) }, null ) );
-			}
-			return __GetAllMethodsWithAttribute_0_1( bindingFlags );
-		}
-		
-		public static IEnumerable<Type> GetAllTypesWithAttribute() {
-			if( __GetAllTypesWithAttribute_0_0 == null ) {
-				__GetAllTypesWithAttribute_0_0 = (Func<IEnumerable<Type>>) Delegate.CreateDelegate( typeof( Func<IEnumerable<Type>> ), null, UnityTypes.UnityEditor_EditorAssemblies.GetMethod( "GetAllTypesWithAttribute", R.StaticMembers, null, new Type[]{  }, null ) );
-			}
-			return __GetAllTypesWithAttribute_0_0(  );
-		}
-		
 		public static IEnumerable<Type> GetAllTypesWithInterface() {
 			if( __GetAllTypesWithInterface_0_0 == null ) {
 				__GetAllTypesWithInterface_0_0 = (Func<IEnumerable<Type>>) Delegate.CreateDelegate( typeof( Func<IEnumerable<Type>> ), null, UnityTypes.UnityEditor_EditorAssemblies.GetMethod( "GetAllTypesWithInterface", R.StaticMembers, null, new Type[]{  }, null ) );
@@ -69,13 +54,6 @@ namespace UnityReflection {
 			__ProcessInitializeOnLoadAttributes_0_1( types );
 		}
 		
-		public static void SetLoadedEditorAssemblies( System.Reflection.Assembly[] assemblies ) {
-			if( __SetLoadedEditorAssemblies_0_1 == null ) {
-				__SetLoadedEditorAssemblies_0_1 = (Action<System.Reflection.Assembly[]>) Delegate.CreateDelegate( typeof( Action<System.Reflection.Assembly[]> ), null, UnityTypes.UnityEditor_EditorAssemblies.GetMethod( "SetLoadedEditorAssemblies", R.StaticMembers, null, new Type[]{ typeof( System.Reflection.Assembly[] ) }, null ) );
-			}
-			__SetLoadedEditorAssemblies_0_1( assemblies );
-		}
-		
 		public static IEnumerable<Type> SubclassesOf( System.Type parent ) {
 			if( __SubclassesOf_0_1 == null ) {
 				__SubclassesOf_0_1 = (Func<System.Type, IEnumerable<Type>>) Delegate.CreateDelegate( typeof( Func<System.Type, IEnumerable<Type>> ), null, UnityTypes.UnityEditor_EditorAssemblies.GetMethod( "SubclassesOf", R.StaticMembers, null, new Type[]{ typeof( System.Type ) }, null ) );
@@ -101,13 +79,10 @@ namespace UnityReflection {
 		
 		static Func<System.Reflection.Assembly[]> __loadedAssemblies;
 		static Func<IEnumerable<Type>> __loadedTypes;
-		static Func<System.Reflection.BindingFlags, IEnumerable<MethodInfo>> __GetAllMethodsWithAttribute_0_1;
-		static Func<IEnumerable<Type>> __GetAllTypesWithAttribute_0_0;
 		static Func<IEnumerable<Type>> __GetAllTypesWithInterface_0_0;
 		static Func<System.Type, IEnumerable<Type>> __GetAllTypesWithInterface_1_1;
 		static Func<System.Type,System.Type, bool> __IsSubclassOfGenericType_0_2;
 		static Action<System.Type[]> __ProcessInitializeOnLoadAttributes_0_1;
-		static Action<System.Reflection.Assembly[]> __SetLoadedEditorAssemblies_0_1;
 		static Func<System.Type, IEnumerable<Type>> __SubclassesOf_0_1;
 		static Func<System.Type, IEnumerable<Type>> __SubclassesOfClass_0_1;
 		static Func<System.Type, IEnumerable<Type>> __SubclassesOfGenericType_0_1;
