@@ -87,5 +87,10 @@ namespace Hananoki.Extensions {
 
 			style.Draw( rc, false, false, false, false );
 		}
+
+		public static float CalcHeight( this GUIStyle style, string text ) {
+
+			return style.CalcHeight( EditorHelper.TempContent(text), 16 );
+		}
 	}
 }

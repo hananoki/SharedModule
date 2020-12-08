@@ -10,5 +10,12 @@ namespace Hananoki.ScriptableObjectManager {
 			this.category = category;
 		}
 	}
+
+
+	[AttributeUsage( AttributeTargets.Class )]
+	public class UtilityWindowAttribute : PropertyAttribute {
+		public UtilityWindowAttribute() {
+		}
+	}
 }
 

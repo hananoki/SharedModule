@@ -55,7 +55,8 @@ namespace Hananoki {
 		#region Button
 
 		public static bool Button( string s, Texture image, params GUILayoutOption[] options ) {
-			return Button( EditorHelper.TempContent( s, image ), options );
+			var size = EditorStyles.toolbarButton.CalcSize( EditorHelper.TempContent( s, image ) );
+			return Button( EditorHelper.TempContent( s, image ), GUILayout.Width( size.x ) );
 		}
 		public static bool Button( string s, params GUILayoutOption[] options ) {
 			return Button( EditorHelper.TempContent( s ), options );

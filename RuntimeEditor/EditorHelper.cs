@@ -31,6 +31,13 @@ namespace Hananoki {
 
 	public static class EditorHelper {
 
+		public static void ShowMessagePop( string text ) {
+			var content = new MessagePop( text );
+			var mouseRect = new Rect( Event.current.mousePosition, Vector2.one );
+			PopupWindow.Show( mouseRect, content );
+		}
+
+
 		#region ScreenCapture
 
 		static string MakeScreenCaptureFileName( int width, int height ) {

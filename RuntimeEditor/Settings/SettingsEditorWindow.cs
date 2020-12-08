@@ -27,6 +27,8 @@ namespace Hananoki.SharedModule {
 		public static List<EditorLocalize.LCIDString> m_localeNames;
 		public static int m_localeIndex;
 
+
+
 		public static void Open() {
 			var w = GetWindow<SettingsEditorWindow>();
 			w.SetTitle( new GUIContent( Package.name, EditorIcon.settings ) );
@@ -71,15 +73,23 @@ namespace Hananoki.SharedModule {
 
 			E.i.versionBackColor.value = EditorGUILayout.ColorField( S._VersionBackColor, E.i.versionBackColor.value );
 
-			//E.i.utilityWindow = EditorGUILayout.ToggleLeft( SS._UtilityWindowMode, E.i.utilityWindow );
-			if( HGUIScope.End() ) {
-				E.Save();
-			}
+			E.i.m_windowShade = HEditorGUILayout.ToggleLeft( S._WindowShade, E.i.m_windowShade );
+
+			//////////////////////////////////
 
 			GUILayout.Space( 8 );
 
-			HEditorGUILayout.HeaderTitle( S._WheretosaveProjectsettings );
+			HEditorGUILayout.HeaderTitle( "AssetPostprocessor" );
 
+			E.i.m_asmdefNameSync = HEditorGUILayout.ToggleLeft( S._MaketheNamefieldthesameasthefilenamewhenimportingasmdef, E.i.m_asmdefNameSync );
+			E.i.m_asmdefAutoReferenceOFF = HEditorGUILayout.ToggleLeft( S._TurnoffAutoReferencedwhenimportingasmdef, E.i.m_asmdefAutoReferenceOFF );
+			//E.i.utilityWindow = EditorGUILayout.ToggleLeft( SS._UtilityWindowMode, E.i.utilityWindow );
+			if( HGUIScope.End() ) E.Save();
+
+			//////////////////////////////////
+			GUILayout.Space( 8 );
+
+			HEditorGUILayout.HeaderTitle( S._WheretosaveProjectsettings );
 
 			HEditorGUILayout.PreviewFolder( E.i.GetProjectSettingsPath(), OnProjectFolderPreset );
 

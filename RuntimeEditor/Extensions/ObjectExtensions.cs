@@ -41,7 +41,8 @@ namespace Hananoki.Extensions {
 		/// <param name="obj"></param>
 		/// <returns></returns>
 		public static bool IsSubAsset( this UnityObject obj ) {
-			return AssetDatabase.IsSubAsset( obj );
+			// ??? AssetDatabase.IsSubAssetの結果がおかしい、バグ? 2019.4.5f1
+			return !AssetDatabase.IsMainAsset( obj );
 		}
 
 
@@ -70,8 +71,35 @@ namespace Hananoki.Extensions {
 		}
 
 
+		/// <summary>
+		/// オブジェクトをダーティとしてマークします
+		/// </summary>
+		/// <param name="target">UnityEngine.Object</param>
+		public static void SetDirty( this UnityObject target ) {
+			EditorUtility.SetDirty( target );
+		}
+
+
+		/// <summary>
+		/// すべてのサブアセット配列を返します
+		/// </summary>
+		/// <param name="target"></param>
+		/// <returns>サブアセット配列</returns>
+		public static UnityObject[] LoadAllSubAssets( this UnityObject target ) {
+			return AssetDatabaseUtils.LoadAllSubAssets( target );
+		}
+
+
+		public static string GetTypeName( this UnityObject target ) {
+			return target.GetType().Name;
+		}
+
+		public static bool IsNull( this UnityObject target ) {
+			return Helper.IsNull( target );
+		}
+
 		public static SerializedObject CreateSerializedObject( this UnityObject o ) {
-			return  new SerializedObject( o );
+			return new SerializedObject( o );
 		}
 	}
 }

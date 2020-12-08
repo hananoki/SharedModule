@@ -97,3 +97,21 @@ File exists
 Update to the latest status
 Template file not found
 Script Templates
+Unsafe
+Allows you to compile code that uses the unsafe keyword
+Create New
+Overwrite Save
+Display Contents
+Deleted
+Saved
+Window Shade
+Make the Name field the same as the file name when importing asmdef
+Turn off Auto Referenced when importing asmdef
+Suppress warnings
+The using directive for 'namespace' appeared previously in this namespace
+Unreachable code detected
+The private field 'class member' is never used
+The private field 'field' is assigned but its value is never used
+member' is obsolete: 'text'
+Field 'field' is never assigned to, and will always have its default value 'value'
+The local function 'function' is declared but never used

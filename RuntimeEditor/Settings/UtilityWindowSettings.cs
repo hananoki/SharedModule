@@ -29,8 +29,20 @@ namespace Hananoki.SharedModule {
 		static string[] typeList = {
 			$"Hananoki.ScriptableObjectManager.MainWindow",
 			$"Hananoki.PackageFileTools.MainWindow",
+			$"Hananoki.BuildAssist.BuildAssistWindow",
+			
 			UnityTypes.UnityEditor_AssetStoreWindow.AssemblyQualifiedName,
 		};
+
+
+		[SettingsMethod]
+		public static SettingsItem RegisterSettings() {
+			return new SettingsItem() {
+				//mode = 1,
+				displayName = $"{Package.name}/UtilityWindow",
+				gui = DrawGUI,
+			};
+		}
 
 		static void CheckNullType() {
 			var dels = new List<UtilityWindowSettingsData>();
@@ -92,20 +104,4 @@ namespace Hananoki.SharedModule {
 #endif
 		}
 	}
-
-
-#if ENABLE_HANANOKI_SETTINGS
-	[SettingsClass]
-	public class UtilityWindowSettingsEvent {
-		[SettingsMethod]
-		public static SettingsItem RegisterSettings() {
-			return new SettingsItem() {
-				//mode = 1,
-				displayName = $"{Package.name}/UtilityWindow",
-				//version = Package.version,
-				gui = UtilityWindowGUI.DrawGUI,
-			};
-		}
-	}
-#endif
 }

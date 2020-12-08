@@ -1,9 +1,13 @@
 ﻿
 using Hananoki.Extensions;
+using Hananoki.Reflection;
 using System;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityReflection;
+
+using E = Hananoki.SharedModule.SettingsEditor;
 
 namespace Hananoki {
 	public class HEditorWindow : EditorWindow {
@@ -37,15 +41,90 @@ namespace Hananoki {
 			}
 		}
 
-		//protected virtual void ShowButton( Rect r ) {
-		//	//r.x -= 16;
-		//	HEditorGUI.DrawDebugRect( r );
-		//}
+		public UnityEditorEditorWindow _editorWindow;
+		public bool m_disableShadeMode;
+		public bool m_shade;
+		public float m_height;
+
+		protected virtual void ShowButton( Rect r ) {
+			var rb = r;
+			rb.x += (17*3);
+			//HEditorGUI.DrawDebugRect(rb);
+			if(EditorHelper.HasMouseClick( rb ) ) {
+				OnClose();
+			}
+
+			if( !E.i.m_windowShade ) return;
+			if( m_disableShadeMode ) return;
+			var a = (Texture2D) EditorIcon.icons_processed_unityengine_ui_aspectratiofitter_icon_asset;
+
+			if( _editorWindow == null ) return;
+			//if( _editorWindow.dockArea != null ) {
+			if( _editorWindow.showMode == 4 ) return;
+			//}
+
+			if( HEditorGUI.IconButton( r, a ) ) {
+
+				//Debug.Log( $"{position}" );
+				var dockArea = _editorWindow.dockArea;
+				//if( dockArea != null ) {
+				//	var wnd = dockArea.GetProperty<object>( "window" );
+
+				//	var inaa = wnd.GetField<int>( "m_ShowMode" );
+				//	Debug.Log( inaa );
+				//}
+
+				if( position.height < 25 ) {
+					var rr = position;
+					rr.height = m_height;
+
+
+					//if( dockArea == null ) Debug.Log( "dockArea null" );
+
+
+					if( dockArea != null ) {
+						var wnd = dockArea.GetProperty<object>( "window" );
+						var rrc = wnd.GetProperty<Rect>( "position" );
+						//Debug.Log( rrc );
+						wnd.SetProperty<Rect>( "position", rr );
+					}
+
+					//position = rr;
+				}
+				else {
+					minSize = new Vector2( minSize.x, -10 );
+					var rr = position;
+					m_height = rr.height;
+					rr.height = 21;
+
+					//var dockArea = _editorWindow.dockArea;
+					//if( dockArea == null ) Debug.Log( "dockArea null" );
+					if( dockArea != null ) {
+						var wnd = dockArea.GetProperty<object>( "window" );
+						wnd.SetProperty<Rect>( "position", rr );
+					}
+
+					//position = rr;
+				}
+				m_shade = !m_shade;
+				//Debug.Log( m_shade );
+			}
+		}
+
+
+
+		public virtual void OnClose() { }
 
 		public void OnGUI() {
+			if( _editorWindow == null ) {
+				_editorWindow = new UnityEditorEditorWindow( this );
+			}
 			HGUIScope.Reset();
 			try {
 				OnDefaultGUI();
+			}
+			catch( ArgumentException ) {
+				// GUILayout.FlexibleSpace
 			}
 			catch( ExitGUIException ) {
 			}
@@ -64,6 +143,7 @@ namespace Hananoki {
 		//	draw?.Invoke();
 		//	GUILayout.EndHorizontal();
 		//}
+
 
 		public static EditorWindow ShowWindow( Type editorWindowType, bool utility = false ) {
 			return GetWindow( editorWindowType, utility );

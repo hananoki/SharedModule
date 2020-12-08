@@ -32,6 +32,11 @@ namespace Hananoki {
 			return (T) FindItem( id, rootItem );
 		}
 
+
+		public void SelectItem( int id ) {
+			SetSelection( new int[] { id }, TreeViewSelectionOptions.FireSelectionChanged );
+		}
+
 		public void InitID() {
 			m_id = 0;
 		}
@@ -62,7 +67,7 @@ namespace Hananoki {
 					_gui.SetProperty( "selectionStyle", EditorStyles.label );
 				}
 			}
-			catch(Exception e) {
+			catch( Exception e ) {
 				Debug.LogException( e );
 			}
 		}

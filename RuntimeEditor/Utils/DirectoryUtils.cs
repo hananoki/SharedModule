@@ -191,13 +191,17 @@ namespace Hananoki {
 		}
 
 		public static void WriteAllText( string path, string contents ) {
+			WriteAllText( path, contents, Encoding.UTF8 );
+		}
+
+		public static void WriteAllText( string path, string contents, Encoding encoding ) {
 			using( var fs = new FileStream( path, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite ) ) {
-				using( var st = new StreamWriter( fs, Encoding.UTF8 ) ) {
+				using( var st = new StreamWriter( fs, encoding ) ) {
 					st.Write( contents );
 				}
 			}
-			//File.WriteAllText( path, contents );
 		}
+		
 
 		/// <summary>
 		/// テキストファイルを書き出します

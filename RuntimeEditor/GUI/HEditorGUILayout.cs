@@ -19,7 +19,7 @@ namespace Hananoki {
 			GUILayout.Label( EditorHelper.TempContent( text, image ), style, options );
 		}
 
-
+		/*
 		public static bool Toggle( bool value, string text, params GUILayoutOption[] options ) {
 			return Toggle( value, EditorHelper.TempContent( text ), EditorStyles.toggle, options );
 		}
@@ -38,7 +38,7 @@ namespace Hananoki {
 
 			return result;
 		}
-
+		*/
 
 		static GUIStyle s_ToggleBox;
 		public static GUIStyle toggleBox {
@@ -83,6 +83,8 @@ namespace Hananoki {
 				return result;
 			}
 		}
+
+
 	}
 
 
@@ -106,10 +108,10 @@ namespace Hananoki {
 
 		#region HeaderTitle
 		public static bool ToggleBox( string title, bool value, Texture2D iconButton = null, Action actionButton = null ) {
-			return ToggleBox( value, title, false, iconButton, actionButton );
+			return ToggleBox( title, value, false, iconButton, actionButton );
 		}
 
-		public static bool ToggleBox( bool value, string title, bool boldFont, Texture2D iconButton = null, Action actionButton = null ) {
+		public static bool ToggleBox( string title, bool value, bool boldFont, Texture2D iconButton = null, Action actionButton = null ) {
 			bool result = value;
 			var backgroundColor = GUI.backgroundColor;
 			if( value ) {
@@ -335,12 +337,15 @@ namespace Hananoki {
 			var rt = EditorHelper.GetLayout( "", EditorStyles.toggle, GUILayout.Width( 16 ), GUILayout.Height( EditorGUIUtility.singleLineHeight ) );
 			rt.y += heighOffset;
 			bool b11 = GUI.Toggle( rt, b, "" );
-			var r = EditorHelper.GetLayout( s, EditorStyles.label );
-			r.x -= 5;
+			var r = EditorHelper.GetLayout( s, EditorStyles.label, GUILayout.Height( EditorGUIUtility.singleLineHeight ) );
+			r.x -= 2;
 			r.y += heighOffset;
 			//if( b11 ) HEditorGUI.DrawDebugRect( r );
 			GUI.Label( r, s, EditorStyles.label );
 			GUILayout.EndHorizontal();
+
+			//HEditorGUI.DrawDebugRectAtLastRect();
+			//HEditorGUI.DrawDebugRect( r );
 			return b11;
 		}
 

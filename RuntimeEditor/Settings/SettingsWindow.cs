@@ -18,6 +18,7 @@ using UnityEditorSplitterGUILayout = UnityReflection.UnityEditorSplitterGUILayou
 using EditorAssemblies = UnityReflection.UnityEditorEditorAssemblies;
 
 namespace Hananoki.SharedModule {
+
 	public class SettingsItem {
 		public int mode;
 		public string displayName;
@@ -119,7 +120,8 @@ namespace Hananoki.SharedModule {
 			//}
 
 			if( s_settingsItem != null ) {
-				foreach( var item in s_settingsItem ) {
+				var tot = s_settingsItem.OrderBy( x => x.displayName ).ToArray();
+				foreach( var item in tot ) {
 					m_treeView.AddItem( item );
 				}
 			}
@@ -134,7 +136,7 @@ namespace Hananoki.SharedModule {
 
 		void DrawLeftPane() {
 			if( selectionOpen ) {
-				m_treeView.SelectAndExpand( E.i.selectSettingName, (int)E.i.selectSettingMode );
+				m_treeView.SelectAndExpand( E.i.selectSettingName, (int) E.i.selectSettingMode );
 				selectionOpen = false;
 			}
 
@@ -154,6 +156,8 @@ namespace Hananoki.SharedModule {
 				}
 			}
 			catch( ArgumentException ) {
+			}
+			catch( ExitGUIException ) {
 			}
 			catch( Exception e ) {
 				Debug.LogException( e );

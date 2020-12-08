@@ -44,7 +44,7 @@ namespace Hananoki {
 
 		public void Calc() {
 			var sa = Time.realtimeSinceStartup - time;
-			if( 1 < sa ) {
+			if( 1.5f < sa ) {
 				editorWindow.Close();
 			}
 		}

@@ -24,6 +24,10 @@ namespace Hananoki.SharedModule {
 		//public string language;
 		public Color selectionColor = Color.white;
 
+		public bool m_asmdefNameSync;
+		public bool m_asmdefAutoReferenceOFF;
+		public bool m_windowShade;
+
 		public string selectSettingName;
 
 		public string projectSettingsPath;
@@ -53,7 +57,7 @@ namespace Hananoki.SharedModule {
 
 
 		public List<UtilityWindowSettingsData> utilityWindowSettingsData;
-
+		public CSPFileData m_CSPFileData;
 
 		public static E i;
 		static List<MethodInfo> s_localizeEvent;

@@ -111,6 +111,24 @@ namespace Hananoki.SharedModule {
 		public static string _Updatetothelateststatus => L.Tr( 96 );
 		public static string _Templatefilenotfound => L.Tr( 97 );
 		public static string _ScriptTemplates => L.Tr( 98 );
+		public static string _Unsafe => L.Tr( 99 );
+		public static string _Allowsyoutocompilecodethatusestheunsafekeyword => L.Tr( 100 );
+		public static string _CreateNew => L.Tr( 101 );
+		public static string _OverwriteSave => L.Tr( 102 );
+		public static string _DisplayContents => L.Tr( 103 );
+		public static string _Deleted => L.Tr( 104 );
+		public static string _Saved => L.Tr( 105 );
+		public static string _WindowShade => L.Tr( 106 );
+		public static string _MaketheNamefieldthesameasthefilenamewhenimportingasmdef => L.Tr( 107 );
+		public static string _TurnoffAutoReferencedwhenimportingasmdef => L.Tr( 108 );
+		public static string _Suppresswarnings => L.Tr( 109 );
+		public static string _Theusingdirectivefor_namespace_appearedpreviouslyinthisnamespace => L.Tr( 110 );
+		public static string _Unreachablecodedetected => L.Tr( 111 );
+		public static string _Theprivatefield_classmember_isneverused => L.Tr( 112 );
+		public static string _Theprivatefield_field_isassignedbutitsvalueisneverused => L.Tr( 113 );
+		public static string _member_isobsolete__text_ => L.Tr( 114 );
+		public static string _Field_field_isneverassignedto_andwillalwayshaveitsdefaultvalue_value_ => L.Tr( 115 );
+		public static string _Thelocalfunction_function_isdeclaredbutneverused => L.Tr( 116 );
 	}
 
 #if UNITY_EDITOR

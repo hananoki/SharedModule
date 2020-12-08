@@ -1,5 +1,31 @@
 # Shared Module
 
+## [1.7.2] - 2020-12-09
+
+### Added
+- Added window shade function to HEditorWindow
+- Added an event to HEditorWindow that pressed the close button
+- Added the ability to generate csc.rsp
+- Added processing when importing asmdef
+- Added UnityReflection.UnityEditorEditorWindow Class
+- Added EditorHelper Method
+  - ShowMessagePop
+- Added ObjectExtensions Method
+  - SetDirty
+  - LoadAllSubAssets
+  - GetTypeName
+  - IsNull
+- Added HTreeView Method
+  - SelectItem
+
+### Changed
+- HGUILayout.ToggleBox
+  - Changed the order of arguments
+- HEditorGUILayout.ToggleLeft
+  - Adjusted the layout
+- HGUIToolbar.Button
+  - Adjusted the layout
+
 ## [1.7.1] - 2020-12-04
 
 ### Added
