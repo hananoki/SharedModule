@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Hananoki {
+namespace HananokiEditor {
 	public static partial class UnityTypes {
 #if false
 		static Type _HolographicEmulationWindow;

@@ -3,9 +3,11 @@ using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using HananokiRuntime.Extensions;
+using HananokiEditor.Extensions;
 using UnityObject = UnityEngine.Object;
 
-namespace Hananoki.Extensions {
+namespace HananokiEditor.Extensions {
 	public static partial class EditorExtensions {
 
 		public static string quote( this string s ) {

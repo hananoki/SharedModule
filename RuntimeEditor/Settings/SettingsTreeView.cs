@@ -1,17 +1,18 @@
-﻿#define  ENABLE_HANANOKI_SETTINGS
+﻿#define ENABLE_HANANOKI_SETTINGS
 
 #if ENABLE_HANANOKI_SETTINGS
 
-using Hananoki.Extensions;
+using HananokiEditor.Extensions;
+using HananokiRuntime.Extensions;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
-using System.Linq;
 
-using E = Hananoki.SharedModule.SettingsEditor;
+using E = HananokiEditor.SharedModule.SettingsEditor;
 
-namespace Hananoki.SharedModule {
+namespace HananokiEditor.SharedModule {
 
 	using Item = SettingsTreeViewItem;
 
@@ -111,7 +112,15 @@ namespace Hananoki.SharedModule {
 			var item = (Item) args.item;
 			if( item.root && !args.selected ) {
 				//HEditorGUI.DrawDebugRect(args.rowRect);
-				var r = new GUIStyle( "SceneTopBarBg" );
+				var r = new GUIStyle();
+				//var r = new GUIStyle( "SceneTopBarBg" );
+				if( UnitySymbol.UNITY_2019_3_OR_NEWER ) {
+					r = new GUIStyle( "SceneTopBarBg" );
+				}
+				else {
+					r = new GUIStyle( "ProjectBrowserHeaderBgMiddle" );
+				}
+				
 				r.Draw( args.rowRect );
 			}
 

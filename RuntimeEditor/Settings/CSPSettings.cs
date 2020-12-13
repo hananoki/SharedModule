@@ -1,14 +1,14 @@
-﻿
-using Hananoki.Extensions;
+﻿using HananokiRuntime.Extensions;
+using HananokiEditor.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-using E = Hananoki.SharedModule.SettingsEditor;
+using E = HananokiEditor.SharedModule.SettingsEditor;
 
-namespace Hananoki.SharedModule {
+namespace HananokiEditor.SharedModule {
 	[Serializable]
 	public class CSPFileData {
 		public bool Enable;
@@ -50,10 +50,10 @@ namespace Hananoki.SharedModule {
 
 	internal class CSPFileGUI : HSettingsEditorWindow {
 
-		[SettingsMethod]
+		[HananokiSettingsRegister]
 		public static SettingsItem RegisterSettings() {
 			return new SettingsItem() {
-				displayName = $"{Package.name}/csc.rsp",
+				displayName = $"{Package.nameNicify}/csc.rsp",
 				gui = DrawGUI,
 			};
 		}
@@ -65,7 +65,7 @@ namespace Hananoki.SharedModule {
 
 		public static void DrawGUI() {
 			///////////////////
-			HGUIScope.Horizontal( EditorStyles.helpBox );
+			ScopeHorizontal.Begin( EditorStyles.helpBox );
 			var height = GUI.skin.button.CalcHeight( "csc.rsp" );
 			GUILayout.Label( "csc.rsp", EditorStyles.boldLabel, GUILayout.Height( EditorGUIUtility.singleLineHeight ) );
 			GUILayout.Space( 8 );
@@ -77,7 +77,7 @@ namespace Hananoki.SharedModule {
 				HGUILayout.Label( S._Filedoesnotexist, EditorIcon.error, EditorStyles.miniLabel, GUILayout.Height( EditorGUIUtility.singleLineHeight ) );
 			}
 			GUILayout.FlexibleSpace();
-			HGUIScope.Disable( !exist );
+			ScopeDisable.Begin( !exist );
 			if( GUILayout.Button( S._DisplayContents ) ) {
 				EditorUtility.DisplayDialog( S._Confirm, fs.ReadAllText( kAssetPath ), S._OK );
 			}
@@ -85,8 +85,8 @@ namespace Hananoki.SharedModule {
 				fs.rm( kAssetPath );
 				AssetDatabase.Refresh();
 			}
-			HGUIScope.End();
-			HGUIScope.End();
+			ScopeDisable.End();
+			ScopeHorizontal.End();
 
 			///////////////////
 			///
@@ -94,7 +94,7 @@ namespace Hananoki.SharedModule {
 
 			HEditorGUILayout.HeaderTitle( S._Suppresswarnings );
 			EditorGUI.indentLevel++;
-			HGUIScope.Change();
+			ScopeChange.Begin();
 
 			pref.cs0105 = HEditorGUILayout.ToggleLeft( $"CS0105 - {S._Theusingdirectivefor_namespace_appearedpreviouslyinthisnamespace}", pref.cs0105 );
 			pref.cs0162 = HEditorGUILayout.ToggleLeft( $"CS0162 - {S._Unreachablecodedetected}", pref.cs0162 );
@@ -107,29 +107,29 @@ namespace Hananoki.SharedModule {
 			//
 
 			EditorGUI.indentLevel--;
-			if( HGUIScope.End() ) E.Save();
+			if( ScopeChange.End() ) E.Save();
 
 			///////////////////
 			GUILayout.Space( 8 );
 
 			HEditorGUILayout.HeaderTitle( S._Unsafe );
 			EditorGUI.indentLevel++;
-			HGUIScope.Change();
+			ScopeChange.Begin();
 			pref.isUnsafe = HEditorGUILayout.ToggleLeft( S._Allowsyoutocompilecodethatusestheunsafekeyword, pref.isUnsafe );
-			if( HGUIScope.End() ) E.Save();
+			if( ScopeChange.End() ) E.Save();
 			EditorGUI.indentLevel--;
 
 			///////////////////
 			GUILayout.Space( 16 );
 
-			HGUIScope.Horizontal();
+			ScopeHorizontal.Begin();
 			GUILayout.FlexibleSpace();
 
 			if( GUILayout.Button( exist ? " " + S._OverwriteSave : " " + S._CreateNew ) ) {
 				SaveFile();
 			}
 
-			HGUIScope.End();
+			ScopeHorizontal.End();
 		}
 
 

@@ -2,7 +2,7 @@
 using System;
 using UnityEngine;
 
-namespace Hananoki.ScriptableObjectManager {
+namespace HananokiRuntime {
 	[AttributeUsage( AttributeTargets.Class )]
 	public class ScriptableObjectClassAttribute : PropertyAttribute {
 		public string category;

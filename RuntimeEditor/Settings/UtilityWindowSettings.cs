@@ -1,12 +1,12 @@
 ﻿
-using Hananoki.Extensions;
+using HananokiEditor.Extensions;
 using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using E = Hananoki.SharedModule.SettingsEditor;
+using E = HananokiEditor.SharedModule.SettingsEditor;
 
-namespace Hananoki.SharedModule {
+namespace HananokiEditor.SharedModule {
 	[Serializable]
 	public class UtilityWindowSettingsData {
 		public bool Enable;
@@ -27,19 +27,19 @@ namespace Hananoki.SharedModule {
 		const string kCom = "Version=0.0.0.0, Culture=neutral, PublicKeyToken=null";
 
 		static string[] typeList = {
-			$"Hananoki.ScriptableObjectManager.MainWindow",
-			$"Hananoki.PackageFileTools.MainWindow",
-			$"Hananoki.BuildAssist.BuildAssistWindow",
+			$"HananokiEditor.ScriptableObjectManager.MainWindow",
+			$"HananokiEditor.PackageFileTools.MainWindow",
+			$"HananokiEditor.BuildAssist.BuildAssistWindow",
 			
 			UnityTypes.UnityEditor_AssetStoreWindow.AssemblyQualifiedName,
 		};
 
 
-		[SettingsMethod]
+		[HananokiSettingsRegister]
 		public static SettingsItem RegisterSettings() {
 			return new SettingsItem() {
 				//mode = 1,
-				displayName = $"{Package.name}/UtilityWindow",
+				displayName = $"{Package.nameNicify}/UtilityWindow",
 				gui = DrawGUI,
 			};
 		}

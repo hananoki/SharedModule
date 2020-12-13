@@ -1,10 +1,11 @@
 ﻿
 using UnityEditor;
 
-namespace Hananoki.SharedModule {
+namespace HananokiEditor.SharedModule {
   public static class Package {
     public const string name = "SharedModule";
+    public const string nameNicify = "Shared Module";
     public const string editorPrefName = "Hananoki.SharedModule";
-    public const string version = "1.7.2";
+    public const string version = "1.7.3";
   }
 }

@@ -6,15 +6,15 @@
 #if UNITY_EDITOR
 
 
-using Hananoki.Reflection;
-using Hananoki.SharedModule;
+//using Hananoki.Reflection;
+using HananokiEditor.SharedModule;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityReflection;
 
-namespace Hananoki {
+namespace HananokiEditor {
 	public static class PlatformUtils {
 
 		static List<BuildTargetGroup> s_buildTargetGroup;

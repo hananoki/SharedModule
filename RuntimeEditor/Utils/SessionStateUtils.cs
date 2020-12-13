@@ -4,7 +4,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Hananoki {
+namespace HananokiEditor {
 
 	[System.Serializable]
 	public class SessionStateBool {

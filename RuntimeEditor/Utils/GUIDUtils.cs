@@ -1,13 +1,11 @@
 ﻿#if UNITY_EDITOR
 
-using UnityEditor;
-using System.IO;
 using System;
-using UnityObject = UnityEngine.Object;
+using System.IO;
+using HananokiEditor.Extensions;
+using HananokiRuntime.Extensions;
 
-namespace Hananoki {
-	using Extensions;
-
+namespace HananokiEditor {
 	public static class GUIDUtils {
 
 		public static string AdjustDirectoryGUID( this string guid ) {
@@ -23,11 +21,11 @@ namespace Hananoki {
 		}
 
 		public static string NewString() {
-			return System.Guid.NewGuid().ToString( "N" );
+			return Guid.NewGuid().ToString( "N" );
 		}
 
 		public static int NewInt32() {
-			return System.Convert.ToInt32( NewString().Substring( 0, 8 ), 16 );
+			return Convert.ToInt32( NewString().Substring( 0, 8 ), 16 );
 		}
 
 	}

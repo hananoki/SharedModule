@@ -1,12 +1,14 @@
 ﻿
-using Hananoki.Extensions;
+using HananokiEditor.Extensions;
+using HananokiRuntime;
+using HananokiRuntime.Extensions;
 using System;
 using UnityEditor;
 using UnityEngine;
 
 using UnityObject = UnityEngine.Object;
 
-namespace Hananoki {
+namespace HananokiEditor {
 
 	public static class HGUILayout {
 		public static void Label( string text, Texture image, params GUILayoutOption[] options ) {
@@ -47,7 +49,7 @@ namespace Hananoki {
 					s_ToggleBox = new GUIStyle( EditorStyles.helpBox );
 					s_ToggleBox.padding = new RectOffset( 4, 4, 2, 2 );
 					s_ToggleBox.margin = new RectOffset( 3, 3, 2, 2 );
-					s_ToggleBox.onNormal= s_ToggleBox.normal;
+					s_ToggleBox.onNormal = s_ToggleBox.normal;
 				}
 				return s_ToggleBox;
 			}
@@ -72,7 +74,7 @@ namespace Hananoki {
 			using( new GUIBackgroundColorScope() ) {
 				if( value ) {
 					//GUI.backgroundColor = ColorUtils.RGB( 169, 201, 255 );
-					var r=position;
+					var r = position;
 					r.x += 1;
 					r.width -= 2;
 					EditorGUI.DrawRect( r, EditorGUIUtility.isProSkin ? ColorUtils.RGB( 128, 128, 128 ) : Color.white );
@@ -211,10 +213,10 @@ namespace Hananoki {
 			if( !file.IsEmpty() && !file.IsExistsFile() ) {
 				GUI.backgroundColor = HEditorStyles.helpBoxInvalidColor;
 			}
-			HGUIScope.Horizontal( EditorStyles.helpBox );
+			ScopeHorizontal.Begin( EditorStyles.helpBox );
 			var rect = GUILayoutUtility.GetRect( GUIContent.none, HEditorStyles.folderField, options );
 			var newfile = HEditorGUI.FileFiled( rect, GUIContent.none, file, filters );
-			HGUIScope.End();
+			ScopeHorizontal.End();
 
 			GUI.backgroundColor = backgroundColor;
 
@@ -228,9 +230,14 @@ namespace Hananoki {
 			return HEditorGUI.FolderFiled( rect, EditorHelper.TempContent( label ), path );
 		}
 
+		public static string FolderFiled( string path, params GUILayoutOption[] options ) {
+			var rect = GUILayoutUtility.GetRect( GUIContent.none, HEditorStyles.folderField, options );
+
+			return HEditorGUI.FolderFiled( rect, path );
+		}
 
 		public static void PreviewFolder(/* string label, */string path, Action presetAction = null ) {
-			HGUIScope.Horizontal( EditorStyles.helpBox );
+			ScopeHorizontal.Begin( EditorStyles.helpBox );
 			GUILayout.Label( path );
 			GUILayout.FlexibleSpace();
 			if( presetAction != null ) {
@@ -238,12 +245,12 @@ namespace Hananoki {
 					presetAction.Invoke();
 				}
 			}
-			HGUIScope.Disable( !path.IsExistsDirectory() );
+			ScopeDisable.Begin( !path.IsExistsDirectory() );
 			if( IconButton( EditorIcon.icons_processed_folderempty_icon_asset ) ) {
 				ShellUtils.OpenDirectory( path );
 			}
-			HGUIScope.End();
-			HGUIScope.End();
+			ScopeDisable.End();
+			ScopeHorizontal.End();
 		}
 
 

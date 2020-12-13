@@ -7,7 +7,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 
-namespace Hananoki {
+namespace HananokiEditor {
 	public static class SceneViewUtils {
 		static Dictionary<SceneView.OnSceneFunc, Action<SceneView>> s_func = new Dictionary<SceneView.OnSceneFunc, Action<SceneView>>();
 

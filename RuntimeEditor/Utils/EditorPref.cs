@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 using UnityEditor;
 
-namespace Hananoki {
+namespace HananokiEditor {
 
 	[Serializable]
 	public class EditorPrefsInt {

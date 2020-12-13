@@ -1,13 +1,11 @@
 ﻿
-using UnityEngine;
-using UnityEditor;
-using Hananoki.Extensions;
-using Hananoki.Reflection;
+using HananokiEditor.Extensions;
+using HananokiRuntime;
 using System.Reflection;
+using UnityEditor;
 using UnityReflection;
-//using ProjectBrowser = UnityReflection.UnityEditorProjectBrowser;
 
-namespace Hananoki {
+namespace HananokiEditor {
 	public static partial class ProjectBrowserUtils {
 
 		static UnityEditorProjectBrowser s_projectBrowser;

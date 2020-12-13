@@ -1,12 +1,12 @@
 ﻿using UnityEditor;
 
-namespace Hananoki {
+namespace HananokiEditor {
 	public static partial class UnityEditorMenu {
 
 		public static void Window_Hananoki_Settings() {
-			if( EditorHelper.IsDefine( "ENABLE_HANANOKI_SETTINGS" ) ) {
+			//if( EditorHelper.IsDefine( "ENABLE_HANANOKI_SETTINGS" ) ) {
 				EditorApplication.ExecuteMenuItem( "Window/Hananoki/Settings" );
-			}
+	//}
 		}
 
 		public static void File_Build_Settings() {

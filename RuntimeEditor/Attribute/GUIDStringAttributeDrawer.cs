@@ -1,15 +1,12 @@
 ﻿
 #if UNITY_EDITOR
 
-using UnityEngine;
 using UnityEditor;
-using System.Linq;
-using System.Collections.Generic;
-using Hananoki;
-
+using UnityEngine;
+using HananokiRuntime;
 using UnityObject = UnityEngine.Object;
 
-namespace Hananoki {
+namespace HananokiEditor {
 
 	[CustomPropertyDrawer( typeof( GUIDStringAttribute ) )]
 	class GUIDStringAttributeDrawer : PropertyDrawer {
@@ -50,7 +47,7 @@ namespace Hananoki {
 			}
 			EditorGUI.BeginChangeCheck();
 			//if()
-			Object value = (UnityObject) EditorGUI.ObjectField( rc, m_scnCache, atb.m_type, false );
+			UnityObject value = (UnityObject) EditorGUI.ObjectField( rc, m_scnCache, atb.m_type, false );
 			if( EditorGUI.EndChangeCheck() ) {
 				property.stringValue = AssetDatabase.AssetPathToGUID( AssetDatabase.GetAssetPath( value ) );
 			}

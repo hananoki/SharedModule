@@ -1,11 +1,11 @@
-﻿#if UNITY_EDITOR
-
+﻿
 using System;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using HananokiRuntime;
 
-namespace Hananoki {
+namespace HananokiEditor {
 
 	public class HandlesGUIScope : GUI.Scope {
 		public HandlesGUIScope() {
@@ -139,4 +139,3 @@ namespace Hananoki {
 	}
 }
 
-#endif

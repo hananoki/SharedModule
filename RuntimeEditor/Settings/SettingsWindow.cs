@@ -3,21 +3,21 @@
 
 #if ENABLE_HANANOKI_SETTINGS
 
-using Hananoki.Extensions;
-using Hananoki.Reflection;
+using HananokiEditor.Extensions;
+//using Hananoki.Reflection;
 using System;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using System.Linq;
 
-using SS = Hananoki.SharedModule.S;
-using E = Hananoki.SharedModule.SettingsEditor;
+using SS = HananokiEditor.SharedModule.S;
+using E = HananokiEditor.SharedModule.SettingsEditor;
 using UnityEditorSplitterState = UnityReflection.UnityEditorSplitterState;
 using UnityEditorSplitterGUILayout = UnityReflection.UnityEditorSplitterGUILayout;
-using EditorAssemblies = UnityReflection.UnityEditorEditorAssemblies;
+//using EditorAssemblies = UnityReflection.UnityEditorEditorAssemblies;
 
-namespace Hananoki.SharedModule {
+namespace HananokiEditor.SharedModule {
 
 	public class SettingsItem {
 		public int mode;
@@ -48,7 +48,7 @@ namespace Hananoki.SharedModule {
 
 		static bool selectionOpen;
 
-		[MenuItem( "Window/Hananoki/Settings" )]
+		[MenuItem( "Window/Hananoki/Settings", false, 190 )]
 		public static void Open() {
 			var window = GetWindow<SettingsWindow>();
 			window.SetTitle( new GUIContent( SS._Settings, EditorIcon.settings ) );
@@ -80,6 +80,7 @@ namespace Hananoki.SharedModule {
 			s_instance = null;
 		}
 
+
 		void OnEnable() {
 			s_instance = this;
 
@@ -87,7 +88,7 @@ namespace Hananoki.SharedModule {
 
 			m_treeView = new SettingsTreeView();
 
-			var settingsMethods = EditorAssemblies.GetAllMethodsWithAttribute<SettingsMethod>();
+			var settingsMethods = AssemblieUtils.GetAllMethodsWithAttribute<HananokiSettingsRegister>();
 			s_settingsItem = settingsMethods.Select( x => (SettingsItem) x.Invoke( null, null ) ).ToArray();
 			//foreach( var p in settingsMethods ) {
 			//	//Debug.Log( p.FullName );
@@ -149,10 +150,10 @@ namespace Hananoki.SharedModule {
 				using( var sc = new GUILayout.ScrollViewScope( m_scroll ) ) {
 					m_scroll = sc.scrollPosition;
 
-					HGUIScope.Layout();
-					GUILayout.Space( 4 );
-					m_treeView.DrawCurrent();
-					HGUIScope.End();
+					using( new GUILayoutScope() ) {
+						GUILayout.Space( 4 );
+						m_treeView.DrawCurrent();
+					}
 				}
 			}
 			catch( ArgumentException ) {
@@ -189,13 +190,13 @@ namespace Hananoki.SharedModule {
 
 			UnityEditorSplitterGUILayout.BeginHorizontalSplit( m_HorizontalSplitter );
 
-			HGUIScope.Vertical();
+			ScopeVertical.Begin();
 			DrawLeftPane();
-			HGUIScope.End();
+			ScopeVertical.End();
 
-			HGUIScope.Vertical( HEditorStyles.dopesheetBackground );
+			ScopeVertical.Begin( HEditorStyles.dopesheetBackground );
 			DrawRightPane();
-			HGUIScope.End();
+			ScopeVertical.End();
 
 			UnityEditorSplitterGUILayout.EndHorizontalSplit();
 		}

@@ -1,7 +1,7 @@
 ﻿
 using System;
 
-namespace Hananoki {
+namespace HananokiEditor {
 	public static partial class UnityTypes {
 
 		static Type _UnityEditor_Tilemaps_GridPalettes;

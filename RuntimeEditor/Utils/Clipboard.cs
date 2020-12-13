@@ -1,7 +1,7 @@
 ﻿
 using UnityEngine;
 
-namespace Hananoki {
+namespace HananokiEditor {
 
 	public static class Clipboard {
 

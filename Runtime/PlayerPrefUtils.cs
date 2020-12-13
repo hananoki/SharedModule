@@ -2,7 +2,7 @@
 using System;
 using UnityEngine;
 
-namespace Hananoki {
+namespace HananokiRuntime {
 
 	[Serializable]
 	public class PlayerPrefsInt {

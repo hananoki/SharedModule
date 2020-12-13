@@ -1,5 +1,4 @@
-﻿using Hananoki;
-using Hananoki.Reflection;
+﻿using HananokiEditor;
 using UnityEditor;
 using UnityEngine;
 using System;

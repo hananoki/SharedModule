@@ -1,7 +1,6 @@
 ﻿/// UnityEditor.ScriptAttributeUtility : 2019.4.5f1
 
-using Hananoki;
-using Hananoki.Reflection;
+using HananokiEditor;
 using System;
 using System.Collections.Generic;
 

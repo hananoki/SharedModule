@@ -1,7 +1,7 @@
 ﻿
 using UnityEditor;
 
-namespace Hananoki {
+namespace HananokiEditor {
 
 	public static class EditorFolder {
 		public static string resourcePath {

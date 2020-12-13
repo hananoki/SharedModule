@@ -1,15 +1,9 @@
 ﻿
-#if UNITY_EDITOR
-
-using UnityEngine;
 using UnityEditor;
-using System.Linq;
-using System.Collections.Generic;
-using Hananoki;
+using UnityEngine;
+using HananokiRuntime;
 
-using UnityObject = UnityEngine.Object;
-
-namespace Hananoki {
+namespace HananokiEditor {
 	[CustomPropertyDrawer( typeof( HexNumberAttribute ) )]
 	class HexANumberttributeDrawer : PropertyDrawer {
 		HexNumberAttribute atb { get { return (HexNumberAttribute) attribute; } }
@@ -24,6 +18,6 @@ namespace Hananoki {
 			EditorGUI.EndDisabledGroup();
 		}
 	}
+
 }
 
-#endif

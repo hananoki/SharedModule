@@ -1,9 +1,9 @@
-﻿using Hananoki.Extensions;
+﻿using HananokiEditor.Extensions;
 using System;
 using UnityEditor;
 using UnityEngine;
 
-namespace Hananoki {
+namespace HananokiEditor {
 	public static class HGUIToolbar {
 
 		//static GUIStyle s_ToolbarDropDown;
@@ -142,6 +142,10 @@ namespace Hananoki {
 
 		public static bool DropDown( string text, Action action, params GUILayoutOption[] options ) {
 			return DropDown( EditorHelper.TempContent( text ), action, options );
+		}
+
+		public static bool DropDown( string text, params GUILayoutOption[] options ) {
+			return DropDown( EditorHelper.TempContent( text ), null, options );
 		}
 
 		public static bool DropDown( string text, string tooltip, Action action, params GUILayoutOption[] options ) {

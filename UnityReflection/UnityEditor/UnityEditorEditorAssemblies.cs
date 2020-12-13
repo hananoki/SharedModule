@@ -1,14 +1,17 @@
 ﻿/// UnityEditor.EditorAssemblies : 2019.4.5f1
 
-using Hananoki;
-using Hananoki.Reflection;
+using HananokiEditor;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 
 namespace UnityReflection {
   public sealed partial class UnityEditorEditorAssemblies {
-    
+
+		public static class Cache<T> {
+			public static T cache;
+		}
+
 		public static System.Reflection.Assembly[] loadedAssemblies {
 			get {
 				if( __loadedAssemblies == null ) {
@@ -26,11 +29,35 @@ namespace UnityReflection {
 				return __loadedTypes();
 			}
 		}
-		public static IEnumerable<Type> GetAllTypesWithInterface() {
-			if( __GetAllTypesWithInterface_0_0 == null ) {
-				__GetAllTypesWithInterface_0_0 = (Func<IEnumerable<Type>>) Delegate.CreateDelegate( typeof( Func<IEnumerable<Type>> ), null, UnityTypes.UnityEditor_EditorAssemblies.GetMethod( "GetAllTypesWithInterface", R.StaticMembers, null, new Type[]{  }, null ) );
+
+		public static IEnumerable<MethodInfo> GetAllMethodsWithAttribute<T>( System.Reflection.BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic ) where T : Attribute {
+			if( Cache<Method_GetAllMethodsWithAttribute_0_1<T>>.cache == null ) {
+				Type funcType = typeof(Method_GetAllMethodsWithAttribute_0_1<>).MakeGenericType( typeof( T ) );
+				var mi = UnityTypes.UnityEditor_EditorAssemblies.GetMethod( "GetAllMethodsWithAttribute", R.StaticMembers, null, new Type[]{ typeof( System.Reflection.BindingFlags ) }, null );
+				System.Reflection.MethodInfo generic = mi.MakeGenericMethod( typeof( T ) );
+				Cache< Method_GetAllMethodsWithAttribute_0_1<T> >.cache = ( Method_GetAllMethodsWithAttribute_0_1<T> ) Delegate.CreateDelegate( funcType, null, generic );
 			}
-			return __GetAllTypesWithInterface_0_0(  );
+			return Cache< Method_GetAllMethodsWithAttribute_0_1<T> >.cache( bindingFlags );
+		}
+		
+		public static IEnumerable<Type> GetAllTypesWithAttribute<T>() where T : Attribute {
+			if( Cache<Method_GetAllTypesWithAttribute_0_0<T>>.cache == null ) {
+				Type funcType = typeof(Method_GetAllTypesWithAttribute_0_0<>).MakeGenericType( typeof( T ) );
+				var mi = UnityTypes.UnityEditor_EditorAssemblies.GetMethod( "GetAllTypesWithAttribute", R.StaticMembers, null, new Type[]{  }, null );
+				System.Reflection.MethodInfo generic = mi.MakeGenericMethod( typeof( T ) );
+				Cache< Method_GetAllTypesWithAttribute_0_0<T> >.cache = ( Method_GetAllTypesWithAttribute_0_0<T> ) Delegate.CreateDelegate( funcType, null, generic );
+			}
+			return Cache< Method_GetAllTypesWithAttribute_0_0<T> >.cache();
+		}
+		
+		public static IEnumerable<Type> GetAllTypesWithInterface<T>() where T : class {
+			if( Cache<Method_GetAllTypesWithInterface_0_0<T>>.cache == null ) {
+				Type funcType = typeof(Method_GetAllTypesWithInterface_0_0<>).MakeGenericType( typeof( T ) );
+				var mi = UnityTypes.UnityEditor_EditorAssemblies.GetMethod( "GetAllTypesWithInterface", R.StaticMembers, null, new Type[]{  }, null );
+				System.Reflection.MethodInfo generic = mi.MakeGenericMethod( typeof( T ) );
+				Cache< Method_GetAllTypesWithInterface_0_0<T> >.cache = ( Method_GetAllTypesWithInterface_0_0<T> ) Delegate.CreateDelegate( funcType, null, generic );
+			}
+			return Cache< Method_GetAllTypesWithInterface_0_0<T> >.cache();
 		}
 		
 		public static IEnumerable<Type> GetAllTypesWithInterface( System.Type interfaceType ) {
@@ -79,7 +106,9 @@ namespace UnityReflection {
 		
 		static Func<System.Reflection.Assembly[]> __loadedAssemblies;
 		static Func<IEnumerable<Type>> __loadedTypes;
-		static Func<IEnumerable<Type>> __GetAllTypesWithInterface_0_0;
+		delegate IEnumerable<MethodInfo> Method_GetAllMethodsWithAttribute_0_1<T>( System.Reflection.BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic );
+		delegate IEnumerable<Type> Method_GetAllTypesWithAttribute_0_0<T>();
+		delegate IEnumerable<Type> Method_GetAllTypesWithInterface_0_0<T>();
 		static Func<System.Type, IEnumerable<Type>> __GetAllTypesWithInterface_1_1;
 		static Func<System.Type,System.Type, bool> __IsSubclassOfGenericType_0_2;
 		static Action<System.Type[]> __ProcessInitializeOnLoadAttributes_0_1;

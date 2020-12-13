@@ -2,7 +2,7 @@
 using UnityEngine;
 using System;
 
-namespace Hananoki {
+namespace HananokiRuntime {
 	public class GUIDStringAttribute : PropertyAttribute {
 		public Type m_type;
 		public GUIDStringAttribute( Type t ) {

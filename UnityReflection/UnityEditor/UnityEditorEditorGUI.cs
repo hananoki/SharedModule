@@ -1,14 +1,17 @@
 ﻿/// UnityEditor.EditorGUI : 2019.4.5f1
 
-using Hananoki;
-using Hananoki.Reflection;
+using HananokiEditor;
 using System;
 using UnityEngine;
 using UnityObject = UnityEngine.Object;
 
 namespace UnityReflection {
   public sealed partial class UnityEditorEditorGUI {
-    
+
+		public static class Cache<T> {
+			public static T cache;
+		}
+
 		public static string ToolbarSearchField( UnityEngine.Rect position, string text, bool showWithPopupArrow ) {
 			if( __ToolbarSearchField_0_3 == null ) {
 				__ToolbarSearchField_0_3 = (Func<UnityEngine.Rect,string,bool, string>) Delegate.CreateDelegate( typeof( Func<UnityEngine.Rect,string,bool, string> ), null, UnityTypes.UnityEditor_EditorGUI.GetMethod( "ToolbarSearchField", R.StaticMembers, null, new Type[]{ typeof( UnityEngine.Rect ), typeof( string ), typeof( bool ) }, null ) );
@@ -72,19 +75,109 @@ namespace UnityReflection {
 			return __ButtonWithDropdownList_1_4( content, buttonNames, callback, options );
 		}
 		
+		public static float CalcPrefixLabelWidth( UnityEngine.GUIContent label, UnityEngine.GUIStyle style = null ) {
+			if( __CalcPrefixLabelWidth_0_2 == null ) {
+				__CalcPrefixLabelWidth_0_2 = (Func<UnityEngine.GUIContent,UnityEngine.GUIStyle, float>) Delegate.CreateDelegate( typeof( Func<UnityEngine.GUIContent,UnityEngine.GUIStyle, float> ), null, UnityTypes.UnityEditor_EditorGUI.GetMethod( "CalcPrefixLabelWidth", R.StaticMembers, null, new Type[]{ typeof( UnityEngine.GUIContent ), typeof( UnityEngine.GUIStyle ) }, null ) );
+			}
+			return __CalcPrefixLabelWidth_0_2( label, style );
+		}
+		
+		public static System.Enum EnumFlagsField( UnityEngine.Rect position, System.Enum enumValue ) {
+			if( __EnumFlagsField_0_2 == null ) {
+				__EnumFlagsField_0_2 = (Func<UnityEngine.Rect,System.Enum, System.Enum>) Delegate.CreateDelegate( typeof( Func<UnityEngine.Rect,System.Enum, System.Enum> ), null, UnityTypes.UnityEditor_EditorGUI.GetMethod( "EnumFlagsField", R.StaticMembers, null, new Type[]{ typeof( UnityEngine.Rect ), typeof( System.Enum ) }, null ) );
+			}
+			return __EnumFlagsField_0_2( position, enumValue );
+		}
+		
+		public static System.Enum EnumFlagsField( UnityEngine.Rect position, System.Enum enumValue, UnityEngine.GUIStyle style ) {
+			if( __EnumFlagsField_1_3 == null ) {
+				__EnumFlagsField_1_3 = (Func<UnityEngine.Rect,System.Enum,UnityEngine.GUIStyle, System.Enum>) Delegate.CreateDelegate( typeof( Func<UnityEngine.Rect,System.Enum,UnityEngine.GUIStyle, System.Enum> ), null, UnityTypes.UnityEditor_EditorGUI.GetMethod( "EnumFlagsField", R.StaticMembers, null, new Type[]{ typeof( UnityEngine.Rect ), typeof( System.Enum ), typeof( UnityEngine.GUIStyle ) }, null ) );
+			}
+			return __EnumFlagsField_1_3( position, enumValue, style );
+		}
+		
+		public static System.Enum EnumFlagsField( UnityEngine.Rect position, string label, System.Enum enumValue ) {
+			if( __EnumFlagsField_2_3 == null ) {
+				__EnumFlagsField_2_3 = (Func<UnityEngine.Rect,string,System.Enum, System.Enum>) Delegate.CreateDelegate( typeof( Func<UnityEngine.Rect,string,System.Enum, System.Enum> ), null, UnityTypes.UnityEditor_EditorGUI.GetMethod( "EnumFlagsField", R.StaticMembers, null, new Type[]{ typeof( UnityEngine.Rect ), typeof( string ), typeof( System.Enum ) }, null ) );
+			}
+			return __EnumFlagsField_2_3( position, label, enumValue );
+		}
+		
+		public static System.Enum EnumFlagsField( UnityEngine.Rect position, string label, System.Enum enumValue, UnityEngine.GUIStyle style ) {
+			if( __EnumFlagsField_3_4 == null ) {
+				__EnumFlagsField_3_4 = (Func<UnityEngine.Rect,string,System.Enum,UnityEngine.GUIStyle, System.Enum>) Delegate.CreateDelegate( typeof( Func<UnityEngine.Rect,string,System.Enum,UnityEngine.GUIStyle, System.Enum> ), null, UnityTypes.UnityEditor_EditorGUI.GetMethod( "EnumFlagsField", R.StaticMembers, null, new Type[]{ typeof( UnityEngine.Rect ), typeof( string ), typeof( System.Enum ), typeof( UnityEngine.GUIStyle ) }, null ) );
+			}
+			return __EnumFlagsField_3_4( position, label, enumValue, style );
+		}
+		
+		public static System.Enum EnumFlagsField( UnityEngine.Rect position, UnityEngine.GUIContent label, System.Enum enumValue ) {
+			if( __EnumFlagsField_4_3 == null ) {
+				__EnumFlagsField_4_3 = (Func<UnityEngine.Rect,UnityEngine.GUIContent,System.Enum, System.Enum>) Delegate.CreateDelegate( typeof( Func<UnityEngine.Rect,UnityEngine.GUIContent,System.Enum, System.Enum> ), null, UnityTypes.UnityEditor_EditorGUI.GetMethod( "EnumFlagsField", R.StaticMembers, null, new Type[]{ typeof( UnityEngine.Rect ), typeof( UnityEngine.GUIContent ), typeof( System.Enum ) }, null ) );
+			}
+			return __EnumFlagsField_4_3( position, label, enumValue );
+		}
+		
+		public static System.Enum EnumFlagsField( UnityEngine.Rect position, UnityEngine.GUIContent label, System.Enum enumValue, UnityEngine.GUIStyle style ) {
+			if( __EnumFlagsField_5_4 == null ) {
+				__EnumFlagsField_5_4 = (Func<UnityEngine.Rect,UnityEngine.GUIContent,System.Enum,UnityEngine.GUIStyle, System.Enum>) Delegate.CreateDelegate( typeof( Func<UnityEngine.Rect,UnityEngine.GUIContent,System.Enum,UnityEngine.GUIStyle, System.Enum> ), null, UnityTypes.UnityEditor_EditorGUI.GetMethod( "EnumFlagsField", R.StaticMembers, null, new Type[]{ typeof( UnityEngine.Rect ), typeof( UnityEngine.GUIContent ), typeof( System.Enum ), typeof( UnityEngine.GUIStyle ) }, null ) );
+			}
+			return __EnumFlagsField_5_4( position, label, enumValue, style );
+		}
+		
+		public static System.Enum EnumFlagsField( UnityEngine.Rect position, UnityEngine.GUIContent label, System.Enum enumValue, bool includeObsolete, UnityEngine.GUIStyle style = null ) {
+			if( __EnumFlagsField_6_5 == null ) {
+				__EnumFlagsField_6_5 = (Func<UnityEngine.Rect,UnityEngine.GUIContent,System.Enum,bool,UnityEngine.GUIStyle, System.Enum>) Delegate.CreateDelegate( typeof( Func<UnityEngine.Rect,UnityEngine.GUIContent,System.Enum,bool,UnityEngine.GUIStyle, System.Enum> ), null, UnityTypes.UnityEditor_EditorGUI.GetMethod( "EnumFlagsField", R.StaticMembers, null, new Type[]{ typeof( UnityEngine.Rect ), typeof( UnityEngine.GUIContent ), typeof( System.Enum ), typeof( bool ), typeof( UnityEngine.GUIStyle ) }, null ) );
+			}
+			return __EnumFlagsField_6_5( position, label, enumValue, includeObsolete, style );
+		}
+		
+		public static System.Enum EnumFlagsField( UnityEngine.Rect position, UnityEngine.GUIContent label, System.Enum enumValue, bool includeObsolete, ref int changedFlags, ref bool changedToValue, UnityEngine.GUIStyle style ) {
+			if( __EnumFlagsField_7_7 == null ) {
+				__EnumFlagsField_7_7 = (Method_EnumFlagsField_7_7) Delegate.CreateDelegate( typeof( Method_EnumFlagsField_7_7 ), null, UnityTypes.UnityEditor_EditorGUI.GetMethod( "EnumFlagsField", R.StaticMembers, null, new Type[]{ typeof( UnityEngine.Rect ), typeof( UnityEngine.GUIContent ), typeof( System.Enum ), typeof( bool ), typeof( int ).MakeByRefType(), typeof( bool ).MakeByRefType(), typeof( UnityEngine.GUIStyle ) }, null ) );
+			}
+			return __EnumFlagsField_7_7( position, label, enumValue, includeObsolete, ref changedFlags, ref changedToValue, style );
+		}
+		
+		public static System.Enum EnumFlagsField( UnityEngine.Rect position, UnityEngine.GUIContent label, System.Enum enumValue, System.Type enumType, bool includeObsolete, ref int changedFlags, ref bool changedToValue, UnityEngine.GUIStyle style ) {
+			if( __EnumFlagsField_8_8 == null ) {
+				__EnumFlagsField_8_8 = (Method_EnumFlagsField_8_8) Delegate.CreateDelegate( typeof( Method_EnumFlagsField_8_8 ), null, UnityTypes.UnityEditor_EditorGUI.GetMethod( "EnumFlagsField", R.StaticMembers, null, new Type[]{ typeof( UnityEngine.Rect ), typeof( UnityEngine.GUIContent ), typeof( System.Enum ), typeof( System.Type ), typeof( bool ), typeof( int ).MakeByRefType(), typeof( bool ).MakeByRefType(), typeof( UnityEngine.GUIStyle ) }, null ) );
+			}
+			return __EnumFlagsField_8_8( position, label, enumValue, enumType, includeObsolete, ref changedFlags, ref changedToValue, style );
+		}
+		
+		public static int EnumFlagsField( UnityEngine.Rect position, UnityEngine.GUIContent label, int enumValue, System.Type enumType, bool includeObsolete, UnityEngine.GUIStyle style ) {
+			if( __EnumFlagsField_9_6 == null ) {
+				__EnumFlagsField_9_6 = (Func<UnityEngine.Rect,UnityEngine.GUIContent,int,System.Type,bool,UnityEngine.GUIStyle, int>) Delegate.CreateDelegate( typeof( Func<UnityEngine.Rect,UnityEngine.GUIContent,int,System.Type,bool,UnityEngine.GUIStyle, int> ), null, UnityTypes.UnityEditor_EditorGUI.GetMethod( "EnumFlagsField", R.StaticMembers, null, new Type[]{ typeof( UnityEngine.Rect ), typeof( UnityEngine.GUIContent ), typeof( int ), typeof( System.Type ), typeof( bool ), typeof( UnityEngine.GUIStyle ) }, null ) );
+			}
+			return __EnumFlagsField_9_6( position, label, enumValue, enumType, includeObsolete, style );
+		}
+		
 		
 		
 		static Func<UnityEngine.Rect,string,bool, string> __ToolbarSearchField_0_3;
 		static Func<int,UnityEngine.Rect,string,bool, string> __ToolbarSearchField_1_4;
-		delegate string Method_ToolbarSearchField_2_4(  UnityEngine.Rect position, string[] searchModes, ref int searchMode, string text  );
+		delegate string Method_ToolbarSearchField_2_4( UnityEngine.Rect position, string[] searchModes, ref int searchMode, string text );
 		static Method_ToolbarSearchField_2_4 __ToolbarSearchField_2_4;
-		delegate string Method_ToolbarSearchField_3_5(  int id, UnityEngine.Rect position, string[] searchModes, ref int searchMode, string text  );
+		delegate string Method_ToolbarSearchField_3_5( int id, UnityEngine.Rect position, string[] searchModes, ref int searchMode, string text );
 		static Method_ToolbarSearchField_3_5 __ToolbarSearchField_3_5;
 		static Action<UnityObject,UnityEngine.Rect> __PingObjectOrShowPreviewOnClick_0_2;
 		static Func<UnityEngine.Rect,UnityEngine.GUIContent,bool,bool, bool> __FoldoutTitlebar_0_4;
 		static Func<UnityEngine.Rect,UnityEngine.GUIContent,bool,bool,UnityEngine.GUIStyle,UnityEngine.GUIStyle, bool> __FoldoutTitlebar_1_6;
 		static Func<string,string[],UnityEditor.GenericMenu.MenuFunction2,UnityEngine.GUILayoutOption[], bool> __ButtonWithDropdownList_0_4;
 		static Func<UnityEngine.GUIContent,string[],UnityEditor.GenericMenu.MenuFunction2,UnityEngine.GUILayoutOption[], bool> __ButtonWithDropdownList_1_4;
+		static Func<UnityEngine.GUIContent,UnityEngine.GUIStyle, float> __CalcPrefixLabelWidth_0_2;
+		static Func<UnityEngine.Rect,System.Enum, System.Enum> __EnumFlagsField_0_2;
+		static Func<UnityEngine.Rect,System.Enum,UnityEngine.GUIStyle, System.Enum> __EnumFlagsField_1_3;
+		static Func<UnityEngine.Rect,string,System.Enum, System.Enum> __EnumFlagsField_2_3;
+		static Func<UnityEngine.Rect,string,System.Enum,UnityEngine.GUIStyle, System.Enum> __EnumFlagsField_3_4;
+		static Func<UnityEngine.Rect,UnityEngine.GUIContent,System.Enum, System.Enum> __EnumFlagsField_4_3;
+		static Func<UnityEngine.Rect,UnityEngine.GUIContent,System.Enum,UnityEngine.GUIStyle, System.Enum> __EnumFlagsField_5_4;
+		static Func<UnityEngine.Rect,UnityEngine.GUIContent,System.Enum,bool,UnityEngine.GUIStyle, System.Enum> __EnumFlagsField_6_5;
+		delegate System.Enum Method_EnumFlagsField_7_7( UnityEngine.Rect position, UnityEngine.GUIContent label, System.Enum enumValue, bool includeObsolete, ref int changedFlags, ref bool changedToValue, UnityEngine.GUIStyle style );
+		static Method_EnumFlagsField_7_7 __EnumFlagsField_7_7;
+		delegate System.Enum Method_EnumFlagsField_8_8( UnityEngine.Rect position, UnityEngine.GUIContent label, System.Enum enumValue, System.Type enumType, bool includeObsolete, ref int changedFlags, ref bool changedToValue, UnityEngine.GUIStyle style );
+		static Method_EnumFlagsField_8_8 __EnumFlagsField_8_8;
+		static Func<UnityEngine.Rect,UnityEngine.GUIContent,int,System.Type,bool,UnityEngine.GUIStyle, int> __EnumFlagsField_9_6;
 	}
 }
 

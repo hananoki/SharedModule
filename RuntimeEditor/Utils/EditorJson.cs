@@ -1,7 +1,7 @@
 ﻿
 using Json = UnityReflection.UnityEditorJson;
 
-namespace Hananoki {
+namespace HananokiEditor {
 	public sealed class EditorJson {
 		public static string Serialize( System.Object obj, bool pretty = false, string indentText = "  " ) {
 			if( UnitySymbol.Has( "UNITY_2019_1_OR_NEWER" ) ) {

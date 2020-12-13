@@ -1,12 +1,12 @@
 ﻿
-using Hananoki.Extensions;
+using HananokiEditor.Extensions;
 using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
 
-namespace Hananoki {
+namespace HananokiEditor {
 	public class MessagePop : PopupWindowContent {
 		string text;
 		public static Vector2 windowSize = new Vector2( 300, ( 20 * 5 ) + 36 );

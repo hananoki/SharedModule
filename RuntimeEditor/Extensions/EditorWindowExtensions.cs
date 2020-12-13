@@ -1,8 +1,8 @@
-﻿using Hananoki.Reflection;
+﻿//using Hananoki.Reflection;
 using System;
 using UnityEditor;
 
-namespace Hananoki.Extensions {
+namespace HananokiEditor.Extensions {
 	public static partial class EditorWindowExtensions {
 
 		public static void RepaintArray( this EditorWindow[] ew ) {

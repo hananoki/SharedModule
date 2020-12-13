@@ -1,6 +1,6 @@
 ﻿using UnityObject = UnityEngine.Object;
 
-namespace Hananoki {
+namespace HananokiRuntime {
 	public sealed class Helper {
 		public static bool New<T>( ref T obj ) where T : new() {
 			if( obj != null ) return false;

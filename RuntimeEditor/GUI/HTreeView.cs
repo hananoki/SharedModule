@@ -1,5 +1,5 @@
-﻿using Hananoki.Reflection;
-using Hananoki.Extensions;
+﻿//using Hananoki.Reflection;
+using HananokiEditor.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -8,7 +8,7 @@ using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 using System;
 
-namespace Hananoki {
+namespace HananokiEditor {
 	public abstract class HTreeView<T> : TreeView where T : TreeViewItem {
 		public HTreeView( TreeViewState state ) : base( state ) { }
 		public HTreeView( TreeViewState state, MultiColumnHeader multiColumnHeader ) : base( state, multiColumnHeader ) { }

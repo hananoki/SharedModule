@@ -1,12 +1,12 @@
-﻿using Hananoki.Extensions;
+﻿using HananokiEditor.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 
-using E = Hananoki.SharedModule.SettingsEditor;
+using E = HananokiEditor.SharedModule.SettingsEditor;
 
-namespace Hananoki {
+namespace HananokiEditor {
 
 	public static class EditorLocalize {
 
@@ -95,16 +95,5 @@ namespace Hananoki {
 	}
 	
 
-	[AttributeUsage( AttributeTargets.Class )]
-	public class EditorLocalizeClass : Attribute { }
-
-	[AttributeUsage( AttributeTargets.Method )]
-	public class EditorLocalizeMethod : Attribute { }
-
-
-	[AttributeUsage( AttributeTargets.Class )]
-	public class SettingsClass : Attribute { }
-
-	[AttributeUsage( AttributeTargets.Method )]
-	public class SettingsMethod : Attribute { }
+	
 }

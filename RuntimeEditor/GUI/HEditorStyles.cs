@@ -3,7 +3,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Hananoki {
+namespace HananokiEditor {
 
 
 	public static class HEditorStyles {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 
-namespace Hananoki {
+namespace HananokiEditor {
 	public static class ManifestJsonUtils {
 		static Dictionary<string, object> s_manifest = null;
 

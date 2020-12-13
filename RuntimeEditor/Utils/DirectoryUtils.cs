@@ -1,13 +1,13 @@
 ﻿#if UNITY_EDITOR
 
-using Hananoki.Extensions;
+using HananokiRuntime.Extensions;
 using System;
 using System.IO;
 using System.Linq;
 using System.Text;
 using UnityEditor;
 
-namespace Hananoki {
+namespace HananokiEditor {
 
 	public static class DirectoryUtils {
 
@@ -156,6 +156,17 @@ namespace Hananoki {
 			if( !overwrite ) {
 				if( File.Exists( dst ) ) return;
 			}
+			else {
+				if( File.Exists( dst ) ) {
+					// ファイル属性を取得
+					FileAttributes fa = File.GetAttributes( dst );
+					// 読み取り専用属性を削除（他の属性は変更しない）
+					fa = fa & ~FileAttributes.ReadOnly;
+					fa = fa & ~FileAttributes.Hidden;
+					File.SetAttributes( dst, fa );
+				}
+			}
+
 			if( !Directory.Exists( Path.GetDirectoryName( dst ) ) ) {
 				Directory.CreateDirectory( Path.GetDirectoryName( dst ) );
 			}
@@ -179,19 +190,25 @@ namespace Hananoki {
 			//}
 		}
 
+		static Encoding UTF8N = new UTF8Encoding( false );
+
 
 		public static string ReadAllText( string path ) {
+			return ReadAllText( path, UTF8N );
+		}
+
+		public static string ReadAllText( string path, Encoding encoding ) {
 			if( !File.Exists( path ) ) return null;
 
 			using( var fs = new FileStream( path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite ) ) {
-				using( var st = new StreamReader( fs, Encoding.UTF8 ) ) {
+				using( var st = new StreamReader( fs, encoding ) ) {
 					return st.ReadToEnd();
 				}
 			}
 		}
 
 		public static void WriteAllText( string path, string contents ) {
-			WriteAllText( path, contents, Encoding.UTF8 );
+			WriteAllText( path, contents, UTF8N );
 		}
 
 		public static void WriteAllText( string path, string contents, Encoding encoding ) {
@@ -201,7 +218,7 @@ namespace Hananoki {
 				}
 			}
 		}
-		
+
 
 		/// <summary>
 		/// テキストファイルを書き出します

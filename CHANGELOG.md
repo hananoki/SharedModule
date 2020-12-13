@@ -1,5 +1,20 @@
 # Shared Module
 
+## [1.7.3] - 2020-12-13
+
+### Changed
+- Revised the configuration of asmdef
+- Changed namespace to distinguish between editor and runtime
+- Integrated asmdef of Attribute
+- Separated asmdef as EditorIcon
+- Deprecated HGUIScope
+  - Alternatives ScopeHorizontal, ScopeVertical, ScopeDisable, ScopeChange
+- ENABLE_HANANOKI_SETTINGS is no longer set automatically
+- fs.ReadAllText: UTF8N is standardized 
+
+### Fixed
+- SettingsTreeView: Fixed GUIStyle error in 2018.3 ~ 2019.2 environment
+
 ## [1.7.2] - 2020-12-09
 
 ### Added

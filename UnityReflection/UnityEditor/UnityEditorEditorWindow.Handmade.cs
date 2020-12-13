@@ -1,7 +1,7 @@
-﻿using Hananoki.Reflection;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEditor;
 using System.Reflection;
+using HananokiEditor;
 
 namespace UnityReflection {
 	public sealed partial class UnityEditorEditorWindow {
@@ -40,8 +40,8 @@ namespace UnityReflection {
 				}
 				return (object) __containerWindow.GetValue( dockArea );
 
-				var __ = dockArea.GetProperty<object>( "window" );
-				return __;
+				//var __ = dockArea.GetProperty<object>( "window" );
+				//return __;
 			}
 		}
 

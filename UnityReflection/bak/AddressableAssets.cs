@@ -1,10 +1,10 @@
 ﻿#if UNITY_EDITOR
 
-using Hananoki.Reflection;
+//using Hananoki.Reflection;
 using System;
 using UnityObject = UnityEngine.Object;
 
-namespace Hananoki {
+namespace HananokiEditor {
 	public static class UnityAddressableAssetInspectorGUI {
 		public static void SetAaEntry( UnityAddressableAssetSettings aaSettings, UnityObject[] targets, bool create ) {
 			R.Method( "SetAaEntry", "UnityEditor.AddressableAssets.GUI.AddressableAssetInspectorGUI", "Unity.Addressables.Editor" ).Invoke( null, new object[] { aaSettings.m_instance, targets, create } );

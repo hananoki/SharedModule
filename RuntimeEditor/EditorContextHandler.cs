@@ -1,10 +1,10 @@
-﻿using Hananoki.Extensions;
+﻿using HananokiEditor.Extensions;
 
 using UnityEditor;
 
-using SS = Hananoki.SharedModule.S;
+using SS = HananokiEditor.SharedModule.S;
 
-namespace Hananoki {
+namespace HananokiEditor {
 	public class EditorContextHandler {
 
 		public static void ShowNewInspectorWindow( object context ) {

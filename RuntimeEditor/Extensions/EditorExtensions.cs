@@ -6,11 +6,11 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using System.Text.RegularExpressions;
-using Hananoki.Extensions;
+using HananokiEditor.Extensions;
 
 using UnityObject = UnityEngine.Object;
 
-namespace Hananoki.Extensions {
+namespace HananokiEditor.Extensions {
 
 	public static partial class EditorExtensions {
 

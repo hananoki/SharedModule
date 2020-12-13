@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Hananoki.Reflection {
+namespace HananokiEditor {
 	public static class R {
 		public const BindingFlags StaticMembers = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
 		public const BindingFlags InstanceMembers = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;

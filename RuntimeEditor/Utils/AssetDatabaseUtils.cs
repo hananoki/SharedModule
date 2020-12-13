@@ -1,5 +1,5 @@
 ﻿
-using Hananoki.Extensions;
+using HananokiEditor.Extensions;
 using UnityEditor;
 using UnityEngine;
 using System.Linq;
@@ -7,7 +7,7 @@ using System;
 
 using UnityObject = UnityEngine.Object;
 
-namespace Hananoki {
+namespace HananokiEditor {
 	public static class AssetDatabaseUtils {
 
 		#region GetOrCreateInstance

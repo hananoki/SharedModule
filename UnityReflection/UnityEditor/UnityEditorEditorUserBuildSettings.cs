@@ -1,12 +1,15 @@
 ﻿/// UnityEditor.EditorUserBuildSettings : 2019.4.5f1
 
-using Hananoki;
-using Hananoki.Reflection;
+using HananokiEditor;
 using System;
+using System.Reflection;
 
 namespace UnityReflection {
   public sealed partial class UnityEditorEditorUserBuildSettings {
-    
+
+		public static class Cache<T> {
+			public static T cache;
+		}
 
 		public static UnityEditor.BuildTargetGroup activeBuildTargetGroup {
 			get {
@@ -16,25 +19,26 @@ namespace UnityReflection {
 				return __activeBuildTargetGroup();
 			}
 		}
-		public static Compression GetCompressionType( UnityEditor.BuildTargetGroup targetGroup ) {
+
+		public static int GetCompressionType( UnityEditor.BuildTargetGroup targetGroup ) {
 			if( __GetCompressionType_0_1 == null ) {
-				__GetCompressionType_0_1 = (Func<UnityEditor.BuildTargetGroup, Compression>) Delegate.CreateDelegate( typeof( Func<UnityEditor.BuildTargetGroup, Compression> ), null, UnityTypes.UnityEditor_EditorUserBuildSettings.GetMethod( "GetCompressionType", R.StaticMembers, null, new Type[]{ typeof( UnityEditor.BuildTargetGroup ) }, null ) );
+				__GetCompressionType_0_1 = UnityTypes.UnityEditor_EditorUserBuildSettings.GetMethod( "GetCompressionType", R.StaticMembers );
 			}
-			return __GetCompressionType_0_1( targetGroup );
+			return (int) __GetCompressionType_0_1.Invoke( null, new object[] {  targetGroup  } );
 		}
 		
-		public static void SetCompressionType( UnityEditor.BuildTargetGroup targetGroup, Compression type ) {
+		public static void SetCompressionType( UnityEditor.BuildTargetGroup targetGroup, int type ) {
 			if( __SetCompressionType_0_2 == null ) {
-				__SetCompressionType_0_2 = (Action<UnityEditor.BuildTargetGroup,Compression>) Delegate.CreateDelegate( typeof( Action<UnityEditor.BuildTargetGroup,Compression> ), null, UnityTypes.UnityEditor_EditorUserBuildSettings.GetMethod( "SetCompressionType", R.StaticMembers, null, new Type[]{ typeof( UnityEditor.BuildTargetGroup ), typeof( Compression ) }, null ) );
+				__SetCompressionType_0_2 = UnityTypes.UnityEditor_EditorUserBuildSettings.GetMethod( "SetCompressionType", R.StaticMembers );
 			}
-			__SetCompressionType_0_2( targetGroup, type );
+			__SetCompressionType_0_2.Invoke( null, new object[] {  targetGroup, type  } );
 		}
 		
 		
 		
 		static Func<UnityEditor.BuildTargetGroup> __activeBuildTargetGroup;
-		static Func<UnityEditor.BuildTargetGroup, Compression> __GetCompressionType_0_1;
-		static Action<UnityEditor.BuildTargetGroup,Compression> __SetCompressionType_0_2;
+		static MethodInfo __GetCompressionType_0_1;
+		static MethodInfo __SetCompressionType_0_2;
 	}
 }
 

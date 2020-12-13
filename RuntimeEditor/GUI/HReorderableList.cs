@@ -1,18 +1,15 @@
-﻿using System;
-using UnityEngine;
-
-#if UNITY_EDITOR
+﻿using HananokiRuntime.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
 using UnityEditor;
 using UnityEditorInternal;
-using System.Reflection;
-using Hananoki.Extensions;
-using System.Collections.Generic;
-using Hananoki.Reflection;
+using UnityEngine;
 using PropertyHandler = UnityReflection.UnityEditorPropertyHandler;
 using ScriptAttributeUtility = UnityReflection.UnityEditorScriptAttributeUtility;
 using UnityEditorInternalReorderableList = UnityReflection.UnityEditorInternalReorderableList;
 
-namespace Hananoki {
+namespace HananokiEditor {
 	public class HReorderableList {
 		ReorderableList m_lst;
 		UnityEditorInternalReorderableList m_lstMethod;
@@ -231,4 +228,3 @@ namespace Hananoki {
 	}
 }
 
-#endif

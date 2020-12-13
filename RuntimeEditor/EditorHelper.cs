@@ -1,26 +1,22 @@
 ﻿//#pragma warning disable 618
 #if UNITY_EDITOR
-
-using Hananoki.Extensions;
-using Hananoki.Reflection;
+using HananokiEditor.Extensions;
+using HananokiRuntime.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
-//using UnityReflection;
-
-using static System.Convert;
-using UnityObject = UnityEngine.Object;
-using EditorAssemblies = UnityReflection.UnityEditorEditorAssemblies;
+using UnityReflection;
+//using EditorAssemblies = UnityReflection.UnityEditorEditorAssemblies;
 using CustomEditorAttributes = UnityReflection.UnityEditorCustomEditorAttributes;
+using UnityObject = UnityEngine.Object;
 
-namespace Hananoki {
+namespace HananokiEditor {
 
 	public enum EventMouseButton {
 		L, R, M,
@@ -29,7 +25,14 @@ namespace Hananoki {
 
 
 
+
 	public static class EditorHelper {
+
+		public static void RequestChangeLanguage( SystemLanguage lang) {
+			UnityEditorEditorGUIUtility.NotifyLanguageChanged( lang );
+			UnityEditorInternalInternalEditorUtility.RequestScriptReload();
+		}
+
 
 		public static void ShowMessagePop( string text ) {
 			var content = new MessagePop( text );
@@ -124,7 +127,7 @@ namespace Hananoki {
 
 		// Example "Unity.Addressables.Editor"
 		public static bool IsLoadAssembly(string assemblyName ) {
-			foreach( var p in EditorAssemblies.loadedAssemblies ) {
+			foreach( var p in AssemblieUtils.loadedAssemblies ) {
 				if( p.FullName == assemblyName ) return true;
 			}
 			return false;
@@ -135,7 +138,7 @@ namespace Hananoki {
 			var t = Type.GetType( typeName );
 			if( t != null ) return t;
 
-			var lst = EditorAssemblies.loadedTypes
+			var lst = AssemblieUtils.loadedTypes
 					.Where( x => x.FullName.Contains( typeName ) )
 					.Where( x => !x.FullName.Contains( "+" ) )
 					.ToList();
@@ -1002,21 +1005,7 @@ namespace Hananoki {
 
 
 
-	public static class B64 {
-		public static string Encode( UnityObject obj ) {
-			if( obj == null ) return string.Empty;
-			return Encode( AssetDatabase.GetAssetPath( obj ) );
-		}
-		public static string Encode( string filePath ) {
-			if( filePath.IsEmpty() ) return string.Empty;
-
-			return ToBase64String( File.ReadAllBytes( filePath ) );
-		}
-
-		public static byte[] Decode( string base64Str ) {
-			return FromBase64String( base64Str );
-		}
-	}
+	
 
 
 	// preview

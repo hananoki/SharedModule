@@ -1,18 +1,20 @@
-﻿
+﻿#define ENABLE_HANANOKI_SETTINGS
+
 #if ENABLE_HANANOKI_SETTINGS
 #pragma warning disable 618
 #endif
 
-using Hananoki.Extensions;
+using HananokiEditor.Extensions;
+using HananokiRuntime;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-using E = Hananoki.SharedModule.SettingsEditor;
-using SS = Hananoki.SharedModule.S;
+using E = HananokiEditor.SharedModule.SettingsEditor;
+using SS = HananokiEditor.SharedModule.S;
 
-namespace Hananoki.SharedModule {
+namespace HananokiEditor.SharedModule {
 
 	public class SettingsEditorWindow : HSettingsEditorWindow {
 
@@ -67,7 +69,7 @@ namespace Hananoki.SharedModule {
 				E.Save();
 			}
 
-			HGUIScope.Change();
+			ScopeChange.Begin();
 			GUILayout.Space( 4 );
 			E.i.versionTextColor.value = EditorGUILayout.ColorField( S._VersionTextColor, E.i.versionTextColor.value );
 
@@ -84,7 +86,7 @@ namespace Hananoki.SharedModule {
 			E.i.m_asmdefNameSync = HEditorGUILayout.ToggleLeft( S._MaketheNamefieldthesameasthefilenamewhenimportingasmdef, E.i.m_asmdefNameSync );
 			E.i.m_asmdefAutoReferenceOFF = HEditorGUILayout.ToggleLeft( S._TurnoffAutoReferencedwhenimportingasmdef, E.i.m_asmdefAutoReferenceOFF );
 			//E.i.utilityWindow = EditorGUILayout.ToggleLeft( SS._UtilityWindowMode, E.i.utilityWindow );
-			if( HGUIScope.End() ) E.Save();
+			if( ScopeChange.End() ) E.Save();
 
 			//////////////////////////////////
 			GUILayout.Space( 8 );
@@ -94,7 +96,7 @@ namespace Hananoki.SharedModule {
 			HEditorGUILayout.PreviewFolder( E.i.GetProjectSettingsPath(), OnProjectFolderPreset );
 
 			GUILayout.Space( 8f );
-			HGUIScope.Horizontal();
+			ScopeHorizontal.Begin();
 			GUILayout.FlexibleSpace();
 			if( GUILayout.Button( SS._ReturnToDefault ) ) {
 				E.i.versionTextColor = new EditorColor( ColorUtils.RGB( 72 ), ColorUtils.RGB( 173 ) );
@@ -102,7 +104,7 @@ namespace Hananoki.SharedModule {
 				//E.i.utilityWindow = false;
 				E.Save();
 			}
-			HGUIScope.End();
+			ScopeHorizontal.End();
 
 
 			//#if ENABLE_HANANOKI_SETTINGS && LOCAL_TEST
@@ -153,13 +155,13 @@ namespace Hananoki.SharedModule {
 
 
 #if ENABLE_HANANOKI_SETTINGS
-	[SettingsClass]
+	//[SettingsClass]
 	public class SettingsEditorEvent {
-		[SettingsMethod]
+		[HananokiSettingsRegister]
 		public static SettingsItem RegisterSettings() {
 			return new SettingsItem() {
 				//mode = 1,
-				displayName = Package.name,
+				displayName = Package.nameNicify,
 				version = Package.version,
 				gui = SettingsEditorWindow.DrawGUI,
 			};

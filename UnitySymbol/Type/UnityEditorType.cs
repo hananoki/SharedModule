@@ -1,7 +1,7 @@
 ﻿
 using System;
 
-namespace Hananoki {
+namespace HananokiEditor {
 	public static partial class UnityTypes {
 
 		static Type _UnityEditor_AnimationClipEditor;
@@ -162,6 +162,15 @@ namespace Hananoki {
 
 		static Type _UnityEditor_WindowLayout;
 		public static Type UnityEditor_WindowLayout => Get( ref _UnityEditor_WindowLayout, "UnityEditor.WindowLayout", "UnityEditor" );
+
+		static Type _UnityEditor_AssetStoreUtils;
+		public static Type UnityEditor_AssetStoreUtils => Get( ref _UnityEditor_AssetStoreUtils, "UnityEditor.AssetStoreUtils", "UnityEditor" );
+
+		static Type _UnityEditor_Lightmapping;
+		public static Type UnityEditor_Lightmapping => Get( ref _UnityEditor_Lightmapping, "UnityEditor.Lightmapping", "UnityEditor" );
+
+		static Type _UnityEditor_SyncVS;
+		public static Type UnityEditor_SyncVS => Get( ref _UnityEditor_SyncVS, "UnityEditor.SyncVS", "UnityEditor" );
 
 	}
 }

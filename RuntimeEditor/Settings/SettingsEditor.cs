@@ -4,19 +4,18 @@
 #pragma warning disable 618
 #endif
 
-using Hananoki.Extensions;
-using Hananoki.Reflection;
+using HananokiEditor.Extensions;
+using HananokiRuntime;
+using HananokiRuntime.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
-using E = Hananoki.SharedModule.SettingsEditor;
-using SS = Hananoki.SharedModule.S;
+using E = HananokiEditor.SharedModule.SettingsEditor;
 
-namespace Hananoki.SharedModule {
+namespace HananokiEditor.SharedModule {
 	[InitializeOnLoad]
 	[Serializable]
 	public class SettingsEditor {
@@ -64,12 +63,12 @@ namespace Hananoki.SharedModule {
 
 
 		static SettingsEditor() {
-			var lst = PlayerSettingsUtils.GetScriptingDefineSymbolsAtList();
-			if( lst.IndexOf( "ENABLE_HANANOKI_SETTINGS" ) < 0 ) {
-				Debug.Log( "SetScriptingDefineSymbols: ENABLE_HANANOKI_SETTINGS ... 1.7.1 or later required" );
-				lst.Add( "ENABLE_HANANOKI_SETTINGS" );
-				PlayerSettingsUtils.SetScriptingDefineSymbols( lst );
-			}
+			//var lst = PlayerSettingsUtils.GetScriptingDefineSymbolsAtList();
+			//if( lst.IndexOf( "ENABLE_HANANOKI_SETTINGS" ) < 0 ) {
+			//	Debug.Log( "SetScriptingDefineSymbols: ENABLE_HANANOKI_SETTINGS ... 1.7.1 or later required" );
+			//	lst.Add( "ENABLE_HANANOKI_SETTINGS" );
+			//	PlayerSettingsUtils.SetScriptingDefineSymbols( lst );
+			//}
 			Load();
 		}
 
@@ -109,27 +108,28 @@ namespace Hananoki.SharedModule {
 
 			if( s_localizeEvent == null ) {
 				s_localizeEvent = new List<MethodInfo>();
-				var t = typeof( EditorLocalizeClass );
-				foreach( Assembly assembly in AppDomain.CurrentDomain.GetAssemblies() ) {
-					try {
-						foreach( Type type in assembly.GetTypes() ) {
-							try {
-								if( type.GetCustomAttribute( t ) == null ) continue;
-								var mm = R.Methods( typeof( EditorLocalizeMethod ), type.FullName, assembly.FullName.Split( ',' )[ 0 ] );
-								s_localizeEvent.AddRange( mm );
-							}
-							catch( Exception ee ) {
-								Debug.LogException( ee );
-							}
-						}
-					}
-					catch( ReflectionTypeLoadException ) {
-						Debug.LogError( assembly.FullName );
-					}
-					catch( Exception e ) {
-						Debug.LogError( e );
-					}
-				}
+				//var t = typeof( EditorLocalizeClass );
+				//foreach( Assembly assembly in AppDomain.CurrentDomain.GetAssemblies() ) {
+				//	try {
+				//		foreach( Type type in assembly.GetTypes() ) {
+				//			try {
+				//				if( type.GetCustomAttribute( t ) == null ) continue;
+				//				var mm = R.Methods( typeof( EditorLocalizeMethod ), type.FullName, assembly.FullName.Split( ',' )[ 0 ] );
+				//				s_localizeEvent.AddRange( mm );
+				//			}
+				//			catch( Exception ee ) {
+				//				Debug.LogException( ee );
+				//			}
+				//		}
+				//	}
+				//	catch( ReflectionTypeLoadException ) {
+				//		Debug.LogError( assembly.FullName );
+				//	}
+				//	catch( Exception e ) {
+				//		Debug.LogError( e );
+				//	}
+				//}
+				s_localizeEvent.AddRange( AssemblieUtils.GetAllMethodsWithAttribute<HananokiEditorLocalizeRegister>() );
 			}
 			foreach( var m in s_localizeEvent ) {
 				//Debug.Log("Invoke: "+m.Name);

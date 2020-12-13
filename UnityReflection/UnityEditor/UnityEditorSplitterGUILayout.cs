@@ -2,13 +2,18 @@
 
 #if UNITY_EDITOR
 
-using Hananoki;
-using Hananoki.Reflection;
+using HananokiEditor;
+//using Hananoki.Reflection;
 using System;
 using System.Reflection;
 
 namespace UnityReflection {
 	public static class UnityEditorSplitterGUILayout {
+		public static class R {
+			public const BindingFlags StaticMembers = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+			public const BindingFlags InstanceMembers = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+			public const BindingFlags AllMembers = StaticMembers | InstanceMembers;
+		}
 
 		static MethodInfo _BeginHorizontalSplit1;
 
@@ -30,7 +35,7 @@ namespace UnityReflection {
 		static Method_EndHorizontalSplit0 __EndHorizontalSplit0;
 		public static void EndHorizontalSplit() {
 			if( __EndHorizontalSplit0 == null ) {
-				__EndHorizontalSplit0 = (Method_EndHorizontalSplit0) Delegate.CreateDelegate( typeof( Method_EndHorizontalSplit0 ), null, R.Method( "EndHorizontalSplit", "UnityEditor.SplitterGUILayout", "UnityEditor.dll" ) );
+				__EndHorizontalSplit0 = (Method_EndHorizontalSplit0) Delegate.CreateDelegate( typeof( Method_EndHorizontalSplit0 ), null, UnityTypes.UnityEditor_SplitterGUILayout.GetMethod( "EndHorizontalSplit", R.AllMembers ) );
 			}
 			__EndHorizontalSplit0();
 		}

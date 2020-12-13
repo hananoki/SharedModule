@@ -1,7 +1,7 @@
 ﻿
 using System.Collections.Generic;
 
-namespace Hananoki {
+namespace HananokiRuntime {
 	public static class EnumUtils {
 
 		public static T[] GetArray<T>() where T : struct {

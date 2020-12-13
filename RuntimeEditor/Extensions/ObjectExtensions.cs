@@ -1,9 +1,10 @@
 ﻿using UnityEditor;
 using UnityEngine;
 using System;
+using HananokiRuntime;
 using UnityObject = UnityEngine.Object;
 
-namespace Hananoki.Extensions {
+namespace HananokiEditor.Extensions {
 	public static class ObjectExtensions {
 
 		/// <summary>

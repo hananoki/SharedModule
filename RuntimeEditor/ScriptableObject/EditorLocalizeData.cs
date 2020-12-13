@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-namespace Hananoki {
+namespace HananokiEditor {
 	//[PreferBinarySerialization]
 	//public class EditorLocalizeDataOld : ScriptableObject {
 	//	public string[] m_Strings;

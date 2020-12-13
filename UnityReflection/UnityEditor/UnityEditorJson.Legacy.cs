@@ -1,7 +1,6 @@
 ﻿/// UnityEditor.Json : 2018.4.0f1
 
-using Hananoki;
-using Hananoki.Reflection;
+using HananokiEditor;
 using System;
 
 namespace UnityReflection {

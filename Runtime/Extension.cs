@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 using UnityRandom = UnityEngine.Random;
 
-namespace Hananoki.Extensions {
+namespace HananokiRuntime.Extensions {
 	public static partial class Extensions {
 #if UNITY_2018_3_OR_NEWER
 

@@ -1,15 +1,15 @@
 ﻿
-using Hananoki.Extensions;
-using Hananoki.Reflection;
+using HananokiEditor.Extensions;
+//using Hananoki.Reflection;
 using System;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityReflection;
 
-using E = Hananoki.SharedModule.SettingsEditor;
+using E = HananokiEditor.SharedModule.SettingsEditor;
 
-namespace Hananoki {
+namespace HananokiEditor {
 	public class HEditorWindow : EditorWindow {
 		protected Action drawGUI;
 
@@ -123,9 +123,9 @@ namespace Hananoki {
 			try {
 				OnDefaultGUI();
 			}
-			catch( ArgumentException ) {
+			//catch( ArgumentException ) {
 				// GUILayout.FlexibleSpace
-			}
+			//}
 			catch( ExitGUIException ) {
 			}
 			//catch( MissingReferenceException ) {
@@ -133,7 +133,7 @@ namespace Hananoki {
 			catch( Exception e ) {
 				Debug.LogException( e );
 			}
-			HGUIScope.SafePop();
+			//HGUIScope.SafePop();
 		}
 
 		public virtual void OnDefaultGUI() { }

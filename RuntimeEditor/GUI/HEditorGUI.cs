@@ -1,12 +1,13 @@
 ﻿
-using Hananoki.Extensions;
+using HananokiRuntime.Extensions;
+using HananokiEditor.Extensions;
 using System;
 using UnityEditor;
 using UnityEngine;
-
+using HananokiRuntime;
 using UnityObject = UnityEngine.Object;
 
-namespace Hananoki {
+namespace HananokiEditor {
 
 	public static class HEditorGUI {
 		public static Rect lastRect;
@@ -230,6 +231,7 @@ namespace Hananoki {
 			}
 
 			GUI.Button( position, content, style );
+			GUI.changed = result;
 			return result;
 		}
 

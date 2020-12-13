@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEditorEditorUserBuildSettings = UnityReflection.UnityEditorEditorUserBuildSettings;
 
-namespace Hananoki {
+namespace HananokiEditor {
 	public static class PlayerSettingsUtils {
 
 		public static string GetScriptingDefineSymbols() {

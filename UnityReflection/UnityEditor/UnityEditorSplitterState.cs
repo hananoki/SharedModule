@@ -1,11 +1,18 @@
 ﻿/// UnityEditor.SplitterState : 2019.4.5f1
 
-using Hananoki;
-using Hananoki.Reflection;
+using HananokiEditor;
+//using Hananoki.Reflection;
 using System;
+using System.Reflection;
 
 namespace UnityReflection {
   public sealed partial class UnityEditorSplitterState {
+		public static class R {
+			public const BindingFlags StaticMembers = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+			public const BindingFlags InstanceMembers = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+			public const BindingFlags AllMembers = StaticMembers | InstanceMembers;
+		}
+
 		public object m_instance;
     
     public UnityEditorSplitterState( object instance ){

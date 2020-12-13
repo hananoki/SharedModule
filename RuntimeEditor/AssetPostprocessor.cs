@@ -1,13 +1,13 @@
 ﻿
-using Hananoki.Extensions;
+using HananokiEditor.Extensions;
 using System.Collections.Generic;
 using System.Text;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityReflection;
-using E = Hananoki.SharedModule.SettingsEditor;
+using E = HananokiEditor.SharedModule.SettingsEditor;
 
-namespace Hananoki {
+namespace HananokiEditor {
 
 	public class __ : AssetPostprocessor {
 		static void OnPostprocessAllAssets( string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths ) {

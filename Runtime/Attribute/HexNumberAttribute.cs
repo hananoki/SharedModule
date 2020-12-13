@@ -1,7 +1,7 @@
 ﻿
 using UnityEngine;
 
-namespace Hananoki {
+namespace HananokiRuntime {
 	/// <summary>
 	/// intに付けて16進数で表示する
 	/// 編集できないので注意

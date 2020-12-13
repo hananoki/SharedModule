@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEditor.Animations;
 
-namespace Hananoki.Extensions {
+namespace HananokiEditor.Extensions {
 	public static partial class EditorExtensions {
 
 		public static int GetFrame( this AnimationClip clip, float time ) {

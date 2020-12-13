@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace Hananoki.Extensions {
+namespace HananokiEditor.Extensions {
 	public static partial class EditorExtensions {
 		public static string[] SplitFullName( this Type t ) {
 			return t.FullName.Split( '.' );

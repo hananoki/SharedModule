@@ -1,13 +1,13 @@
 ﻿
-using Hananoki.Extensions;
+using HananokiEditor.Extensions;
 using System.Diagnostics;
 using UnityEditor;
 
-using SS = Hananoki.SharedModule.S;
+using SS = HananokiEditor.SharedModule.S;
 using UnityDebug = UnityEngine.Debug;
 using UnityObject = UnityEngine.Object;
 
-namespace Hananoki {
+namespace HananokiEditor {
 	public static class ShellUtils {
 
 		const string kExplorer = "EXPLORER.EXE";

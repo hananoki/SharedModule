@@ -3,15 +3,12 @@ using UnityEngine;
 using UnityEditor;
 using System;
 
-namespace Hananoki {
+namespace HananokiEditor {
 	public static partial class EditorIcon {
 		public static string IconPath( string name ) { return $"icons/{name}.png"; }
 
-		public static string IconProcessed( string s, string name ) { return $"icons/processed{s}/{name} icon.asset"; }
+		public static string IconProcessed( string s, string name ) { return $"icons/processed{s}/{name}"; }
 		public static string IconProcessed2( string s, string name ) { return $"icons/processed{s}/{name}"; }
-		public static string ProcessedPath( string name ) { return IconProcessed( "", name ); }
-		public static string ProcessedEditorPath( string name ) { return IconProcessed( "/unityeditor", name ); }
-		public static string ProcessedEnginePath( string name ) { return IconProcessed( "/unityengine", name ); }
 
 
 		public static Texture2D erroricon_inactive => console_erroricon_inactive_sml;
@@ -19,14 +16,11 @@ namespace Hananoki {
 		public static Texture2D warning            => console_warnicon_sml;
 		public static Texture2D info               => console_infoicon_sml;
 
-		public static Texture2D folder => Icon.GetBuiltin( ProcessedPath( "folder" ) );
-		public static Texture2D folderEmpty => Icon.GetBuiltin( ProcessedPath( "folderempty icon" ) );
+		public static Texture2D folder => icons_processed_folder_icon_asset;
+		public static Texture2D folderEmpty => icons_processed_folderempty_icon_asset;
 		
 
-		//public static Texture2D refresh                    => Icon.GetBuiltin( IconPath( "refresh" ) );
-		//public static Texture2D settings                   => Icon.GetBuiltin( IconPath( "settings" ) );
-		public static Texture2D collabFileDeleted     => Icon.GetBuiltin( IconPath( "collab.filedeleted" ) );
-		public static Texture2D collabFileDeletedIcon => Icon.GetBuiltin( ProcessedPath( "collabdeleted" ) );
+		public static Texture2D collabFileDeletedIcon => icons_processed_collabdeleted_icon_asset;
 
 		public static Texture2D pane_options => Icon.Get( "builtin skins/lightskin/images/pane options.png", "builtin skins/darkskin/images/pane options.png" );
 
@@ -34,9 +28,9 @@ namespace Hananoki {
 
 		public static Texture2D allowUp             => SharedModule.Icon.AllowUp_;
 		public static Texture2D allowDown           => SharedModule.Icon.AllowDown_;
-		public static Texture2D minus               => PackageResourceIcon.GetSelect( SharedModule.Icon.ol_minus_, SharedModule.Icon.d_ol_minus_ );
-		public static Texture2D plus                => PackageResourceIcon.GetSelect( SharedModule.Icon.ol_plus_, SharedModule.Icon.d_ol_plus_ );
-		public static Texture2D burger              => PackageResourceIcon.GetSelect( SharedModule.Icon.burger_, SharedModule.Icon.d_burger_ );
+		public static Texture2D minus               => IconDictionary.GetSelect( SharedModule.Icon.ol_minus_, SharedModule.Icon.d_ol_minus_ );
+		public static Texture2D plus                => IconDictionary.GetSelect( SharedModule.Icon.ol_plus_, SharedModule.Icon.d_ol_plus_ );
+		public static Texture2D burger              => IconDictionary.GetSelect( SharedModule.Icon.burger_, SharedModule.Icon.d_burger_ );
 		public static Texture2D dopesheetBackground =>  SharedModule.Icon.DopesheetBackground_ ;
 
 		//public static Texture2D installed => Icon.GetPackageManagerIcon( "installed" );
@@ -51,36 +45,23 @@ namespace Hananoki {
 			}
 		}
 
-		public static Texture2D lightmeter_lightrim    => Icon.GetBuiltin( IconPath( "lightmeter/lightrim" ) );
-		public static Texture2D lightmeter_greenlight  => Icon.GetBuiltin( IconPath( "lightmeter/greenlight" ) );
-		public static Texture2D lightmeter_orangelight => Icon.GetBuiltin( IconPath( "lightmeter/orangelight" ) );
-		public static Texture2D lightmeter_redlight    => Icon.GetBuiltin( IconPath( "lightmeter/redlight" ) );
+		public static Texture2D lightmeter_greenlight  => Icon.GetOrLoadFromBuiltin( IconPath( "lightmeter/greenlight" ) );
+		public static Texture2D lightmeter_lightoff    => Icon.GetOrLoadFromBuiltin( IconPath( "lightmeter/lightoff" ) );
+		public static Texture2D lightmeter_lightrim    => Icon.GetOrLoadFromBuiltin( IconPath( "lightmeter/lightrim" ) );
+		public static Texture2D lightmeter_orangelight => Icon.GetOrLoadFromBuiltin( IconPath( "lightmeter/orangelight" ) );
+		public static Texture2D lightmeter_redlight    => Icon.GetOrLoadFromBuiltin( IconPath( "lightmeter/redlight" ) );
 
 
 		public static Texture2D search_icon => icons_processed_search_icon_asset;
 		public static Texture2D assetstore_icon => asset_store;
 
-		public static Texture2D cs_script {
-			get {
-				if( UnitySymbol.Has( "UNITY_2019_3_OR_NEWER" ) ) {
-					return Icon.GetBuiltin( ProcessedPath( "cs script" ) );
-				}
-				return Icon.Get( ProcessedPath( "cs script" ) );
-			}
-		}
+		public static Texture2D cs_script => icons_processed_cs_script_icon_asset;
 
-		public static Texture2D sceneasset {
-			get {
-				if( UnitySymbol.Has( "UNITY_2019_3_OR_NEWER" ) ) {
-					return Icon.GetBuiltin( ProcessedEditorPath( "sceneasset" ) );
-				}
-				return Icon.Get( ProcessedEditorPath( "sceneasset" ) );
-			}
-		}
-
-
+		public static Texture2D sceneasset => icons_processed_unityeditor_sceneasset_icon_asset;
 
 		public static Texture2D scriptableobject => icons_processed_unityengine_scriptableobject_icon_asset;
+
+		public static Texture2D assemblyDefinition => icons_processed_unityeditorinternal_assemblydefinitionasset_icon_asset;
 	}
 
 

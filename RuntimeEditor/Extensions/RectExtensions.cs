@@ -1,7 +1,7 @@
 ﻿
 using UnityEngine;
 
-namespace Hananoki.Extensions {
+namespace HananokiEditor.Extensions {
 	public static partial class EditorExtensions {
 
 		public static Rect W( this Rect r, float f ) {

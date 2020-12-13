@@ -1,20 +1,22 @@
 {
-    "name": "Hananoki.SharedModule.RuntimeEditor",
-    "references": [
-        "Hananoki.SharedModule.Runtime",
-        "Hananoki.ReflectionUtils.Editor",
-        "Hananoki.UnityReflection.Editor",
-        "Hananoki.UnitySymbol.Editor"
-    ],
-    "includePlatforms": [
-        "Editor"
-    ],
-    "excludePlatforms": [],
-    "allowUnsafeCode": false,
-    "overrideReferences": false,
-    "precompiledReferences": [],
-    "autoReferenced": false,
-    "defineConstraints": [],
-    "versionDefines": [],
-    "noEngineReferences": false
+  "name": "Hananoki.SharedModule.RuntimeEditor",
+  "references": [
+    "Hananoki.EditorIcon.Editor",
+    "Hananoki.ReflectionUtils.Editor",
+    "Hananoki.SharedModule.Runtime",
+    "Hananoki.UnityReflection.Editor",
+    "Hananoki.UnitySymbol.Editor"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": false,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false,
+  "references.backup": []
 }

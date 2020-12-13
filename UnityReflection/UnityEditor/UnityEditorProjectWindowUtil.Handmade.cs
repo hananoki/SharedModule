@@ -2,8 +2,7 @@
 
 #if UNITY_EDITOR
 
-using Hananoki;
-using Hananoki.Reflection;
+using HananokiEditor;
 using System;
 using System.Reflection;
 
