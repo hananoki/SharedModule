@@ -1,6 +1,7 @@
 ﻿
 using System.IO;
 using System.Linq;
+using System;
 using UnityEditor;
 using UnityEngine;
 using HananokiRuntime.Extensions;
@@ -112,16 +113,26 @@ namespace HananokiEditor.Extensions {
 
 
 		public static bool StartWithAssets( this string p ) {
-			if( p[ 1 ] == 's' || p[ 1 ] == 'S' ) return true;
-			if( p[ 0 ] == 'P' || p[ 1 ] == 'p' ) return true;
+			if( p.IsEmpty() ) return false;
+			if( p[ 1 ] == 's' || p[ 1 ] == 'S' ) return true; // Assets
+			if( p[ 0 ] == 'P' || p[ 0 ] == 'p' ) return true; // Package
+			return false;
+		}
+		public static bool StartWithResource( this string p ) {
+			if( p.IsEmpty() ) return false;
+			if( p[ 0 ] == 'R' || p[ 0 ] == 'r' ) return true; // Resource
 			return false;
 		}
 
 		public static T LoadAsset<T>( this string s ) where T : UnityObject {
-			if( s.IsEmpty() ) return null;
-			if( s.StartWithAssets() ) return AssetDatabase.LoadAssetAtPath<T>( s );
+			return (T) LoadAsset( s, typeof( T ) );
+		}
 
-			return AssetDatabaseUtils.LoadAssetAtGUID<T>( s );
+		public static UnityObject LoadAsset( this string s, Type t ) {
+			if( s.IsEmpty() ) return null;
+			if( s.StartWithAssets() ) return AssetDatabase.LoadAssetAtPath( s, t );
+
+			return AssetDatabaseUtils.LoadAssetAtGUID( s, t );
 		}
 
 		public static UnityObject LoadAsset( this string s ) => LoadAsset<UnityObject>( s );
@@ -180,6 +191,17 @@ namespace HananokiEditor.Extensions {
 		}
 
 
+		/// <summary>
+		/// 引数で渡した拡張子であるかどうかを判定します
+		/// </summary>
+		/// <param name="s"></param>
+		/// <param name="ext">拡張子 (.は付けてもつけなくてもよい)</param>
+		/// <returns></returns>
+		public static bool HasExtention( this string s, string ext ) {
+			return s.EndsWith( ext );
+		}
+
+
 		public static bool IsExistsFile( this string s ) {
 			return File.Exists( s );
 		}
@@ -205,37 +227,5 @@ namespace HananokiEditor.Extensions {
 			fs.WriteAllText( path, contents );
 		}
 
-
-		//public static string colorTag( this string s, string color ) {
-		//	return "<color=" + s + ">" + s + "</color>";
-		//}
-
-
-		/// <summary>
-		/// スネークケースをアッパーキャメル(パスカル)ケースに変換します
-		/// 例) quoted_printable_encode → QuotedPrintableEncode
-		/// </summary>
-		//public static string SnakeToUpperCamel( this string self ) {
-		//	if( string.IsNullOrEmpty( self ) ) return self;
-
-		//	return self
-		//			.Split( new[] { '_' }, StringSplitOptions.RemoveEmptyEntries )
-		//			.Select( s => char.ToUpperInvariant( s[ 0 ] ) + s.Substring( 1, s.Length - 1 ) )
-		//			.Aggregate( string.Empty, ( s1, s2 ) => s1 + s2 )
-		//	;
-		//}
-
-		/// <summary>
-		/// スネークケースをローワーキャメル(キャメル)ケースに変換します
-		/// 例) quoted_printable_encode → quotedPrintableEncode
-		/// </summary>
-		//public static string SnakeToLowerCamel( this string self ) {
-		//	if( string.IsNullOrEmpty( self ) ) return self;
-
-		//	return self
-		//			.SnakeToUpperCamel()
-		//			.Insert( 0, char.ToLowerInvariant( self[ 0 ] ).ToString() ).Remove( 1, 1 )
-		//	;
-		//}
 	}
 }

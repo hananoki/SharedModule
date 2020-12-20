@@ -12,9 +12,13 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityReflection;
-//using EditorAssemblies = UnityReflection.UnityEditorEditorAssemblies;
+using UnityEditorInternal;
+using System.Threading.Tasks;
+//using UnityEditor.Compilation;
+
 using CustomEditorAttributes = UnityReflection.UnityEditorCustomEditorAttributes;
 using UnityObject = UnityEngine.Object;
+using CompilationAssembly = UnityEditor.Compilation.Assembly;
 
 namespace HananokiEditor {
 
@@ -28,7 +32,49 @@ namespace HananokiEditor {
 
 	public static class EditorHelper {
 
-		public static void RequestChangeLanguage( SystemLanguage lang) {
+		public static void SyncCSProject( AssemblyDefinitionAsset asset ) {
+			var m_data = (Dictionary<string, object>) EditorJson.Deserialize( asset.text );
+			var aname = (string) m_data[ "name" ];
+			var aa = UnityEditor.Compilation.CompilationPipeline.GetAssemblies().Where( x => x.name == aname ).ToArray();
+			var sourceList = aa[ 0 ].sourceFiles;
+
+			//Task.Run(_);
+			//void _() {
+				var cspath = $"{System.Environment.CurrentDirectory}/{aname}.csproj".separatorToOS();
+				var content = fs.ReadAllText( cspath );
+				var ss = content.Replace( "\r", "" ).Split( '\n' );
+				int step = 0;
+
+				fs.WriteFile( cspath, ( b ) => {
+					foreach( var s in ss ) {
+						if( step == 0 ) {
+							if( s.Contains( "Compile Include" ) ) {
+								step = 1;
+								continue;
+							}
+						}
+						else if( step == 1 ) {
+							if( s.Contains( "None Include" ) || s.Contains( "Reference Include" ) ) {
+								step = 2;
+								foreach( var c in aa[ 0 ].sourceFiles ) {
+									b.AppendLine( $"    <Compile Include=\"{c.separatorToOS()}\" />" );
+								}
+							}
+
+							else {
+								continue;
+							}
+						}
+						b.AppendLine( s );
+					}
+				}, utf8bom: true, newLineLinux: false );
+
+			//}
+		}
+
+
+
+		public static void RequestChangeLanguage( SystemLanguage lang ) {
 			UnityEditorEditorGUIUtility.NotifyLanguageChanged( lang );
 			UnityEditorInternalInternalEditorUtility.RequestScriptReload();
 		}
@@ -126,7 +172,7 @@ namespace HananokiEditor {
 
 
 		// Example "Unity.Addressables.Editor"
-		public static bool IsLoadAssembly(string assemblyName ) {
+		public static bool IsLoadAssembly( string assemblyName ) {
 			foreach( var p in AssemblieUtils.loadedAssemblies ) {
 				if( p.FullName == assemblyName ) return true;
 			}
@@ -368,23 +414,24 @@ namespace HananokiEditor {
 			EditorWindow result;
 			for( int i = 0; i < desiredDockNextTo.Length; i++ ) {
 				Type desired = desiredDockNextTo[ i ];
-				var windows = (Array) R.Property( "windows", "UnityEditor.ContainerWindow" ).GetValue( null );
-				//var a = windows.GetType();
-				foreach( var containerWindow in windows ) {
 
-					var rootView = R.Property( "rootView", "UnityEditor.ContainerWindow" ).GetValue( containerWindow );
-					var allChildren = (Array) R.Property( "allChildren", "UnityEditor.View" ).GetValue( rootView );
-					foreach( var view in allChildren ) {
+				foreach( var _containerWindow in UnityEditorContainerWindow.windows ) {
+					var containerWindow = new UnityEditorContainerWindow( _containerWindow );
+
+					var rootView = new UnityEditorView( containerWindow.rootView );//R.Property( "rootView", "UnityEditor.ContainerWindow" ).GetValue( containerWindow );
+
+					foreach( var view in rootView.allChildren ) {
 
 						if( view == null ) continue;
-						if( view.GetType().Name != "DockArea" ) continue;
+						if( view.GetType() != UnityTypes.UnityEditor_DockArea ) continue;
 
-						var arg_B9_0 = (IEnumerable<EditorWindow>) R.Field( "m_Panes", "UnityEditor.DockArea" ).GetValue( view );
+						var dockarea = new UnityEditorDockArea( view );
+						var arg_B9_0 = dockarea.m_Panes;
 						if( arg_B9_0 == null ) continue;
 
 						bool flag3 = arg_B9_0.Any( x => x.GetType() == desired );
 						if( flag3 ) {
-							view.MethodInvoke( "AddTab", new Type[] { typeof( EditorWindow ), typeof( bool ) }, new object[] { t, true } );
+							dockarea.AddTab( t, true );
 							result = t;
 							return result;
 						}
@@ -402,11 +449,35 @@ namespace HananokiEditor {
 			EditorSceneManager.MarkAllScenesDirty();
 		}
 
-		//public static void EditScript( Type t ) {
-		//	var a = ScriptableObject.CreateInstance( t );
-		//	AssetDatabase.OpenAsset( MonoScript.FromScriptableObject( a ) );
-		//	UnityObject.DestroyImmediate( a );
-		//}
+
+		public static MonoScript GetMonoScriptFromType( Type t ) {
+			var lst = Resources.FindObjectsOfTypeAll<MonoScript>()
+				.Select( x => x.ToAssetPath() )
+				.Distinct().ToArray();
+
+			var tname = t.Name;
+
+			foreach( var p in lst ) {
+				if( !p.FileName().Contains( tname ) ) continue;
+
+				var mono = p.LoadAsset<MonoScript>();
+				var tt = mono.GetClass();
+
+				if( t == tt ) {
+					return mono;
+				}
+			}
+			return null;
+		}
+
+
+		public static void EditScript( Type monoScriptType ) {
+			var obj = GetMonoScriptFromType( monoScriptType );
+
+			if( obj == null ) return;
+
+			AssetDatabase.OpenAsset( obj );
+		}
 
 		public static void EditScript( UnityObject obj ) {
 			if( obj.IsSubclassOf( UnityTypes.UnityEngine_ScriptableObject ) ) {
@@ -791,7 +862,7 @@ namespace HananokiEditor {
 				inspector.SetProperty( "isLocked", true );
 			}
 			else {
-				inspector.MethodInvoke( "FlipLocked" );
+				inspector.MethodInvoke( "FlipLocked", null );
 			}
 		}
 
@@ -878,41 +949,6 @@ namespace HananokiEditor {
 		}
 
 
-
-
-#if false
-		public static bool AnimationControllerIsRegistered( UnityEditor.Animations.AnimatorController controller, AnimationClip clip ) {
-			var st = controller.layers[ 0 ].stateMachine.states;
-
-			if( 0 <= Array.FindIndex( controller.animationClips, ( c ) => { return c.name == clip.name; } ) ) {
-				int i = Array.FindIndex( st, c => c.state.motion == clip );
-				if( 0 <= i ) {
-					if( st[ i ].state.name != clip.name ) {
-						//console.log( st[ i ].state.name );
-						st[ i ].state.name = clip.name;
-					}
-				}
-				return true;
-			}
-			return false;
-		}
-#endif
-
-
-#if false
-		public static void showNotification( string text ) {
-			if( SceneView.lastActiveSceneView ) {
-				GUIContent guiContent = new GUIContent();
-				guiContent.text = text;
-				guiContent.image = EditorGUIUtility.FindTexture( "SceneAsset Icon" );
-
-				//UnityEditor.SceneView.currentDrawingSceneView.ShowNotification( guiContent );
-				SceneView.lastActiveSceneView.ShowNotification( guiContent );
-				SceneView.RepaintAll();
-			}
-		}
-#endif
-
 		/// <summary>
 		/// EditorBuildSettingsからシーン名の配列を取得する
 		/// </summary>
@@ -934,24 +970,7 @@ namespace HananokiEditor {
 		}
 
 
-#if false
-		public static void ReadLine( string fname, char sepa, Action<string[]> func ) {
-			var sss = fs.ReadAllText( fname );
-			if( sss.IsEmpty() ) return;
 
-			var ss = sss.Split( '\n' );
-			for( int i = 0; i < ss.Length; i++ ) {
-				var s = ss[ i ];
-				s = s.TrimEnd( '\r' );
-				if( string.IsNullOrEmpty( s ) ) {
-					func( null );
-				}
-				else {
-					func( s.Split( sepa ) );
-				}
-			}
-		}
-#endif
 
 
 #if false
@@ -1005,7 +1024,7 @@ namespace HananokiEditor {
 
 
 
-	
+
 
 
 	// preview

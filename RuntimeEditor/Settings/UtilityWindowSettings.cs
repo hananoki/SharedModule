@@ -10,12 +10,12 @@ namespace HananokiEditor.SharedModule {
 	[Serializable]
 	public class UtilityWindowSettingsData {
 		public bool Enable;
-		public string TypeName;
+		public string TypeFullName;
 
 		Type _cache;
 		public Type GetUtilityType() {
 			if( _cache == null ) {
-				_cache = EditorHelper.GetTypeFromString( TypeName );
+				_cache = EditorHelper.GetTypeFromString( TypeFullName );
 			}
 			return _cache;
 		}
@@ -26,17 +26,18 @@ namespace HananokiEditor.SharedModule {
 
 		const string kCom = "Version=0.0.0.0, Culture=neutral, PublicKeyToken=null";
 
-		static string[] typeList = {
-			$"HananokiEditor.ScriptableObjectManager.MainWindow",
-			$"HananokiEditor.PackageFileTools.MainWindow",
-			$"HananokiEditor.BuildAssist.BuildAssistWindow",
-			
-			UnityTypes.UnityEditor_AssetStoreWindow.AssemblyQualifiedName,
-		};
+		//static string[] typeList = {
+		//	$"HananokiEditor.ScriptableObjectManager.MainWindow",
+		//	$"HananokiEditor.PackageFileTools.MainWindow",
+		//	$"HananokiEditor.BuildAssist.BuildAssistWindow",
+
+		//	UnityTypes.UnityEditor_AssetStoreWindow.AssemblyQualifiedName,
+		//};
 
 
 		[HananokiSettingsRegister]
 		public static SettingsItem RegisterSettings() {
+			CheckNullType();
 			return new SettingsItem() {
 				//mode = 1,
 				displayName = $"{Package.nameNicify}/UtilityWindow",
@@ -54,7 +55,7 @@ namespace HananokiEditor.SharedModule {
 				}
 			}
 			foreach( var p in dels ) {
-				Debug.Log( $"Remove: {p.TypeName}" );
+				//Debug.Log( $"Remove: {p.TypeFullName}" );
 				E.i.utilityWindowSettingsData.Remove( p );
 			}
 		}
@@ -64,14 +65,15 @@ namespace HananokiEditor.SharedModule {
 			using( new GUILayout.HorizontalScope() ) {
 				if( GUILayout.Button( "add" ) ) {
 					var m = new GenericMenu();
-					foreach( var p in typeList ) {
-						m.AddItem( p.Split( ',' )[ 0 ], reg, p );
+					var list = AssemblieUtils.SubclassesOf<EditorWindow>();
+					foreach( var p in list ) {
+						m.AddItem( p.FullName.Replace(".","/"), reg, p );
 					}
 					m.DropDownAtMousePosition();
 					void reg( object context ) {
-						var typeName = (string) context;
-						if( E.i.utilityWindowSettingsData.Find( x => x.TypeName == typeName ) == null ) {
-							E.i.utilityWindowSettingsData.Add( new UtilityWindowSettingsData { Enable = true, TypeName = typeName } );
+						var t = (Type) context;
+						if( E.i.utilityWindowSettingsData.Find( x => x.TypeFullName == t.FullName ) == null ) {
+							E.i.utilityWindowSettingsData.Add( new UtilityWindowSettingsData { Enable = true, TypeFullName = t.FullName } );
 						}
 						CheckNullType();
 						E.Save();

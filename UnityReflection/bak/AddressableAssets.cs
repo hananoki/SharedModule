@@ -30,7 +30,7 @@ namespace HananokiEditor {
 		public object m_instance;
 
 		public UnityAddressableAssetEntry FindAssetEntry( string guid ) {
-			return new UnityAddressableAssetEntry() { m_instance = m_instance.MethodInvoke<object>( "FindAssetEntry", guid ) };
+			return new UnityAddressableAssetEntry() { m_instance = m_instance.MethodInvoke<object>( "FindAssetEntry", new object[] { guid } ) };
 		}
 	}
 

@@ -5,16 +5,26 @@ using System;
 
 namespace UnityReflection {
   public sealed partial class UnityEditorEditorGUIUtility {
-    
+
+		public static class Cache<T> {
+			public static T cache;
+		}
 
 		public static int skinIndex {
 			get {
-				if( __skinIndex == null ) {
-					__skinIndex = (Func<int>) Delegate.CreateDelegate( typeof( Func<int> ), null, UnityTypes.UnityEditor_EditorGUIUtility.GetMethod( "get_skinIndex", R.StaticMembers ) );
+				if( __getter_skinIndex == null ) {
+					__getter_skinIndex = (Func<int>) Delegate.CreateDelegate( typeof( Func<int> ), null, UnityTypes.UnityEditor_EditorGUIUtility.GetMethod( "get_skinIndex", R.StaticMembers ) );
 				}
-				return __skinIndex();
+				return __getter_skinIndex();
+			}
+			set {
+				if( __setter_skinIndex == null ) {
+					__setter_skinIndex = (Action<int>) Delegate.CreateDelegate( typeof( Action<int> ), null, UnityTypes.UnityEditor_EditorGUIUtility.GetMethod( "set_skinIndex", R.StaticMembers ) );
+			  }
+				__setter_skinIndex( value );
 			}
 		}
+
 		public static UnityEngine.GUIContent TrTextContent( string key, string text, string tooltip, UnityEngine.Texture icon ) {
 			if( __TrTextContent_0_4 == null ) {
 				__TrTextContent_0_4 = (Func<string,string,string,UnityEngine.Texture, UnityEngine.GUIContent>) Delegate.CreateDelegate( typeof( Func<string,string,string,UnityEngine.Texture, UnityEngine.GUIContent> ), null, UnityTypes.UnityEditor_EditorGUIUtility.GetMethod( "TrTextContent", R.StaticMembers, null, new Type[]{ typeof( string ), typeof( string ), typeof( string ), typeof( UnityEngine.Texture ) }, null ) );
@@ -61,14 +71,14 @@ namespace UnityReflection {
 			if( __GetEditorAssetBundle_0_0 == null ) {
 				__GetEditorAssetBundle_0_0 = (Func<UnityEngine.AssetBundle>) Delegate.CreateDelegate( typeof( Func<UnityEngine.AssetBundle> ), null, UnityTypes.UnityEditor_EditorGUIUtility.GetMethod( "GetEditorAssetBundle", R.StaticMembers, null, new Type[]{  }, null ) );
 			}
-			return __GetEditorAssetBundle_0_0(  );
+			return __GetEditorAssetBundle_0_0();
 		}
 		
 		public static UnityEngine.Color GetDefaultBackgroundColor() {
 			if( __GetDefaultBackgroundColor_0_0 == null ) {
 				__GetDefaultBackgroundColor_0_0 = (Func<UnityEngine.Color>) Delegate.CreateDelegate( typeof( Func<UnityEngine.Color> ), null, UnityTypes.UnityEditor_EditorGUIUtility.GetMethod( "GetDefaultBackgroundColor", R.StaticMembers, null, new Type[]{  }, null ) );
 			}
-			return __GetDefaultBackgroundColor_0_0(  );
+			return __GetDefaultBackgroundColor_0_0();
 		}
 		
 		public static void NotifyLanguageChanged( UnityEngine.SystemLanguage newLanguage ) {
@@ -78,9 +88,17 @@ namespace UnityReflection {
 			__NotifyLanguageChanged_0_1( newLanguage );
 		}
 		
+		public static UnityEngine.Object GetBuiltinExtraResource( System.Type type, string path ) {
+			if( __GetBuiltinExtraResource_0_2 == null ) {
+				__GetBuiltinExtraResource_0_2 = (Func<System.Type,string, UnityEngine.Object>) Delegate.CreateDelegate( typeof( Func<System.Type,string, UnityEngine.Object> ), null, UnityTypes.UnityEditor_EditorGUIUtility.GetMethod( "GetBuiltinExtraResource", R.StaticMembers, null, new Type[]{ typeof( System.Type ), typeof( string ) }, null ) );
+			}
+			return __GetBuiltinExtraResource_0_2( type, path );
+		}
 		
 		
-		static Func<int> __skinIndex;
+		
+		static Func<int> __getter_skinIndex;
+		static Action<int> __setter_skinIndex;
 		static Func<string,string,string,UnityEngine.Texture, UnityEngine.GUIContent> __TrTextContent_0_4;
 		static Func<string,string,UnityEngine.Texture, UnityEngine.GUIContent> __TrTextContent_1_3;
 		static Func<string,string,string, UnityEngine.GUIContent> __TrTextContent_2_3;
@@ -90,6 +108,7 @@ namespace UnityReflection {
 		static Func<UnityEngine.AssetBundle> __GetEditorAssetBundle_0_0;
 		static Func<UnityEngine.Color> __GetDefaultBackgroundColor_0_0;
 		static Action<UnityEngine.SystemLanguage> __NotifyLanguageChanged_0_1;
+		static Func<System.Type,string, UnityEngine.Object> __GetBuiltinExtraResource_0_2;
 	}
 }
 

@@ -172,5 +172,8 @@ namespace HananokiEditor {
 		static Type _UnityEditor_SyncVS;
 		public static Type UnityEditor_SyncVS => Get( ref _UnityEditor_SyncVS, "UnityEditor.SyncVS", "UnityEditor" );
 
+		static Type _UnityEditor_EditorSettings;
+		public static Type UnityEditor_EditorSettings => Get( ref _UnityEditor_EditorSettings, "UnityEditor.EditorSettings", "UnityEditor" );
+
 	}
 }

@@ -1,4 +1,4 @@
-﻿/// UnityEditor.Toolbar : 2019.4.5f1
+﻿/// UnityEditor.Toolbar : 2019.4.16f1
 
 using HananokiEditor;
 using System;
@@ -9,6 +9,15 @@ namespace UnityReflection {
 		public static class Cache<T> {
 			public static T cache;
 		}
+		public object m_instance;
+    
+    public UnityEditorToolbar( object instance ){
+			m_instance = instance;
+    }
+    public UnityEditorToolbar() {
+			m_instance = Activator.CreateInstance( UnityTypes.UnityEditor_Toolbar, new object[] {} );
+    }
+    
 
 		public static void RepaintToolbar() {
 			if( __RepaintToolbar_0_0 == null ) {
@@ -17,9 +26,17 @@ namespace UnityReflection {
 			__RepaintToolbar_0_0();
 		}
 		
+		public void OnDestroy() {
+			if( __OnDestroy_0_0 == null ) {
+				__OnDestroy_0_0 = (Action) Delegate.CreateDelegate( typeof( Action ), m_instance, UnityTypes.UnityEditor_Toolbar.GetMethod( "OnDestroy", R.InstanceMembers, null, new Type[]{  }, null ) );
+			}
+			__OnDestroy_0_0();
+		}
+		
 		
 		
 		static Action __RepaintToolbar_0_0;
+		Action __OnDestroy_0_0;
 	}
 }
 

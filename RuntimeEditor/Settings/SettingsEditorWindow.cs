@@ -85,6 +85,7 @@ namespace HananokiEditor.SharedModule {
 
 			E.i.m_asmdefNameSync = HEditorGUILayout.ToggleLeft( S._MaketheNamefieldthesameasthefilenamewhenimportingasmdef, E.i.m_asmdefNameSync );
 			E.i.m_asmdefAutoReferenceOFF = HEditorGUILayout.ToggleLeft( S._TurnoffAutoReferencedwhenimportingasmdef, E.i.m_asmdefAutoReferenceOFF );
+			//E.i.m_disableSyncVS = HEditorGUILayout.ToggleLeft( "Kill SyncVS", E.i.m_disableSyncVS );
 			//E.i.utilityWindow = EditorGUILayout.ToggleLeft( SS._UtilityWindowMode, E.i.utilityWindow );
 			if( ScopeChange.End() ) E.Save();
 

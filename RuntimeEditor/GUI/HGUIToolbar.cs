@@ -135,6 +135,9 @@ namespace HananokiEditor {
 		public static bool DropDown( string text, Texture2D image, Action action, params GUILayoutOption[] options ) {
 			return DropDown( EditorHelper.TempContent( text, image ), action, options );
 		}
+		public static bool DropDown( string text, Texture2D image, params GUILayoutOption[] options ) {
+			return DropDown( EditorHelper.TempContent( text, image ), null, options );
+		}
 
 		public static bool DropDown( Texture2D image, Action action, params GUILayoutOption[] options ) {
 			return DropDown( EditorHelper.TempContent( image ), action, options );
@@ -154,7 +157,7 @@ namespace HananokiEditor {
 
 		public static bool DropDown( GUIContent content, Action action, params GUILayoutOption[] options ) {
 			var size = EditorStyles.toolbarDropDown.CalcSize( EditorHelper.TempContent( content.text ) );
-			var r = GUILayoutUtility.GetRect( content, toolbarDropDown, GUILayout.Width( size.x + 16 ) );
+			var r = GUILayoutUtility.GetRect( content, toolbarDropDown, options.Length == 0 ? new GUILayoutOption[] { GUILayout.Width( size.x + 16 ) } : options );
 			HEditorGUI.lastRect = r;
 			var result = EditorHelper.HasMouseClick( r );
 			if( result ) {

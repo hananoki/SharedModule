@@ -104,6 +104,7 @@ namespace HananokiRuntime.Extensions {
 			if( type == null ) return null;
 			return go.GetComponent( type );
 		}
+
 		public static Component InvokeComponentFromType( this GameObject go, Type type, Action<Component> action ) {
 			if( go == null ) return null;
 			if( type == null ) return null;

@@ -4,16 +4,15 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+
 namespace HananokiEditor {
 	public class IconDictionary {
 		public Dictionary<int, Texture2D> icons;
 		public string[] i;
 
-
 		public IconDictionary( string[] i ) {
 			this.i = i;
 		}
-
 
 		public Texture2D Get( int n ) {
 			if( icons == null ) {
@@ -21,10 +20,10 @@ namespace HananokiEditor {
 			}
 			bool load = false;
 			if( !icons.ContainsKey( n ) ) load = true;
+
 			else if( icons[ n ] == null ) load = true;
+
 			if( load ) {
-				//for( int i = 0; i < SharedEmbed.num; i++ ) {
-				//if( SharedEmbed.n[ i ] != s ) continue;
 				var bb = B64.Decode( "iVBORw0KGgoAAAAN" + i[ n ] );
 				const int wOff = 16;
 				const int hOff = 20;
@@ -33,15 +32,18 @@ namespace HananokiEditor {
 
 				var t = new Texture2D( Widht, Height );
 				t.LoadImage( bb );
-				t.hideFlags |= HideFlags.DontUnloadUnusedAsset;
+				IconGarbage.Set( t );
+				
+				//t.hideFlags |= HideFlags.DontUnloadUnusedAsset;
 				if( icons.ContainsKey( n ) ) {
 					icons[ n ] = t;
 				}
 				else {
 					icons.Add( n, t );
+					
 				}
-				//}
 			}
+			
 			return icons[ n ];
 		}
 

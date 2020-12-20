@@ -3,6 +3,7 @@ using HananokiEditor.Extensions;
 using System.Collections.Generic;
 using System.Text;
 using UnityEditor;
+using UnityEngine;
 using UnityEditorInternal;
 using UnityReflection;
 using E = HananokiEditor.SharedModule.SettingsEditor;
@@ -10,9 +11,19 @@ using E = HananokiEditor.SharedModule.SettingsEditor;
 namespace HananokiEditor {
 
 	public class __ : AssetPostprocessor {
+		static __() {
+			E.Load();
+			if( UnitySymbol.UNITY_2019_3_OR_NEWER ) {
+				if( E.i.m_disableSyncVS ) {
+					EditorApplication.update -= KillVSSync;
+					EditorApplication.update += KillVSSync;
+				}
+			}
+		}
+
 		static void OnPostprocessAllAssets( string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths ) {
 			//Debug.Log( $"i:{importedAssets.Length}, d:{deletedAssets.Length}, ma:{movedAssets.Length}, mfap:{movedFromAssetPaths.Length}" );
-			
+
 			if( E.i.m_asmdefNameSync || E.i.m_asmdefAutoReferenceOFF ) {
 				var _asmdefNameSync = E.i.m_asmdefNameSync;
 				var _asmdefAutoReferenceOFF = E.i.m_asmdefAutoReferenceOFF;
@@ -49,6 +60,14 @@ namespace HananokiEditor {
 					}
 				}
 			}
+		}
+
+		static void KillVSSync() {
+			if( UnityEditorSyncVS.s_Enabled == false ) return;
+
+			UnityEditorSyncVS.s_Enabled = false;
+			EditorApplication.update -= KillVSSync;
+			UnityEngine.Debug.Log( "off" );
 		}
 	}
 }

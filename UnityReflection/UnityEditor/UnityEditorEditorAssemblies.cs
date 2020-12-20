@@ -14,19 +14,25 @@ namespace UnityReflection {
 
 		public static System.Reflection.Assembly[] loadedAssemblies {
 			get {
-				if( __loadedAssemblies == null ) {
-					__loadedAssemblies = (Func<System.Reflection.Assembly[]>) Delegate.CreateDelegate( typeof( Func<System.Reflection.Assembly[]> ), null, UnityTypes.UnityEditor_EditorAssemblies.GetMethod( "get_loadedAssemblies", R.StaticMembers ) );
+				if( __getter_loadedAssemblies == null ) {
+					__getter_loadedAssemblies = (Func<System.Reflection.Assembly[]>) Delegate.CreateDelegate( typeof( Func<System.Reflection.Assembly[]> ), null, UnityTypes.UnityEditor_EditorAssemblies.GetMethod( "get_loadedAssemblies", R.StaticMembers ) );
 				}
-				return __loadedAssemblies();
+				return __getter_loadedAssemblies();
+			}
+			set {
+				if( __setter_loadedAssemblies == null ) {
+					__setter_loadedAssemblies = (Action<System.Reflection.Assembly[]>) Delegate.CreateDelegate( typeof( Action<System.Reflection.Assembly[]> ), null, UnityTypes.UnityEditor_EditorAssemblies.GetMethod( "set_loadedAssemblies", R.StaticMembers ) );
+			  }
+				__setter_loadedAssemblies( value );
 			}
 		}
 
 		public static IEnumerable<Type> loadedTypes {
 			get {
-				if( __loadedTypes == null ) {
-					__loadedTypes = (Func<IEnumerable<Type>>) Delegate.CreateDelegate( typeof( Func<IEnumerable<Type>> ), null, UnityTypes.UnityEditor_EditorAssemblies.GetMethod( "get_loadedTypes", R.StaticMembers ) );
+				if( __getter_loadedTypes == null ) {
+					__getter_loadedTypes = (Func<IEnumerable<Type>>) Delegate.CreateDelegate( typeof( Func<IEnumerable<Type>> ), null, UnityTypes.UnityEditor_EditorAssemblies.GetMethod( "get_loadedTypes", R.StaticMembers ) );
 				}
-				return __loadedTypes();
+				return __getter_loadedTypes();
 			}
 		}
 
@@ -104,8 +110,9 @@ namespace UnityReflection {
 		
 		
 		
-		static Func<System.Reflection.Assembly[]> __loadedAssemblies;
-		static Func<IEnumerable<Type>> __loadedTypes;
+		static Func<System.Reflection.Assembly[]> __getter_loadedAssemblies;
+		static Action<System.Reflection.Assembly[]> __setter_loadedAssemblies;
+		static Func<IEnumerable<Type>> __getter_loadedTypes;
 		delegate IEnumerable<MethodInfo> Method_GetAllMethodsWithAttribute_0_1<T>( System.Reflection.BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic );
 		delegate IEnumerable<Type> Method_GetAllTypesWithAttribute_0_0<T>();
 		delegate IEnumerable<Type> Method_GetAllTypesWithInterface_0_0<T>();

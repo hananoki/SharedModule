@@ -88,32 +88,32 @@ namespace HananokiEditor {
 			return t.GetMethod( propertyName, InstanceMembers, null, types, null );
 		}
 
-		public static T MethodInvoke<T>( this object obj, string propertyName, params object[] args ) {
+		public static T MethodInvoke<T>( this object obj, string propertyName,  object[] args ) {
 			return (T) _MethodInvoke( obj, propertyName ).Invoke( obj, args );
 		}
 
-		public static void MethodInvoke( this object obj, string propertyName, params object[] args ) {
+		public static void MethodInvoke( this object obj, string propertyName,  object[] args ) {
 			_MethodInvoke( obj, propertyName ).Invoke( obj, args );
 		}
 
-		public static void MethodInvoke( this object obj, string propertyName, Type[] types, params object[] args ) {
+		public static void MethodInvoke( this object obj, string propertyName, Type[] types,  object[] args ) {
 			_MethodInvoke( obj, propertyName, types ).Invoke( obj, args );
 		}
 
 
 
-		public static void MethodInvoke( this Type t, string methodName, params object[] args ) {
+		public static void MethodInvoke( this Type t, string methodName,  object[] args ) {
 			t.GetMethod( methodName, AllMembers ).Invoke( null, args );
 		}
-		public static T MethodInvoke<T>( this Type t, string methodName, params object[] args ) {
+		public static T MethodInvoke<T>( this Type t, string methodName,  object[] args ) {
 			return (T) t.GetMethod( methodName, AllMembers ).Invoke( null, args );
 		}
 
-		public static void MethodInvoke( this Type t, string methodName, Type[] types, params object[] args ) {
+		public static void MethodInvoke( this Type t, string methodName, Type[] types,  object[] args ) {
 			t.GetMethod( methodName, AllMembers, null, types, null ).Invoke( null, args );
 		}
 
-		public static T MethodInvoke<T>( this Type t, Type generic, string methodName, params object[] args ) {
+		public static T MethodInvoke<T>( this Type t, Type generic, string methodName,  object[] args ) {
 			var mk = t.GetMethod( methodName, AllMembers ).MakeGenericMethod( generic );
 			return (T) mk.Invoke( null, args );
 		}

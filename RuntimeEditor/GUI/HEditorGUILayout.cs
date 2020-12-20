@@ -124,7 +124,7 @@ namespace HananokiEditor {
 			if( boldFont ) {
 				GUI.skin.toggle.fontStyle = FontStyle.Bold;
 			}
-			result = GUILayout.Toggle( value, title );
+			result = GUILayout.Toggle( value, title, GUILayout.Height( EditorGUIUtility.singleLineHeight ) );
 			GUILayout.FlexibleSpace();
 
 			if( iconButton != null ) {

@@ -132,7 +132,6 @@ namespace HananokiEditor.SharedModule {
 	}
 
 #if UNITY_EDITOR
-  //[EditorLocalizeClass]
   public class LocalizeEvent {
     [HananokiEditorLocalizeRegister]
     public static void Changed() {

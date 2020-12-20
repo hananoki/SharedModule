@@ -221,16 +221,19 @@ namespace HananokiEditor {
 			bool result = false;
 			position.y += heighOffset;
 			HEditorGUI.lastRect = position;
-			if( EditorHelper.HasMouseClick( position ) ) {
-				//Event.current.Use();
-				result = true;
-			}
-			else if( EditorHelper.HasMouseClick( position, EventMouseButton.R ) ) {
-				//Event.current.Use();
-				result = true;
-			}
+			//if( EditorHelper.HasMouseClick( position ) ) {
+			//	//Event.current.Use();
+			//	result = true;
+			//}
+			//else if( EditorHelper.HasMouseClick( position, EventMouseButton.R ) ) {
+			//	//Event.current.Use();
+			//	result = true;
+			//}
 
-			GUI.Button( position, content, style );
+			// ドッキングボタンの対応
+			// MouseUpでボタン押したことにする
+
+			result=GUI.Button( position, content, style );
 			GUI.changed = result;
 			return result;
 		}

@@ -5,7 +5,7 @@ using System;
 using System.Reflection;
 
 namespace UnityReflection {
-	public sealed partial class UnityEditorSyncVS {
+  public sealed partial class UnityEditorSyncVS {
 
 		public static class Cache<T> {
 			public static T cache;
@@ -22,20 +22,36 @@ namespace UnityReflection {
 				if( __s_Enabled == null ) {
 					__s_Enabled = UnityTypes.UnityEditor_SyncVS.GetField( "s_Enabled", R.StaticMembers );
 				}
-				__s_Enabled.SetValue( null,  value  );
+				__s_Enabled.SetValue( null, value );
+			}
+		}
+
+		public static object Synchronizer {
+			get {
+				if( __Synchronizer == null ) {
+					__Synchronizer = UnityTypes.UnityEditor_SyncVS.GetField( "Synchronizer", R.StaticMembers );
+				}
+				return (object) __Synchronizer.GetValue( null );
+			}
+			set {
+				if( __Synchronizer == null ) {
+					__Synchronizer = UnityTypes.UnityEditor_SyncVS.GetField( "Synchronizer", R.StaticMembers );
+				}
+				__Synchronizer.SetValue( null, value );
 			}
 		}
 
 		public static void SyncSolution() {
 			if( __SyncSolution_0_0 == null ) {
-				__SyncSolution_0_0 = (Action) Delegate.CreateDelegate( typeof( Action ), null, UnityTypes.UnityEditor_SyncVS.GetMethod( "SyncSolution", R.StaticMembers, null, new Type[] { }, null ) );
+				__SyncSolution_0_0 = (Action) Delegate.CreateDelegate( typeof( Action ), null, UnityTypes.UnityEditor_SyncVS.GetMethod( "SyncSolution", R.StaticMembers, null, new Type[]{  }, null ) );
 			}
 			__SyncSolution_0_0();
 		}
-
-
-
+		
+		
+		
 		static FieldInfo __s_Enabled;
+		static FieldInfo __Synchronizer;
 		static Action __SyncSolution_0_0;
 	}
 }

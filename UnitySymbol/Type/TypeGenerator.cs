@@ -34,5 +34,17 @@ namespace HananokiEditor {
 		static Type _UnityEditor_GameObjectUtility;
 		public static Type UnityEditor_GameObjectUtility => Get( ref _UnityEditor_GameObjectUtility, "UnityEditor.GameObjectUtility", "UnityEditor" );
 
+		static Type _UnityEditor_ContainerWindow;
+		public static Type UnityEditor_ContainerWindow => Get( ref _UnityEditor_ContainerWindow, "UnityEditor.ContainerWindow", "UnityEditor" );
+
+		static Type _UnityEditor_View;
+		public static Type UnityEditor_View => Get( ref _UnityEditor_View, "UnityEditor.View", "UnityEditor" );
+
+		static Type _UnityEditor_DockArea;
+		public static Type UnityEditor_DockArea => Get( ref _UnityEditor_DockArea, "UnityEditor.DockArea", "UnityEditor" );
+
+		static Type _UnityEditor_SplitView;
+		public static Type UnityEditor_SplitView => Get( ref _UnityEditor_SplitView, "UnityEditor.SplitView", "UnityEditor" );
+
 	}
 }

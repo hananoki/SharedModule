@@ -2,6 +2,14 @@
 using System;
 using UnityEditor;
 
+//#if UNITY_2019_1_OR_NEWER
+//using UnityEngine.UIElements;
+//using UnityEditor.UIElements;
+//#else
+//using UnityEngine.Experimental.UIElements;
+//using UnityEditor.Experimental.UIElements;
+//#endif
+
 namespace HananokiEditor.Extensions {
 	public static partial class EditorWindowExtensions {
 
@@ -12,15 +20,15 @@ namespace HananokiEditor.Extensions {
 
 		public static object GetRootVisualElement( this EditorWindow ew ) {
 			if( UnitySymbol.Has( "UNITY_2019_1_OR_NEWER" ) ) {
-				return ew.GetProperty<object>( "rootVisualElement" );
+				return (object) ew.GetProperty<object>( "rootVisualElement" );
 			}
-			return ew.GetProperty<object>( "rootVisualContainer" );
+			return (object) ew.GetProperty<object>( "rootVisualContainer" );
 		}
 
 
 		public static void RemoveIMGUIContainer( this EditorWindow ew, object IMGUIContainer, bool parent = false ) {
 			var visualTree = ew.GetRootVisualElement();
-
+			if( IMGUIContainer == null ) return;
 			if( !parent ) {
 				visualTree.MethodInvoke( "Remove", new object[] { IMGUIContainer } );
 			}

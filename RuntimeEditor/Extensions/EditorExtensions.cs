@@ -6,7 +6,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using System.Text.RegularExpressions;
-using HananokiEditor.Extensions;
+using HananokiRuntime.Extensions;
 
 using UnityObject = UnityEngine.Object;
 
@@ -97,32 +97,15 @@ namespace HananokiEditor.Extensions {
 		public static void Field( this SerializedProperty property ) {
 			EditorGUILayout.PropertyField( property );
 		}
-	}
 
 
-
-	public static class IEnumerableExtensions {
-		private sealed class CommonSelector<T, TKey> : IEqualityComparer<T> {
-			private Func<T, TKey> m_selector;
-
-			public CommonSelector( Func<T, TKey> selector ) {
-				m_selector = selector;
-			}
-
-			public bool Equals( T x, T y ) {
-				return m_selector( x ).Equals( m_selector( y ) );
-			}
-
-			public int GetHashCode( T obj ) {
-				return m_selector( obj ).GetHashCode();
-			}
-		}
-
-		public static IEnumerable<T> Distinct<T, TKey>(
-				this IEnumerable<T> source,
-				Func<T, TKey> selector
-		) {
-			return source.Distinct( new CommonSelector<T, TKey>( selector ) );
+		/// <summary>
+		/// シーン上に配置されたGameObjectか判定します
+		/// </summary>
+		/// <param name="go">ゲームオブジェクト</param>
+		/// <returns>true: シーン上に配置されている</returns>
+		public static bool IsOnScene( this GameObject go ) {
+			return go.ToAssetPath().IsEmpty();
 		}
 	}
 }

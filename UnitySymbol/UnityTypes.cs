@@ -15,5 +15,22 @@ namespace HananokiEditor {
 			}
 			return t;
 		}
+
+		static Type[] s_generalEditorWindowTypes;
+		public static Type[] generalEditorWindowTypes {
+			get {
+				if( s_generalEditorWindowTypes == null ) {
+					s_generalEditorWindowTypes = new Type[] {
+						UnityEditor_SceneView,
+						UnityEditor_GameView,
+						UnityEditor_InspectorWindow,
+						UnityEditor_SceneHierarchyWindow,
+						UnityEditor_ProjectBrowser,
+						UnityEditor_ConsoleWindow
+						};
+				}
+				return s_generalEditorWindowTypes;
+			}
+		}
 	}
 }

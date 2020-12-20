@@ -35,6 +35,7 @@ namespace HananokiEditor {
 
 		public void SelectItem( int id ) {
 			SetSelection( new int[] { id }, TreeViewSelectionOptions.FireSelectionChanged );
+			SetFocusAndEnsureSelectedItem();
 		}
 
 		public void InitID() {

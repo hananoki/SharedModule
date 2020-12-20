@@ -6,16 +6,14 @@ using HananokiEditor;
 namespace UnityReflection {
 	public sealed partial class UnityEditorEditorWindow {
 
-		public FieldInfo __dockArea;
-		public object dockArea {
+		public UnityEditorDockArea dockArea {
 			get {
-				if( __dockArea == null ) {
-					__dockArea = typeof( EditorWindow ).GetField( "m_Parent", R.InstanceMembers );
-				}
-				return (object) __dockArea.GetValue( m_instance );
-
-				//var __ = m_instance.GetField<object>( "m_Parent" );
-				//return __;
+				return new UnityEditorDockArea( m_Parent );
+			}
+		}
+		public UnityEditorView view {
+			get {
+				return new UnityEditorView( m_Parent );
 			}
 		}
 
@@ -35,13 +33,13 @@ namespace UnityReflection {
 		public PropertyInfo __containerWindow;
 		public object containerWindow {
 			get {
-				if( __containerWindow == null ) {
-					__containerWindow = dockArea.GetType().GetProperty( "window", R.InstanceMembers );
-				}
-				return (object) __containerWindow.GetValue( dockArea );
+				//if( __containerWindow == null ) {
+				//	__containerWindow = dockArea.m_instance.GetType().GetProperty( "window", R.InstanceMembers );
+				//}
+				//return (object) __containerWindow.GetValue( dockArea.m_instance );
 
 				//var __ = dockArea.GetProperty<object>( "window" );
-				//return __;
+				return view.window;
 			}
 		}
 

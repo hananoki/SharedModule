@@ -10,12 +10,11 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using System.Linq;
+using UnityReflection;
 
 using SS = HananokiEditor.SharedModule.S;
 using E = HananokiEditor.SharedModule.SettingsEditor;
-using UnityEditorSplitterState = UnityReflection.UnityEditorSplitterState;
-using UnityEditorSplitterGUILayout = UnityReflection.UnityEditorSplitterGUILayout;
-//using EditorAssemblies = UnityReflection.UnityEditorEditorAssemblies;
+
 
 namespace HananokiEditor.SharedModule {
 

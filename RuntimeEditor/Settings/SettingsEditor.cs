@@ -25,6 +25,7 @@ namespace HananokiEditor.SharedModule {
 
 		public bool m_asmdefNameSync;
 		public bool m_asmdefAutoReferenceOFF;
+		public bool m_disableSyncVS;
 		public bool m_windowShade;
 
 		public string selectSettingName;
@@ -107,32 +108,10 @@ namespace HananokiEditor.SharedModule {
 			EditorLocalize.Load( Package.name, "95cedfc7731853946b0b3650f175d73a", E.i.LCID );
 
 			if( s_localizeEvent == null ) {
-				s_localizeEvent = new List<MethodInfo>();
-				//var t = typeof( EditorLocalizeClass );
-				//foreach( Assembly assembly in AppDomain.CurrentDomain.GetAssemblies() ) {
-				//	try {
-				//		foreach( Type type in assembly.GetTypes() ) {
-				//			try {
-				//				if( type.GetCustomAttribute( t ) == null ) continue;
-				//				var mm = R.Methods( typeof( EditorLocalizeMethod ), type.FullName, assembly.FullName.Split( ',' )[ 0 ] );
-				//				s_localizeEvent.AddRange( mm );
-				//			}
-				//			catch( Exception ee ) {
-				//				Debug.LogException( ee );
-				//			}
-				//		}
-				//	}
-				//	catch( ReflectionTypeLoadException ) {
-				//		Debug.LogError( assembly.FullName );
-				//	}
-				//	catch( Exception e ) {
-				//		Debug.LogError( e );
-				//	}
-				//}
+				s_localizeEvent = new List<MethodInfo>( 64 );
 				s_localizeEvent.AddRange( AssemblieUtils.GetAllMethodsWithAttribute<HananokiEditorLocalizeRegister>() );
 			}
 			foreach( var m in s_localizeEvent ) {
-				//Debug.Log("Invoke: "+m.Name);
 				m.Invoke( null, null );
 			}
 			HEditorWindow.RepaintWindow( typeof( EditorWindow ) );

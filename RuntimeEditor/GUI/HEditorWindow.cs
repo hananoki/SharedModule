@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityReflection;
 
 using E = HananokiEditor.SharedModule.SettingsEditor;
+using EE = HananokiEditor.SharedModule.SettingsEditor;
 
 namespace HananokiEditor {
 	public class HEditorWindow : EditorWindow {
@@ -48,9 +49,9 @@ namespace HananokiEditor {
 
 		protected virtual void ShowButton( Rect r ) {
 			var rb = r;
-			rb.x += (17*3);
+			rb.x += ( 17 * 3 );
 			//HEditorGUI.DrawDebugRect(rb);
-			if(EditorHelper.HasMouseClick( rb ) ) {
+			if( EditorHelper.HasMouseClick( rb ) ) {
 				OnClose();
 			}
 
@@ -124,7 +125,7 @@ namespace HananokiEditor {
 				OnDefaultGUI();
 			}
 			//catch( ArgumentException ) {
-				// GUILayout.FlexibleSpace
+			// GUILayout.FlexibleSpace
 			//}
 			catch( ExitGUIException ) {
 			}
@@ -149,26 +150,15 @@ namespace HananokiEditor {
 			return GetWindow( editorWindowType, utility );
 		}
 
-		public static EditorWindow[] FindArray( Type editorWindowType ) {
-			return Resources.FindObjectsOfTypeAll( editorWindowType ).Cast<EditorWindow>().ToArray();
-		}
-
-		public static EditorWindow Find( Type editorWindowType ) {
-			foreach( var p in Resources.FindObjectsOfTypeAll( editorWindowType ) ) {
-				return (EditorWindow) p;
-			}
-			return null;
-		}
+		
 
 
 		public static void RepaintWindow( Type editorWindowType ) {
-			FindArray( editorWindowType ).RepaintArray();
+			EditorWindowUtils.FindArray( editorWindowType ).RepaintArray();
 		}
 
 
-		public static void RepaintProjectWindow() => EditorApplication.RepaintProjectWindow();
-		public static void RepaintHierarchyWindow() => EditorApplication.RepaintHierarchyWindow();
-		public static void RepaintAnimationWindow() => EditorApplication.RepaintAnimationWindow();
+		
 	}
 
 
@@ -222,4 +212,87 @@ namespace HananokiEditor {
 
 
 
+	public class HNEditorWindow<T> : EditorWindow where T : EditorWindow {
+
+		public UnityEditorEditorWindow m_self;
+
+		public UnityEditorDockArea _dockArea;
+
+		public bool hasFocus => m_self.hasFocus;
+		public bool docked => m_self.docked;
+
+		public int showMode => m_self.showMode;
+
+		public void SetTitle( string text ) => this.SetTitle( new GUIContent( text ) );
+
+		public void SetTitle( string text, Texture2D image ) => this.SetTitle( new GUIContent( text, image ) );
+
+		public HNEditorWindow() {
+			m_self = new UnityEditorEditorWindow( this );
+
+		}
+
+		public static T GetOrCreate() {
+			return GetWindow<T>( EE.IsUtilityWindow( typeof( T ) ) );
+		}
+		public bool m_shade;
+		public float m_height;
+		public bool m_disableShadeMode;
+		public virtual void OnClose() { }
+
+		protected virtual void ShowButton( Rect r ) {
+			var rb = r;
+			rb.x += ( 17 * 3 );
+			//HEditorGUI.DrawDebugRect( rb );
+			if( EditorHelper.HasMouseClick( rb ) ) {
+				OnClose();
+			}
+
+			if( !E.i.m_windowShade ) return;
+			if( m_disableShadeMode ) return;
+			var a = (Texture2D) EditorIcon.icons_processed_unityengine_ui_aspectratiofitter_icon_asset;
+
+			if( showMode == 4 ) return;
+			//}
+
+			if( HEditorGUI.IconButton( r, a ) ) {
+				//var dockArea = _editorWindow.dockArea;
+
+				if( position.height < 25 ) {
+					var rr = position;
+					rr.height = m_height+21;
+					m_self.containerWindow.SetProperty<Rect>( "position", rr );
+				}
+				else {
+					minSize = new Vector2( minSize.x, -10 );
+					var rr = position;
+					m_height = rr.height;
+					rr.height = 21;
+
+					m_self.containerWindow.SetProperty<Rect>( "position", rr );
+				}
+				m_shade = !m_shade;
+				//Debug.Log( m_shade );
+			}
+		}
+
+
+		public void OnGUI() {
+			try {
+				OnDefaultGUI();
+			}
+			//catch( ArgumentException ) {
+			// GUILayout.FlexibleSpace
+			//}
+			catch( ExitGUIException ) {
+			}
+			//catch( MissingReferenceException ) {
+			//}
+			catch( Exception e ) {
+				Debug.LogException( e );
+			}
+		}
+
+		public virtual void OnDefaultGUI() { }
+	}
 }

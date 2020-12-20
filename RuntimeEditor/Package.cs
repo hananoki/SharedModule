@@ -6,6 +6,6 @@ namespace HananokiEditor.SharedModule {
     public const string name = "SharedModule";
     public const string nameNicify = "Shared Module";
     public const string editorPrefName = "Hananoki.SharedModule";
-    public const string version = "1.7.3";
+    public const string version = "1.7.4";
   }
 }

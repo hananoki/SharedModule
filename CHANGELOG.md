@@ -1,5 +1,29 @@
 # Shared Module
 
+## [1.7.4] - 2020-12-20
+
+### Added
+- Added Class
+  - ExternalPackages
+  - EditorWindowUtils
+
+- Added EditorHelper Method
+  - GetMonoScriptFromType
+- Added EditorExtensions Method
+  - IsOnScene
+  - StartWithResource
+  - HasExtention
+  - GetPersistentTypeID
+- Added AssemblieUtils Method
+  - SubclassesOf
+
+### Changed
+- Changed IconButton event handling to MouseUp
+- Made all editor windows configurable as utility windows
+
+### Fixed
+- Fixed an icon resource leaking
+
 ## [1.7.3] - 2020-12-13
 
 ### Changed
