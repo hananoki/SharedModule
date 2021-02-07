@@ -1,5 +1,12 @@
 # Shared Module
 
+## [1.7.5] - 2021-02-07
+
+### Added
+- Added support for Unity 2020.2
+- Added animation reflection
+- Other functions added, etc.
+
 ## [1.7.4] - 2020-12-20
 
 ### Added

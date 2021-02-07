@@ -1,6 +1,8 @@
 ﻿
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEngine;
+using System.Linq;
 using UnityEditorEditorUserBuildSettings = UnityReflection.UnityEditorEditorUserBuildSettings;
 
 namespace HananokiEditor {
@@ -28,6 +30,13 @@ namespace HananokiEditor {
 
 		public static void SetScriptingDefineSymbols( params string[] defines ) {
 			SetScriptingDefineSymbols( string.Join( ";", defines ) );
+		}
+
+
+		public static void AddPreloadedAssets( params Object[] objects ) {
+			var lst = PlayerSettings.GetPreloadedAssets().ToList();
+			lst.AddRange( objects );
+			PlayerSettings.SetPreloadedAssets( lst.Distinct().ToArray() );
 		}
 	}
 }

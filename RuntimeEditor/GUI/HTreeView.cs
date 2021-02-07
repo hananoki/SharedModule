@@ -24,8 +24,16 @@ namespace HananokiEditor {
 			}
 		}
 
+		public T ToItem( int id ) {
+			return (T) FindItem( id, rootItem );
+		}
+
+		public T[] ToItems( IList<int> ids ) {
+			return ids.Select( _id => (T) FindItem( _id, rootItem ) ).Where( x => x != null ).ToArray();
+		}
+
 		public T[] GetSelectionItems() {
-			return GetSelection().Select( _id => (T) FindItem( _id, rootItem ) ).Where( x => x != null ).ToArray();
+			return ToItems( GetSelection() );
 		}
 
 		public T FindItem( int id ) {
@@ -83,13 +91,16 @@ namespace HananokiEditor {
 			OnGUI( dropRc );
 		}
 
+		public Rect rectGUI;
 
 		public override void OnGUI( Rect rect ) {
 			if( !isInitialized ) return;
 
+			rectGUI = rect;
 			base.OnGUI( rect );
 			if( Event.current.type == EventType.MouseDown && Event.current.button == 0 && rect.Contains( Event.current.mousePosition ) ) {
 				SetSelectionNone();
+				//Debug.Log( "SetSelectionNone" );
 			}
 		}
 
@@ -195,18 +206,28 @@ namespace HananokiEditor {
 			}
 		}
 
+		protected void Label( RowGUIArgs args, Rect rect, GUIContent content ) {
+			Label( rect, content, args );
+		}
+
+		protected void Label( RowGUIArgs args, Rect rect, string text ) {
+			Label( rect, EditorHelper.TempContent( text ), args );
+		}
+		protected void Label( RowGUIArgs args, Rect rect, string text, GUIStyle style ) {
+			_Label( rect, EditorHelper.TempContent( text ), style, args );
+		}
+
+		protected void Label( RowGUIArgs args, Rect rect, string text, Texture2D image ) {
+			Label( rect, EditorHelper.TempContent( text, image ), args );
+		}
 		protected void Label( Rect rect, GUIContent content, RowGUIArgs args ) {
 			if( ControlLabel == null ) {
 				ControlLabel = new GUIStyle( "TV Line" );
 			}
 			_Label( rect, content, ControlLabel, args );
 		}
-		protected void Label( Rect rect, string text, GUIStyle style, RowGUIArgs args ) {
-			_Label( rect, EditorHelper.TempContent( text ), style, args );
-		}
-		protected void Label( Rect rect, string text, RowGUIArgs args ) {
-			Label( rect, EditorHelper.TempContent( text ), args );
-		}
+
+
 	}
 
 	public abstract class HTreeViewContextMenu<T> where T : TreeViewItem {

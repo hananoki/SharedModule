@@ -22,7 +22,9 @@ namespace HananokiEditor.SharedModule {
 		const int CS0649 = 1 << 4;
 		const int CS0105 = 1 << 5;
 		const int CS8321 = 1 << 6;
-
+		//168
+		//219
+		//67
 		const int UNSAFE = 1 << 30;
 
 		public bool cs0105 { get => flag.Has( CS0105 ); set => flag.Toggle( CS0105, value ); }

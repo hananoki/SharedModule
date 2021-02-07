@@ -184,6 +184,12 @@ namespace HananokiEditor {
 		#endregion
 
 
+		public static void LabelBox( string text ) {
+			ScopeHorizontal.Begin( EditorStyles.helpBox );
+			GUILayout.Label( text );
+			ScopeHorizontal.End();
+		}
+
 
 		public static string TextFieldAndAction( string label, string text, Action buttonAction, bool safeCheck = true, params GUILayoutOption[] options ) {
 			var labelCont = EditorHelper.TempContent( label );
@@ -208,7 +214,9 @@ namespace HananokiEditor {
 
 
 		public static string FileFiled( string label, string file, string[] filters, params GUILayoutOption[] options ) {
-			EditorGUILayout.LabelField( label/*, EditorStyles.boldLabel*/ );
+			if( !label.IsEmpty() ) {
+				EditorGUILayout.LabelField( label/*, EditorStyles.boldLabel*/ );
+			}
 			var backgroundColor = GUI.backgroundColor;
 			if( !file.IsEmpty() && !file.IsExistsFile() ) {
 				GUI.backgroundColor = HEditorStyles.helpBoxInvalidColor;
@@ -283,18 +291,47 @@ namespace HananokiEditor {
 		}
 
 
-		public static bool IconButton( Texture2D tex, int marginHeighOffset = 0 ) {
+		#region IconButton
+
+		public static bool IconButton( Texture2D image, int marginHeighOffset = 0 ) {
 			var style = new GUIStyle( HEditorStyles.iconButton );
 			style.margin = new RectOffset( 0, 0, marginHeighOffset, 0 );
-			var r = EditorHelper.GetLayout( tex, style );
-			return HEditorGUI.IconButton( r, EditorHelper.TempContent( tex ), style, 0 );
+			var r = EditorHelper.GetLayout( image, style );
+			return HEditorGUI.IconButton( r, EditorHelper.TempContent( image ), style, 0 );
 		}
-		public static bool IconButton( Texture2D tex, string tooltip, int marginHeighOffset = 0 ) {
+		public static bool IconButton( Texture2D image, string tooltip, int marginHeighOffset = 0 ) {
 			var style = new GUIStyle( HEditorStyles.iconButton );
 			style.margin = new RectOffset( 0, 0, marginHeighOffset, 0 );
-			var r = EditorHelper.GetLayout( tex, style );
-			return HEditorGUI.IconButton( r, EditorHelper.TempContent( tex, tooltip ), style, 0 );
+			var r = EditorHelper.GetLayout( image, style );
+			return HEditorGUI.IconButton( r, EditorHelper.TempContent( image, tooltip ), style, 0 );
 		}
+
+		#endregion
+
+
+
+		#region FlatButton
+
+		public static bool FlatButton( string text, Texture2D image, bool expand = false ) {
+			var cont = EditorHelper.TempContent( text, image );
+			return FlatButton( cont, expand );
+		}
+
+		public static bool FlatButton( string text,  bool expand = false ) {
+			var cont = EditorHelper.TempContent( text );
+			return FlatButton( cont, expand );
+		}
+
+		public static bool FlatButton( GUIContent content, bool expand = false ) {
+			var style = new GUIStyle( HEditorStyles.flatButton );
+			var size = content.text.CalcSizeFromLabel();
+			var rect = expand ? GUILayoutUtility.GetRect( content, style, GUILayout.Width( size.x + 16 + 8 ) ) : GUILayoutUtility.GetRect( content, style );
+
+			return HEditorGUI.FlatButton( rect, content, style );
+		}
+
+		#endregion
+
 
 		public static void BoldLabel( string s, Texture2D ico = null ) {
 			var fontStyle = EditorStyles.label.fontStyle;

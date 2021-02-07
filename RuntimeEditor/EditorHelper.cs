@@ -2,12 +2,14 @@
 #if UNITY_EDITOR
 using HananokiEditor.Extensions;
 using HananokiRuntime.Extensions;
+using HananokiRuntime;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Text;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -32,6 +34,51 @@ namespace HananokiEditor {
 
 	public static class EditorHelper {
 
+		public static void AddSceneToBuildSetting( params string[] pathAndGuids ) {
+			var ss = EditorBuildSettings.scenes.ToList();
+			ss.AddRange( pathAndGuids.Select( x => new EditorBuildSettingsScene( x.ToAssetPath(), true ) ) );
+			EditorBuildSettings.scenes = ss.ToArray();
+
+		}
+
+		public static void FixSerializeReference( UnityObject self ) {
+			using( new AssetEditingScope() ) {
+				var meta = $"{self.ToAssetPath()}";
+				var aa = meta.ReadAllText().Split( '\n' );
+				var dic = new Dictionary<int, string>();
+
+				var aaa = UnityEditorEditorAssemblies.GetAllTypesWithAttribute<TypeIDAttribute>();
+				foreach( var p in aaa ) {
+					var attr = p.GetCustomAttributes( typeof( TypeIDAttribute ), false );
+					var cls = $"class: {p.Name}, ns: {p.Namespace}, asm: {p.Assembly.FullName.Split( ',' )[ 0 ]}";
+					dic.Add( ( (TypeIDAttribute) attr[ 0 ] ).id, cls );
+					//Debug.Log( $"{( (TypeIDAttribute) attr[ 0 ] ).id} : {cls}" );
+				}
+
+				var b = new StringBuilder();
+				for( int i = 0; i < aa.Length; i++ ) {
+					var p = aa[ i ];
+					if( p.IsEmpty() ) continue;
+
+					if( p.Contains( "type: {" ) ) {
+						//Debug.Log( p );
+						var p2 = aa[ i + 2 ].Split( ':' )[ 1 ].TrimStart().toInt();
+						//Debug.Log( p2 );
+						b.AppendLine( $"      type: {{{dic[ p2 ]}}}" );
+					}
+					else {
+						b.AppendLine( p );
+					}
+				}
+				var text = b.ToString().Replace( "\r\n", "\n" );
+
+				fs.WriteAllText( self.ToAssetPath(), text );
+				//fs.WriteAllText( "aaa.txt", text );
+			}
+		}
+
+
+
 		public static void SyncCSProject( AssemblyDefinitionAsset asset ) {
 			var m_data = (Dictionary<string, object>) EditorJson.Deserialize( asset.text );
 			var aname = (string) m_data[ "name" ];
@@ -40,34 +87,34 @@ namespace HananokiEditor {
 
 			//Task.Run(_);
 			//void _() {
-				var cspath = $"{System.Environment.CurrentDirectory}/{aname}.csproj".separatorToOS();
-				var content = fs.ReadAllText( cspath );
-				var ss = content.Replace( "\r", "" ).Split( '\n' );
-				int step = 0;
+			var cspath = $"{System.Environment.CurrentDirectory}/{aname}.csproj".separatorToOS();
+			var content = fs.ReadAllText( cspath );
+			var ss = content.Replace( "\r", "" ).Split( '\n' );
+			int step = 0;
 
-				fs.WriteFile( cspath, ( b ) => {
-					foreach( var s in ss ) {
-						if( step == 0 ) {
-							if( s.Contains( "Compile Include" ) ) {
-								step = 1;
-								continue;
-							}
+			fs.WriteFile( cspath, ( b ) => {
+				foreach( var s in ss ) {
+					if( step == 0 ) {
+						if( s.Contains( "Compile Include" ) ) {
+							step = 1;
+							continue;
 						}
-						else if( step == 1 ) {
-							if( s.Contains( "None Include" ) || s.Contains( "Reference Include" ) ) {
-								step = 2;
-								foreach( var c in aa[ 0 ].sourceFiles ) {
-									b.AppendLine( $"    <Compile Include=\"{c.separatorToOS()}\" />" );
-								}
-							}
-
-							else {
-								continue;
-							}
-						}
-						b.AppendLine( s );
 					}
-				}, utf8bom: true, newLineLinux: false );
+					else if( step == 1 ) {
+						if( s.Contains( "None Include" ) || s.Contains( "Reference Include" ) ) {
+							step = 2;
+							foreach( var c in aa[ 0 ].sourceFiles ) {
+								b.AppendLine( $"    <Compile Include=\"{c.separatorToOS()}\" />" );
+							}
+						}
+
+						else {
+							continue;
+						}
+					}
+					b.AppendLine( s );
+				}
+			}, utf8bom: true, newLineLinux: false );
 
 			//}
 		}
@@ -692,6 +739,17 @@ namespace HananokiEditor {
 		}
 
 
+
+		public static void ChangeAndDirty<T>( UnityObject target, Func<T> chacgeGUI, Action<T> dirtyExec, string undoName = "" ) {
+			ScopeChange.Begin();
+			var _b = chacgeGUI();
+			if( ScopeChange.End() ) {
+				Undo.RecordObject( target, $"{target.name} {undoName} Changed" );
+				dirtyExec.Invoke( _b );
+				EditorUtility.SetDirty( target );
+			}
+		}
+
 		public static void Dirty( UnityObject obj, string name, Action ff ) {
 			Undo.RecordObject( obj, name );
 			ff?.Invoke();
@@ -797,12 +855,12 @@ namespace HananokiEditor {
 
 		#region エディタ拡張、ポップアップ、マウスクリック等
 
-		public static Rect GetLayout( string s, GUIStyle style, params GUILayoutOption[] option ) {
-			return GUILayoutUtility.GetRect( TempContent( s ), style, option );
+		public static Rect GetLayout( string text, GUIStyle style, params GUILayoutOption[] option ) {
+			return GUILayoutUtility.GetRect( TempContent( text ), style, option );
 		}
 
-		public static Rect GetLayout( Texture2D tex, GUIStyle style, params GUILayoutOption[] option ) {
-			return GUILayoutUtility.GetRect( TempContent( tex ), style, option );
+		public static Rect GetLayout( Texture2D image, GUIStyle style, params GUILayoutOption[] option ) {
+			return GUILayoutUtility.GetRect( TempContent( image ), style, option );
 		}
 
 

@@ -71,11 +71,11 @@ namespace HananokiEditor {
 			try {
 				var rc = GUILayoutUtility.GetRect( content, EditorStyles.toolbarButton, options );
 
-				if( EditorHelper.HasMouseClick( rc ) ) {
-					return true;
-				}
+				//if( EditorHelper.HasMouseClick( rc ) ) {
+				//	return true;
+				//}
 
-				GUI.Button( rc, content, EditorStyles.toolbarButton );
+				return GUI.Button( rc, content, EditorStyles.toolbarButton );
 			}
 			catch( Exception e ) {
 				Debug.LogException( e );
@@ -88,18 +88,22 @@ namespace HananokiEditor {
 
 		#region Toggle
 
+
 		public static bool Toggle( bool value, string s, Texture image ) {
 			var size = EditorStyles.toolbarButton.CalcSize( s.content() );
 			var rc = GUILayoutUtility.GetRect( s.content(), EditorStyles.toolbarButton, GUILayout.Width( size.x + 24 ) );
 			return Toggle( rc, value, EditorHelper.TempContent( s, image ), EditorStyles.toolbarButton );
-			//return Toggle( value, EditorHelper.TempContent( s, image ), Toolbarbutton2, options );
 		}
+
 		public static bool Toggle( bool value, Texture image ) {
-			var cont = EditorHelper.TempContent( image );
-			//var size = EditorStyles.toolbarButton.CalcSize( cont );
-			//var rc = GUILayoutUtility.GetRect( cont, EditorStyles.toolbarButton, GUILayout.Width( 26 ) );
 			return Toggle( value, EditorHelper.TempContent( image ), EditorStyles.toolbarButton, GUILayout.Width( 26 ) );
 		}
+
+		public static bool Toggle( bool value, Texture image , GUIStyle style ) {
+			var cont = EditorHelper.TempContent( image );
+			return Toggle( value, EditorHelper.TempContent( image ), style, GUILayout.Width( 26 ) );
+		}
+
 
 		public static bool Toggle( bool value, string s, params GUILayoutOption[] options ) {
 			return Toggle( value, EditorHelper.TempContent( s ), EditorStyles.toolbarButton, options );

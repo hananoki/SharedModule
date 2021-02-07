@@ -3,32 +3,48 @@
 
 using UnityEditor;
 using UnityEngine;
+using HananokiEditor.Extensions;
 
 namespace HananokiEditor {
 
-	[System.Serializable]
-	public class SessionStateBool {
-		public string __name;
-		public string __label;
-		[SerializeField]
-		bool initValue;
-		public SessionStateBool( string name, string label = "", bool initValue = false ) {
-			this.__name = name;
-			if( string.IsNullOrEmpty( label ) ) {
-				//this.__label = ObjectNames.NicifyVariableName( name );
-				this.__label = name;
-			}
-			else {
-				this.__label = label;
-			}
-			this.initValue = initValue;
+	public class SessionStateString {
+		string m_name;
+
+		public SessionStateString( string name ) {
+			this.m_name = name;
 		}
-		public bool Value {
+
+		public string Value {
 			get {
-				return SessionState.GetBool( __name, initValue );
+				return SessionState.GetString( m_name, string.Empty );
 			}
 			set {
-				SessionState.SetBool( __name, value );
+				SessionState.SetString( m_name, value );
+			}
+		}
+
+		public static implicit operator string( SessionStateString c ) { return c.Value; }
+	}
+
+
+	[System.Serializable]
+	public class SessionStateBool {
+		public string m_name;
+
+		[SerializeField]
+		bool initValue;
+
+		public SessionStateBool( string name, bool initValue = false ) {
+			this.m_name = name;
+			this.initValue = initValue;
+		}
+
+		public bool Value {
+			get {
+				return SessionState.GetBool( m_name, initValue );
+			}
+			set {
+				SessionState.SetBool( m_name, value );
 			}
 		}
 
@@ -40,41 +56,43 @@ namespace HananokiEditor {
 	}
 
 
+
 	[System.Serializable]
 	public class SessionStateInt {
-		public string __name;
-		public string __label;
-		public SessionStateInt( string name, string label ) {
-			this.__name = name;
-			this.__label = label;
+		public string m_name;
+		public int m_initValue;
+		public SessionStateInt( string name, int initValue = 0 ) {
+			this.m_name = name;
+			this.m_initValue = initValue;
 		}
 		public int Value {
 			get {
-				return SessionState.GetInt( __name, 0 );
+				return SessionState.GetInt( m_name, m_initValue );
 			}
 			set {
-				SessionState.SetInt( __name, value );
+				SessionState.SetInt( m_name, value );
 			}
 		}
 
 		public static implicit operator int( SessionStateInt c ) { return c.Value; }
+		//public static implicit operator SessionStateInt( int c ) { return c; }
 	}
 
 
 	[System.Serializable]
 	public class SessionStateFloat {
-		public string __name;
-		public string __label;
-		public SessionStateFloat( string name, string label ) {
-			this.__name = name;
-			this.__label = label;
+		public string m_name;
+		public float m_initValue;
+		public SessionStateFloat( string name, float initValue = 0.0f ) {
+			this.m_name = name;
+			this.m_initValue = initValue;
 		}
 		public float Value {
 			get {
-				return SessionState.GetFloat( __name, 0 );
+				return SessionState.GetFloat( m_name, m_initValue );
 			}
 			set {
-				SessionState.SetFloat( __name, value );
+				SessionState.SetFloat( m_name, value );
 			}
 		}
 
@@ -86,24 +104,25 @@ namespace HananokiEditor {
 	public class SessionStateBoolDrawer : PropertyDrawer {
 
 		public static bool OnGUILayout( SessionStateBool ss ) {
-			var rect = GUILayoutUtility.GetRect( EditorHelper.TempContent( ss.__name ), EditorStyles.objectField );
+			var _name = ss.m_name.nicify();
+			var rect = GUILayoutUtility.GetRect( EditorHelper.TempContent( _name ), EditorStyles.objectField );
 
 			EditorGUI.DrawRect( rect, new Color( 0f, 1f, 0f, 0.25f ) );
 
-			return EditorGUI.ToggleLeft( rect, ss.__label, ss.Value );
+			return EditorGUI.ToggleLeft( rect, _name, ss.Value );
 		}
 
 
 
 		public override void OnGUI( Rect rc, SerializedProperty property, GUIContent label ) {
 
-			var nameProp = property.FindPropertyRelative( "__name" );
-			var labelProp = property.FindPropertyRelative( "__label" );
+			var nameProp = property.FindPropertyRelative( nameof( SessionStateBool.m_name ) );
+			//var labelProp = property.FindPropertyRelative( "__label" );
 
 			EditorGUI.DrawRect( rc, new Color( 0f, 1f, 0f, 0.25f ) );
 			GUI.changed = false;
 
-			bool value = EditorGUI.Toggle( rc, ObjectNames.NicifyVariableName( labelProp.stringValue ), SessionState.GetBool( nameProp.stringValue, false ) );
+			bool value = EditorGUI.Toggle( rc, nameProp.stringValue.nicify(), SessionState.GetBool( nameProp.stringValue, false ) );
 
 			if( GUI.changed ) {
 				SessionState.SetBool( nameProp.stringValue, value );
@@ -116,23 +135,23 @@ namespace HananokiEditor {
 	public class SessionStateIntDrawer : PropertyDrawer {
 
 		public static int OnGUILayout( SessionStateInt ss ) {
-			var rect = GUILayoutUtility.GetRect( EditorHelper.TempContent( ss.__name ), EditorStyles.objectField );
+			var rect = GUILayoutUtility.GetRect( EditorHelper.TempContent( ss.m_name ), EditorStyles.objectField );
 
 			EditorGUI.DrawRect( rect, new Color( 0f, 1f, 0f, 0.25f ) );
 
-			return EditorGUI.IntField( rect, ss.__label, ss.Value );
+			return EditorGUI.IntField( rect, ss.m_name, ss.Value );
 		}
 
 
 		public override void OnGUI( Rect rc, SerializedProperty property, GUIContent label ) {
 
-			var nameProp = property.FindPropertyRelative( "__name" );
-			var labelProp = property.FindPropertyRelative( "__label" );
+			var nameProp = property.FindPropertyRelative( nameof( SessionStateInt.m_name ) );
+			//var labelProp = property.FindPropertyRelative( "__label" );
 
 			EditorGUI.DrawRect( rc, new Color( 0f, 1f, 0f, 0.25f ) );
 			GUI.changed = false;
 
-			int value = EditorGUI.IntField( rc, labelProp.stringValue, SessionState.GetInt( nameProp.stringValue, 0 ) );
+			int value = EditorGUI.IntField( rc, nameProp.stringValue.nicify(), SessionState.GetInt( nameProp.stringValue, 0 ) );
 
 			if( GUI.changed ) {
 				SessionState.SetInt( nameProp.stringValue, value );
@@ -143,17 +162,26 @@ namespace HananokiEditor {
 
 
 	[CustomPropertyDrawer( typeof( SessionStateFloat ) )]
-	class SessionStateFloatDrawer : PropertyDrawer {
+	public class SessionStateFloatDrawer : PropertyDrawer {
+
+		public static float OnGUILayout( SessionStateFloat ss ) {
+			var rect = GUILayoutUtility.GetRect( EditorHelper.TempContent( ss.m_name ), EditorStyles.objectField );
+
+			EditorGUI.DrawRect( rect, new Color( 0f, 1f, 0f, 0.25f ) );
+
+			return EditorGUI.FloatField( rect, ss.m_name, ss.Value );
+		}
+
 
 		public override void OnGUI( Rect rc, SerializedProperty property, GUIContent label ) {
 
-			var nameProp = property.FindPropertyRelative( "__name" );
-			var labelProp = property.FindPropertyRelative( "__label" );
+			var nameProp = property.FindPropertyRelative( nameof( SessionStateFloat.m_name ) );
+			//var labelProp = property.FindPropertyRelative( "__label" );
 
 			EditorGUI.DrawRect( rc, new Color( 0f, 1f, 0f, 0.25f ) );
 			GUI.changed = false;
 
-			var value = EditorGUI.FloatField( rc, labelProp.stringValue, SessionState.GetFloat( nameProp.stringValue, 0 ) );
+			var value = EditorGUI.FloatField( rc, nameProp.stringValue.nicify(), SessionState.GetFloat( nameProp.stringValue, 0 ) );
 
 			if( GUI.changed ) {
 				SessionState.SetFloat( nameProp.stringValue, value );

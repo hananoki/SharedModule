@@ -11,7 +11,11 @@ namespace HananokiEditor {
 		public static Assembly[] loadedAssemblies => UnityEditorEditorAssemblies.loadedAssemblies;
 
 		public static IEnumerable<Type> SubclassesOf<T>() where T : class {
-			return UnityEditorEditorAssemblies.SubclassesOf( typeof(T) );
+			return SubclassesOf( typeof( T ) );
+		}
+
+		public static IEnumerable<Type> SubclassesOf( Type type ) {
+			return UnityEditorEditorAssemblies.SubclassesOf( type );
 		}
 
 		public static IEnumerable<MethodInfo> GetAllMethodsWithAttribute<T>() where T : Attribute {

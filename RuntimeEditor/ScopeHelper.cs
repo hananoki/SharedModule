@@ -137,5 +137,16 @@ namespace HananokiEditor {
 			EditorUtility.ClearProgressBar();
 		}
 	}
+
+	public class IndentLevelSetScope : GUI.Scope {
+		int indentLevel;
+		public IndentLevelSetScope( int level ) {
+			indentLevel = EditorGUI.indentLevel;
+			EditorGUI.indentLevel = level;
+		}
+		protected override void CloseScope() {
+			EditorGUI.indentLevel = indentLevel;
+		}
+	}
 }
 

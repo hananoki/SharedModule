@@ -93,6 +93,11 @@ namespace HananokiRuntime.Extensions {
 		}
 
 
+		public static string ToStringSafe( this string s ) {
+			if( s.IsEmpty() ) return "";
+			return s.ToString();
+		}
+
 #if UNITY_2018_3_OR_NEWER
 		public static void Alpha( ref this Color col, float a ) {
 			col.a = a;
@@ -112,6 +117,35 @@ namespace HananokiRuntime.Extensions {
 			if( comp == null ) return null;
 			action?.Invoke( comp );
 			return comp;
+		}
+
+#if UNITY_2019_2_OR_NEWER
+#else
+		public static bool TryGetComponent<T>( this GameObject go, out T component ) {
+			component = go.GetComponent<T>();
+			if( component != null ) return true;
+			return false;
+		}
+#endif
+
+		public static T First<T>( this List<T> lst ) {
+			return lst[ 0 ];
+		}
+
+		public static T Last<T>( this List<T> lst ) {
+			return lst[ lst.Count - 1 ];
+		}
+
+		public static T First<T>( this T[] lst ) {
+			return lst[ 0 ];
+		}
+
+		public static T Last<T>( this T[] lst ) {
+			return lst[ lst.Length - 1 ];
+		}
+
+		public static T Choice<T>( this T[] lst ) {
+			return lst[ UnityEngine.Random.Range( 0, lst.Length ) ];
 		}
 	}
 }

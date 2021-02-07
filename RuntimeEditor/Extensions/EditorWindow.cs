@@ -1,7 +1,7 @@
 ﻿//using Hananoki.Reflection;
 using System;
 using UnityEditor;
-
+using UnityEngine;
 //#if UNITY_2019_1_OR_NEWER
 //using UnityEngine.UIElements;
 //using UnityEditor.UIElements;
@@ -12,6 +12,24 @@ using UnityEditor;
 
 namespace HananokiEditor.Extensions {
 	public static partial class EditorWindowExtensions {
+
+		public static void SetTitle( this EditorWindow wnd, string text ) {
+			wnd.SetTitle( new GUIContent( text ) );
+		}
+
+		public static void SetTitle( this EditorWindow wnd, string text, Texture2D image ) {
+			wnd.SetTitle( new GUIContent( text, image ) );
+		}
+
+		public static void SetTitle( this EditorWindow wnd, GUIContent cont ) {
+			if( UnitySymbol.UNITY_5_3_OR_NEWER ) {
+				wnd.titleContent = cont;
+			}
+			else {
+				wnd.title = cont.text;
+			}
+		}
+
 
 		public static void RepaintArray( this EditorWindow[] ew ) {
 			if( ew == null ) return;

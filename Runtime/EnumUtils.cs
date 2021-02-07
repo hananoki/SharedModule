@@ -10,10 +10,22 @@ namespace HananokiRuntime {
 			return values;
 		}
 
-		public static System.Array GetArray( System.Type t )  {
-			System.Type type = t;
-			return System.Enum.GetValues( type );
+		public static int[] GetValuesArray( System.Type t ) {
+			return (int[]) System.Enum.GetValues( t );
 		}
+
+		public static List<int> GetValuesList( System.Type t ) {
+			return new List<int>( GetValuesArray( t ) );
+		}
+
+		public static string[] GetNamesArray( System.Type t ) {
+			return System.Enum.GetNames( t );
+		}
+
+		public static List<string> GetNamesList( System.Type t ) {
+			return new List<string>( GetNamesArray( t ) );
+		}
+
 
 		public static void Remove<T>( ref T[] array, T item ) {
 			List<T> list = new List<T>( array );

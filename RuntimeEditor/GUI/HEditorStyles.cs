@@ -124,6 +124,21 @@ namespace HananokiEditor {
 		}
 
 
+		static GUIStyle s_FlatButton;
+		public static GUIStyle flatButton {
+			get {
+				if( s_FlatButton != null ) return s_FlatButton;
+
+				s_FlatButton = new GUIStyle( iconButton );
+				s_FlatButton.imagePosition = ImagePosition.ImageLeft;
+				s_FlatButton.fixedWidth = 0;
+				s_FlatButton.stretchWidth = true;
+				s_FlatButton.alignment = TextAnchor.MiddleCenter;
+				s_FlatButton.margin = new RectOffset( 8, 8, 0, 0 );
+				return s_FlatButton;
+			}
+		}
+
 
 		static GUIStyle s_FoldoutText;
 		public static GUIStyle foldoutText {

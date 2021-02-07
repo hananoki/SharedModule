@@ -56,7 +56,7 @@ namespace HananokiEditor.Extensions {
 			s1 = s1.Replace( "！", "_" );
 			s1 = s1.Replace( "「", "_" );
 			s1 = s1.Replace( "」", "_" );
-
+			s1 = s1.Replace( "？", "_" );
 
 			return s1;
 		}
@@ -91,14 +91,20 @@ namespace HananokiEditor.Extensions {
 		/// </summary>
 		/// <param name="guid">GUID</param>
 		/// <returns></returns>
-		public static string ToAssetPath( this string guid ) => AssetDatabase.GUIDToAssetPath( guid );
+		public static string ToAssetPath( this string guid ) {
+			if( guid.IsEmpty() ) return string.Empty;
+			if( guid.StartWithAssets() ) return guid;
+			return AssetDatabase.GUIDToAssetPath( guid );
+		}
 
 
+		public static string ToGUID( this string path ) {
+			if( path.IsEmpty() ) return string.Empty;
+			if( path.StartWithAssets() ) return AssetDatabase.AssetPathToGUID( path );
+			return path;
+		}
 
-		public static string ToGUID( this string path ) => AssetDatabase.AssetPathToGUID( path );
-
-
-
+		public static string ToFullPath( this string path ) => Path.GetFullPath( path );
 
 
 		public static string[] GetFilesFromAssetPath( this string assetPath ) {
@@ -121,6 +127,11 @@ namespace HananokiEditor.Extensions {
 		public static bool StartWithResource( this string p ) {
 			if( p.IsEmpty() ) return false;
 			if( p[ 0 ] == 'R' || p[ 0 ] == 'r' ) return true; // Resource
+			return false;
+		}
+		public static bool StartWithPackage( this string p ) {
+			if( p.IsEmpty() ) return false;
+			if( p[ 0 ] == 'P' || p[ 0 ] == 'p' ) return true; // Package
 			return false;
 		}
 

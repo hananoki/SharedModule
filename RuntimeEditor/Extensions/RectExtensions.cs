@@ -40,6 +40,17 @@ namespace HananokiEditor.Extensions {
 			return r;
 		}
 
+		/// <summary>
+		/// 矩形の右端から指定幅をカットする
+		/// </summary>
+		/// <param name="r"></param>
+		/// <param name="f"></param>
+		/// <returns></returns>
+		public static Rect TrimR( this Rect r, float f ) {
+			r.width -= f;
+			return r;
+		}
+
 
 		/// <summary>
 		/// 入力矩形の右端から指定した幅分の矩形にする

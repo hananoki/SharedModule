@@ -49,7 +49,7 @@ namespace HananokiEditor {
 			if( !move.docked ) return;
 
 			move.dockArea.RemoveTab( moveWindow );
-			moveWindow.Show(  );
+			moveWindow.Show();
 		}
 
 
@@ -71,10 +71,22 @@ namespace HananokiEditor {
 			}
 			return null;
 		}
+		public static T Find<T>() where T : EditorWindow => (T) Find( typeof( T ) );
+
 
 		public static void RepaintProjectWindow() => EditorApplication.RepaintProjectWindow();
 		public static void RepaintHierarchyWindow() => EditorApplication.RepaintHierarchyWindow();
 		public static void RepaintAnimationWindow() => EditorApplication.RepaintAnimationWindow();
+
+		public static void RepaintInspector() {
+			foreach( var p in FindArray( UnityTypes.UnityEditor_InspectorWindow ) ) p.Repaint();
+			//SceneView.RepaintAll();
+		}
+
+		public static void RepaintSceneView() {
+			//foreach( var p in FindArray( UnityTypes.UnityEditor_SceneView ) ) p.Repaint();
+			SceneView.RepaintAll();
+		}
 	}
 }
 

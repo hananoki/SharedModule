@@ -7,6 +7,14 @@ namespace HananokiRuntime {
 			obj = new T();
 			return true;
 		}
+		public static bool New<T>( ref T[] obj, int num ) where T : new() {
+			if( obj != null ) return false;
+			obj = new T[ num ];
+			for( int i = 0; i < num; i++ ) {
+				obj[ i ] = new T();
+			}
+			return true;
+		}
 
 		public static bool IsNull<T>( T obj ) where T : class {
 			var unityObj = obj as UnityObject;

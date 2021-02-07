@@ -229,9 +229,23 @@ namespace UnityReflection {
 			}
 			return __HasAudioCallback_0_1( behaviour );
 		}
-		
-		
-		
+
+		// 2020.2
+		public static void PlayPreviewClip( UnityEngine.AudioClip clip, int startSample = 0, bool loop = false ) {
+			if( __PlayPreviewClip_0_3 == null ) {
+				__PlayPreviewClip_0_3 = (Action<UnityEngine.AudioClip, int, bool>) Delegate.CreateDelegate( typeof( Action<UnityEngine.AudioClip, int, bool> ), null, UnityTypes.UnityEditor_AudioUtil.GetMethod( "PlayPreviewClip", R.StaticMembers, null, new Type[] { typeof( UnityEngine.AudioClip ), typeof( int ), typeof( bool ) }, null ) );
+			}
+			__PlayPreviewClip_0_3( clip, startSample, loop );
+		}
+		public static void StopAllPreviewClips() {
+			if( __StopAllPreviewClips_0_0 == null ) {
+				__StopAllPreviewClips_0_0 = (Action) Delegate.CreateDelegate( typeof( Action ), null, UnityTypes.UnityEditor_AudioUtil.GetMethod( "StopAllPreviewClips", R.StaticMembers, null, new Type[] { }, null ) );
+			}
+			__StopAllPreviewClips_0_0();
+		}
+		static Action<UnityEngine.AudioClip, int, bool> __PlayPreviewClip_0_3;
+		static Action __StopAllPreviewClips_0_0;
+
 		static Action<UnityEngine.AudioClip,int,bool> __PlayClip_0_3;
 		static Action<UnityEngine.AudioClip> __StopClip_0_1;
 		static Action<UnityEngine.AudioClip> __PauseClip_0_1;

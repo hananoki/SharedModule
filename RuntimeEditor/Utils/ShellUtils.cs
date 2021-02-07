@@ -12,12 +12,27 @@ namespace HananokiEditor {
 
 		const string kExplorer = "EXPLORER.EXE";
 
-		public static void Start( string fileName  ) {
+		public static void Start( string fileName ) {
 			Process.Start( fileName );
 		}
 
 		public static void Start( string fileName, string arguments ) {
-			Process.Start( fileName , arguments );
+			Process.Start( fileName, arguments );
+		}
+
+		public static void Start( string fileName, string arguments, System.EventHandler exitHandler ) {
+			System.Diagnostics.Process p = new System.Diagnostics.Process();
+			p.StartInfo.FileName = fileName;
+			p.StartInfo.Arguments = arguments;
+			//p.SynchronizingObject = this;
+			p.EnableRaisingEvents = true;
+			p.Exited += ( sender, e ) => {
+				EditorApplication.delayCall += () => {
+					exitHandler( sender, e );
+				};
+			};
+
+			p.Start();
 		}
 
 

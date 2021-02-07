@@ -234,6 +234,13 @@ namespace HananokiEditor {
 			return (T) p.GetValue( obj );
 		}
 
+		public static void SetField<T>( this object obj, string propertyName, T parameter ) {
+			if( obj == null ) throw new ArgumentNullException( "The argument obj is null." );
+			var t = obj.GetType();
+			var p = t.GetField( propertyName, InstanceMembers );
+			p.SetValue( obj, parameter );
+		}
+
 		#endregion
 
 

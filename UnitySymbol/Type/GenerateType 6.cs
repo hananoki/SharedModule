@@ -25,5 +25,14 @@ namespace HananokiEditor {
 		static Type _UnityEditor_UIElements_ToolbarButton;
 		public static Type UnityEditor_UIElements_ToolbarButton => Get( ref _UnityEditor_UIElements_ToolbarButton, "UnityEditor.UIElements.ToolbarButton", "UnityEditor" );
 
+		static Type _TMPro_EditorUtilities_TMP_UiEditorPanel;
+		public static Type TMPro_EditorUtilities_TMP_UiEditorPanel => Get( ref _TMPro_EditorUtilities_TMP_UiEditorPanel, "TMPro.EditorUtilities.TMP_UiEditorPanel", "Unity.TextMeshPro" );
+
+		static Type _UnityEngine_Rendering_Universal_UniversalRenderPipelineAsset;
+		public static Type UnityEngine_Rendering_Universal_UniversalRenderPipelineAsset => Get( ref _UnityEngine_Rendering_Universal_UniversalRenderPipelineAsset, "UnityEngine.Rendering.Universal.UniversalRenderPipelineAsset", "Unity.RenderPipelines.Universal.Runtime" );
+
+		static Type _UnityEngine_Rendering_HighDefinition_HDRenderPipelineAsset;
+		public static Type UnityEngine_Rendering_HighDefinition_HDRenderPipelineAsset => Get( ref _UnityEngine_Rendering_HighDefinition_HDRenderPipelineAsset, "UnityEngine.Rendering.HighDefinition.HDRenderPipelineAsset", "Unity.RenderPipelines.HighDefinition.Runtime" );
+
 	}
 }

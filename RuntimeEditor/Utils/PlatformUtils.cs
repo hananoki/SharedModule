@@ -1,5 +1,5 @@
 ﻿
-#if !ENABLE_WARNING
+#if !HANANOKI_WARNING
 #pragma warning disable 618
 #endif
 

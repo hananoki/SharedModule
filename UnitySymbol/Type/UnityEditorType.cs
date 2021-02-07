@@ -175,5 +175,14 @@ namespace HananokiEditor {
 		static Type _UnityEditor_EditorSettings;
 		public static Type UnityEditor_EditorSettings => Get( ref _UnityEditor_EditorSettings, "UnityEditor.EditorSettings", "UnityEditor" );
 
+		static Type _UnityEditorInternal_AnimationWindowState;
+		public static Type UnityEditorInternal_AnimationWindowState => Get( ref _UnityEditorInternal_AnimationWindowState, "UnityEditorInternal.AnimationWindowState", "UnityEditor" );
+
+		static Type _UnityEditor_AnimatorInspector;
+		public static Type UnityEditor_AnimatorInspector => Get( ref _UnityEditor_AnimatorInspector, "UnityEditor.AnimatorInspector", "UnityEditor" );
+
+		static Type _UnityEngine_Animator;
+		public static Type UnityEngine_Animator => Get( ref _UnityEngine_Animator, "UnityEngine.Animator", "UnityEngine" );
+
 	}
 }

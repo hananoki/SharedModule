@@ -17,13 +17,13 @@ namespace HananokiEditor.Extensions {
 		public static Type ContextToType( this object context ) {
 			Type result = context as Type;
 
-			if( result !=null) return result;
+			if( result != null ) return result;
 
 			if( Type.GetTypeHandle( context ).Equals( typeof( string ).TypeHandle ) ) {
 				var s = (string) context;
 				result = Type.GetType( s );
 				if( result == null ) {
-					result = EditorHelper.GetTypeFromString(s);
+					result = EditorHelper.GetTypeFromString( s );
 				}
 			}
 
@@ -62,41 +62,10 @@ namespace HananokiEditor.Extensions {
 		}
 
 
-		public static void SetTitle( this EditorWindow wnd, string text ) {
-			wnd.SetTitle( new GUIContent( text ) );
-		}
-
-		public static void SetTitle( this EditorWindow wnd, string text, Texture2D image ) {
-			wnd.SetTitle( new GUIContent( text, image ) );
-		}
-
-		public static void SetTitle( this EditorWindow wnd, GUIContent cont ) {
-			if( UnitySymbol.UNITY_5_3_OR_NEWER ) {
-				wnd.titleContent = cont;
-			}
-			else {
-				wnd.title = cont.text;
-			}
-		}
 
 
 
-		public static string GetPropertyType( this SerializedProperty property ) {
-			var type = property.type;
-			var match = Regex.Match( type, @"PPtr<\$(.*?)>" );
-			return match.Success ? match.Groups[ 1 ].Value : type;
-		}
 
-		//public static string GetProperty( this SerializedProperty property ) {
-		//	var type = typeof( SerializedProperty );
-		//	object _property;
-		//	_property.GetProperty<string>
-		//}
-
-
-		public static void Field( this SerializedProperty property ) {
-			EditorGUILayout.PropertyField( property );
-		}
 
 
 		/// <summary>
@@ -107,5 +76,18 @@ namespace HananokiEditor.Extensions {
 		public static bool IsOnScene( this GameObject go ) {
 			return go.ToAssetPath().IsEmpty();
 		}
+
+		public static T TryAddComponent<T>( this GameObject go ) where T : UnityObject {
+			return (T) TryAddComponent( go, typeof( T ) );
+		}
+
+		public static UnityObject TryAddComponent( this GameObject go, Type componentType ) {
+			var comp = go.GetComponent( componentType );
+			if( comp != null ) return comp;
+			comp = go.AddComponent( componentType );
+			return comp;
+		}
+
+
 	}
 }

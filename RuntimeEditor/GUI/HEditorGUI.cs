@@ -126,14 +126,15 @@ namespace HananokiEditor {
 			//if( !path.IsEmpty() && !path.IsExistsFile() ) {
 			//	HEditorGUI.DrawDebugRect( position );
 			//}
-
+			var icon= EditorIcon.icons_processed_unityeditor_defaultasset_icon_asset;
 			if( content == null ) {
-				EditorGUI.LabelField( rcL, GUIContent.none, EditorHelper.TempContent( name ), HEditorStyles.folderField );
+				EditorGUI.LabelField( rcL, GUIContent.none, EditorHelper.TempContent( name, icon ), HEditorStyles.folderField );
 			}
 			else {
 				rcL = EditorGUI.PrefixLabel( rcL, GUIUtility.GetControlID( FocusType.Passive ), content );
-				EditorGUI.LabelField( rcL, EditorHelper.TempContent( name ), HEditorStyles.folderField );
+				EditorGUI.LabelField( rcL, EditorHelper.TempContent( name, icon ), HEditorStyles.folderField );
 			}
+
 			if( IconButton( position.AlignR( 16 ), EditorIcon.folder, 1 ) ) {
 				// new string[] { "Image files", "png,jpg,jpeg", "All files", "*" }
 				var path2 = EditorUtility.OpenFilePanelWithFilters( "Select File", "", filters );
@@ -163,12 +164,14 @@ namespace HananokiEditor {
 			var rcL = position;
 			rcL.width -= 18;
 
+			var icon = EditorIcon.folder;
+
 			if( content == null ) {
-				EditorGUI.LabelField( rcL, GUIContent.none, EditorHelper.TempContent( name ), HEditorStyles.folderField );
+				EditorGUI.LabelField( rcL, GUIContent.none, EditorHelper.TempContent( name , icon ), HEditorStyles.folderField );
 			}
 			else {
 				rcL = EditorGUI.PrefixLabel( rcL, GUIUtility.GetControlID( FocusType.Passive ), content );
-				EditorGUI.LabelField( rcL, EditorHelper.TempContent( name ), HEditorStyles.folderField );
+				EditorGUI.LabelField( rcL, EditorHelper.TempContent( name, icon ), HEditorStyles.folderField );
 			}
 			if( IconButton( position.AlignR( 16 ), EditorIcon.folder, 1 ) ) {
 				var path2 = EditorUtility.OpenFolderPanel( "Select Folder", "", "" );
@@ -232,14 +235,25 @@ namespace HananokiEditor {
 
 			// ドッキングボタンの対応
 			// MouseUpでボタン押したことにする
-
-			result=GUI.Button( position, content, style );
+			GUI.changed = false;
+			result = GUI.Button( position, content, style );
 			GUI.changed = result;
 			return result;
 		}
 
 		#endregion
 
+
+
+		#region FlatButton
+		public static bool FlatButton( Rect position, GUIContent content, GUIStyle style ) {
+			bool result = false;
+			//EditorGUI.DrawRect( position, ColorUtils.RGBA( 149, 149, 149, 119 ) );
+			result = GUI.Button( position, content, style );
+			GUI.changed = result;
+			return result;
+		}
+		#endregion
 
 		public static bool ClickableIcon( Rect position, Texture2D image ) {
 
@@ -314,10 +328,11 @@ namespace HananokiEditor {
 			return ObjectFieldAndAction<T>( position, null, obj, addButton, allowSceneObjects );
 		}
 
-		public static T ObjectField<T>( Rect position, string label, UnityObject obj, bool allowSceneObjects = false ) where T : UnityObject {
+		public static T ObjectField<T>( Rect position, string label, T obj, bool allowSceneObjects = false ) where T : UnityObject {
 			return ObjectField<T>( position, EditorHelper.TempContent( label ), obj, allowSceneObjects );
 		}
-		public static T ObjectField<T>( Rect position, GUIContent content, UnityObject obj, bool allowSceneObjects = false ) where T : UnityObject {
+
+		public static T ObjectField<T>( Rect position, GUIContent content, T obj, bool allowSceneObjects = false ) where T : UnityObject {
 			try {
 				if( content.text.IsEmpty() ) {
 					return (T) EditorGUI.ObjectField( position, obj, typeof( T ), allowSceneObjects );
@@ -329,7 +344,7 @@ namespace HananokiEditor {
 			return (T) obj;
 		}
 
-		public static T ObjectField<T>( Rect position, UnityObject obj, bool allowSceneObjects = false ) where T : UnityObject {
+		public static T ObjectField<T>( Rect position, T obj, bool allowSceneObjects = false ) where T : UnityObject {
 			return ObjectField<T>( position, string.Empty, obj, allowSceneObjects );
 		}
 
