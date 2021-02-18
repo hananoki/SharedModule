@@ -209,6 +209,30 @@ namespace HananokiEditor {
 				return s_versionLabel;
 			}
 		}
+
+
+		static GUIStyle s_treeViewLine;
+		public static GUIStyle treeViewLine {
+			get {
+				if( s_treeViewLine != null ) return s_treeViewLine;
+
+				s_treeViewLine = new GUIStyle( "IconButton" );
+				GUIStyle _w =  "TV Line" ;
+
+				s_treeViewLine.font = _w.font;
+				s_treeViewLine.border = _w.border;
+				s_treeViewLine.imagePosition = _w.imagePosition;
+				s_treeViewLine.fixedWidth = _w.fixedWidth;
+				s_treeViewLine.fixedHeight = _w.fixedHeight;
+				s_treeViewLine.stretchWidth = _w.stretchWidth;
+				s_treeViewLine.stretchHeight = _w.stretchHeight;
+				s_treeViewLine.alignment = _w.alignment;
+				s_treeViewLine.margin = _w.margin;
+				s_treeViewLine.padding = _w.padding;
+
+				return s_treeViewLine;
+			}
+		}
 	}
 
 

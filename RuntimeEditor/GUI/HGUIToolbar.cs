@@ -165,8 +165,8 @@ namespace HananokiEditor {
 			HEditorGUI.lastRect = r;
 			var result = EditorHelper.HasMouseClick( r );
 			if( result ) {
-				//Event.current.Use(); 
 				action?.Invoke();
+				Event.current.Use();//ボタンがアクティブになるため
 			}
 			GUI.Button( r, content, toolbarDropDown );
 			return result;

@@ -112,7 +112,11 @@ namespace HananokiEditor.SharedModule {
 				s_localizeEvent.AddRange( AssemblieUtils.GetAllMethodsWithAttribute<HananokiEditorLocalizeRegister>() );
 			}
 			foreach( var m in s_localizeEvent ) {
-				m.Invoke( null, null );
+				try {
+					m.Invoke( null, null );
+				}
+				catch(Exception) {
+				}
 			}
 			HEditorWindow.RepaintWindow( typeof( EditorWindow ) );
 		}

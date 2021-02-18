@@ -24,10 +24,9 @@ namespace HananokiEditor {
 			PlayerSettings.SetScriptingDefineSymbolsForGroup( UnityEditorEditorUserBuildSettings.activeBuildTargetGroup, defines );
 		}
 
-		public static void SetScriptingDefineSymbols( List<string> defines ) {
-			SetScriptingDefineSymbols( string.Join( ";", defines ) );
+		public static void SetScriptingDefineSymbols( IEnumerable<string> defines ) {
+			SetScriptingDefineSymbols( defines.ToArray() );
 		}
-
 		public static void SetScriptingDefineSymbols( params string[] defines ) {
 			SetScriptingDefineSymbols( string.Join( ";", defines ) );
 		}

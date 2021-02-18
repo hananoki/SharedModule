@@ -77,16 +77,6 @@ namespace HananokiEditor.Extensions {
 			return go.ToAssetPath().IsEmpty();
 		}
 
-		public static T TryAddComponent<T>( this GameObject go ) where T : UnityObject {
-			return (T) TryAddComponent( go, typeof( T ) );
-		}
-
-		public static UnityObject TryAddComponent( this GameObject go, Type componentType ) {
-			var comp = go.GetComponent( componentType );
-			if( comp != null ) return comp;
-			comp = go.AddComponent( componentType );
-			return comp;
-		}
 
 
 	}

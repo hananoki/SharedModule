@@ -19,8 +19,11 @@ namespace HananokiRuntime {
 			return new Color( rgb / 255.0f, rgb / 255.0f, rgb / 255.0f );
 		}
 
-		public static Color Alpha( Color color, float alpha ) {
-			return new Color( color.r, color.g, color.b, alpha );
+		public static Color RGBA( Color rgb, Color a ) {
+			return RGBA( rgb, a.a );
+		}
+		public static Color RGBA( Color rgb, float a ) {
+			return new Color( rgb.r, rgb.g, rgb.b, a );
 		}
 	}
 }

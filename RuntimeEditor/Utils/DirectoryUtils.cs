@@ -198,7 +198,7 @@ namespace HananokiEditor {
 		}
 
 		public static string ReadAllText( string path, Encoding encoding ) {
-			if( !File.Exists( path ) ) return null;
+			if( !File.Exists( path ) ) return string.Empty;
 
 			using( var fs = new FileStream( path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite ) ) {
 				using( var st = new StreamReader( fs, encoding ) ) {

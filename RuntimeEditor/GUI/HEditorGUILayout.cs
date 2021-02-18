@@ -317,7 +317,7 @@ namespace HananokiEditor {
 			return FlatButton( cont, expand );
 		}
 
-		public static bool FlatButton( string text,  bool expand = false ) {
+		public static bool FlatButton( string text, bool expand = false ) {
 			var cont = EditorHelper.TempContent( text );
 			return FlatButton( cont, expand );
 		}
@@ -418,32 +418,43 @@ namespace HananokiEditor {
 
 		#region ObjectFieldAndAction<T>
 
-		public static T ObjectField<T>( string label, UnityObject obj, bool allowSceneObjects = false, params GUILayoutOption[] options ) where T : UnityObject {
-			return ObjectField<T>( EditorHelper.TempContent( label ), obj, allowSceneObjects, options );
-		}
-
-		public static T ObjectField<T>( GUIContent content, UnityObject obj, bool allowSceneObjects = false, params GUILayoutOption[] options ) where T : UnityObject {
-			//var labelCont = EditorHelper.TempContent( label );
-			var rc = GUILayoutUtility.GetRect( content, EditorStyles.objectField, options );
-			rc = EditorGUI.PrefixLabel( rc, GUIUtility.GetControlID( FocusType.Passive ), content );
-
-			using( new GUIBackgroundColorScope() ) {
-				if( obj == null ) {
-					GUI.backgroundColor = HEditorStyles.fieldInvalidColor;
-				}
-				var _obj = (T) EditorGUI.ObjectField( rc, obj, typeof( T ), allowSceneObjects );
-				return _obj;
-			}
-		}
-
 		public static T ObjectField<T>( UnityObject obj, bool allowSceneObjects = false, bool safeCheck = true, params GUILayoutOption[] options ) where T : UnityObject {
+			return (T) ObjectField<T>( GUIContent.none, obj, allowSceneObjects, safeCheck, options );
+		}
+
+		public static T ObjectField<T>( string label, UnityObject obj, bool allowSceneObjects = false, bool safeCheck = true, params GUILayoutOption[] options ) where T : UnityObject {
+			return ObjectField<T>( label.IsEmpty() ? GUIContent.none : EditorHelper.TempContent( label ), obj, allowSceneObjects, safeCheck, options );
+		}
+
+		public static T ObjectField<T>( GUIContent content, UnityObject obj, bool allowSceneObjects = false, bool safeCheck = true, params GUILayoutOption[] options ) where T : UnityObject {
+
+			var rc = GUILayoutUtility.GetRect( content, EditorStyles.objectField, options );
+
+			if( content != GUIContent.none ) {
+				rc = EditorGUI.PrefixLabel( rc, GUIUtility.GetControlID( FocusType.Passive ), content );
+			}
+
+			T _obj;
 			using( new GUIBackgroundColorScope() ) {
 				if( safeCheck && obj == null ) {
 					GUI.backgroundColor = HEditorStyles.fieldInvalidColor;
+					rc.width -= 16;
 				}
-				return (T) EditorGUILayout.ObjectField( obj, typeof( T ), allowSceneObjects, options );
+				_obj = (T) EditorGUI.ObjectField( rc, obj, typeof( T ), allowSceneObjects );
 			}
+
+			if( _obj == null ) {
+				rc.x = rc.xMax;
+				rc.width = 16;
+				if( HEditorGUI.IconButton( rc, EditorIcon.plus ) ) {
+					var path = $"{ProjectBrowserUtils.activeFolderPath}/New {typeof( T ).Name}.asset".GenerateUniqueAssetPath();
+					_obj = (T)AssetDatabaseUtils.CreateScriptableObject( typeof( T ), path );
+				}
+			}
+			return _obj;
 		}
+
+
 
 		#endregion
 

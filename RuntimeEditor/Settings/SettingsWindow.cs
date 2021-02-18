@@ -23,7 +23,7 @@ namespace HananokiEditor.SharedModule {
 		public string displayName;
 		public string version;
 		public Action gui;
-
+		public bool customLayoutMode;
 		public int hashCode => displayName.GetHashCode() + mode;
 	}
 
@@ -149,10 +149,10 @@ namespace HananokiEditor.SharedModule {
 				using( var sc = new GUILayout.ScrollViewScope( m_scroll ) ) {
 					m_scroll = sc.scrollPosition;
 
-					using( new GUILayoutScope() ) {
-						GUILayout.Space( 4 );
+					//using( new GUILayoutScope() ) {
+					//	GUILayout.Space( 4 );
 						m_treeView.DrawCurrent();
-					}
+					//}
 				}
 			}
 			catch( ArgumentException ) {

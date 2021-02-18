@@ -49,6 +49,13 @@ namespace HananokiEditor {
 
 			return Get( $"icons/packagemanager/light/{name}.png" );
 		}
+		public static Texture2D GetBuiltinSKins( string name ) {
+			if( EditorGUIUtility.isProSkin ) {
+				return Get( $"builtin skins/darkskin/images/{name}.png" );
+			}
+
+			return Get( $"builtin skins/lightskin/images/{name}.png" );
+		}
 
 		public static string GetBuiltinPath( string path ) {
 			var paths = path.Split( '/' );

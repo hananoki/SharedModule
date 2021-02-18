@@ -102,6 +102,11 @@ namespace HananokiEditor.Extensions {
 		public static SerializedObject CreateSerializedObject( this UnityObject o ) {
 			return new SerializedObject( o );
 		}
+
+
+		public static GUIContent ObjectContent( this UnityObject target ) {
+			return EditorGUIUtility.ObjectContent( target, target.GetType() );
+		}
 	}
 }
 

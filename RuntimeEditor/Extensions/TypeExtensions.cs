@@ -1,5 +1,7 @@
 ﻿using System;
 using UnityReflection;
+using UnityEngine;
+using UnityEditor;
 
 namespace HananokiEditor.Extensions {
 	public static partial class EditorExtensions {
@@ -19,6 +21,15 @@ namespace HananokiEditor.Extensions {
 			var unityTYpen = UnityEditorUnityType.FindTypeByName( text );
 			var unityType = new UnityEditorUnityType( unityTYpen );
 			return unityType.persistentTypeID;
+		}
+
+		public static Texture2D GetIcon( this Type t ) {
+			var ico= (Texture2D) EditorGUIUtility.ObjectContent( null, t ).image;
+			if( ico != null ) return ico;
+			var mono = EditorHelper.GetMonoScriptFromType( t );
+			if( mono == null ) return null;
+			ico = mono.GetCachedIcon();
+			return ico;
 		}
 	}
 }

@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using System.Linq;
 using System;
+using System.Collections.Generic;
 
 using UnityObject = UnityEngine.Object;
 
@@ -114,6 +115,29 @@ namespace HananokiEditor {
 		public static void SaveAssetsAndRefresh() {
 			AssetDatabase.SaveAssets();
 			AssetDatabase.Refresh();
+		}
+
+
+		public static T CreateScriptableObject<T>( string path ) where T : ScriptableObject {
+			return (T) CreateScriptableObject( typeof( T ), path );
+		}
+
+		public static UnityObject CreateScriptableObject( Type t, string path ) {
+			var so = ScriptableObject.CreateInstance( t );
+			//EditorApplication.delayCall += () => {
+				AssetDatabase.CreateAsset( so, path );
+				AssetDatabase.SaveAssets();
+				AssetDatabase.Refresh();
+			//};
+			return so;
+		}
+
+		public static string[] FindAssets( Type type ) {
+			return AssetDatabase.FindAssets( $"t:{type.FullName}" );
+		}
+
+		public static IEnumerable<UnityObject> FindAssetsAndLoad( Type type ) {
+			return FindAssets( type ).ToAsset();
 		}
 	}
 }

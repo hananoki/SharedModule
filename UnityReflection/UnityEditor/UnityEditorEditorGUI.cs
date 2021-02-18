@@ -1,7 +1,8 @@
-﻿/// UnityEditor.EditorGUI : 2019.4.5f1
+﻿/// UnityEditor.EditorGUI : 2019.4.16f1
 
 using HananokiEditor;
 using System;
+using System.Reflection;
 using UnityEngine;
 using UnityObject = UnityEngine.Object;
 
@@ -152,6 +153,27 @@ namespace UnityReflection {
 			return __EnumFlagsField_9_6( position, label, enumValue, enumType, includeObsolete, style );
 		}
 		
+		public static UnityEngine.Color DoColorField( UnityEngine.Rect position, int id, UnityEngine.Color value, bool showEyedropper, bool showAlpha, bool hdr ) {
+			if( __DoColorField_0_6 == null ) {
+				__DoColorField_0_6 = (Func<UnityEngine.Rect,int,UnityEngine.Color,bool,bool,bool, UnityEngine.Color>) Delegate.CreateDelegate( typeof( Func<UnityEngine.Rect,int,UnityEngine.Color,bool,bool,bool, UnityEngine.Color> ), null, UnityTypes.UnityEditor_EditorGUI.GetMethod( "DoColorField", R.StaticMembers, null, new Type[]{ typeof( UnityEngine.Rect ), typeof( int ), typeof( UnityEngine.Color ), typeof( bool ), typeof( bool ), typeof( bool ) }, null ) );
+			}
+			return __DoColorField_0_6( position, id, value, showEyedropper, showAlpha, hdr );
+		}
+		
+		public static UnityObject DoObjectField( UnityEngine.Rect position, UnityEngine.Rect dropRect, int id, UnityObject obj, System.Type objType, UnityEditor.SerializedProperty property, object validator, bool allowSceneObjects ) {
+			if( __DoObjectField_0_8 == null ) {
+				__DoObjectField_0_8 = UnityTypes.UnityEditor_EditorGUI.GetMethod( "DoObjectField", R.StaticMembers, null, new Type[]{ typeof( UnityEngine.Rect ), typeof( UnityEngine.Rect ), typeof( int ), typeof( UnityObject ), typeof( System.Type ), typeof( UnityEditor.SerializedProperty ),  UnityTypes.UnityEditor_EditorGUI_ObjectFieldValidator, typeof( bool ) }, null );
+			}
+			return (UnityObject) __DoObjectField_0_8.Invoke( null, new object[] {  position, dropRect, id, obj, objType, property, validator, allowSceneObjects  } );
+		}
+		
+		public static UnityObject DoObjectField( UnityEngine.Rect position, UnityEngine.Rect dropRect, int id, UnityObject obj, System.Type objType, UnityEditor.SerializedProperty property, object validator, bool allowSceneObjects, UnityEngine.GUIStyle style ) {
+			if( __DoObjectField_1_9 == null ) {
+				__DoObjectField_1_9 = UnityTypes.UnityEditor_EditorGUI.GetMethod( "DoObjectField", R.StaticMembers, null, new Type[]{ typeof( UnityEngine.Rect ), typeof( UnityEngine.Rect ), typeof( int ), typeof( UnityObject ), typeof( System.Type ), typeof( UnityEditor.SerializedProperty ),  UnityTypes.UnityEditor_EditorGUI_ObjectFieldValidator, typeof( bool ), typeof( UnityEngine.GUIStyle ) }, null );
+			}
+			return (UnityObject) __DoObjectField_1_9.Invoke( null, new object[] {  position, dropRect, id, obj, objType, property, validator, allowSceneObjects, style  } );
+		}
+		
 		
 		
 		static Func<UnityEngine.Rect,string,bool, string> __ToolbarSearchField_0_3;
@@ -178,6 +200,9 @@ namespace UnityReflection {
 		delegate System.Enum Method_EnumFlagsField_8_8( UnityEngine.Rect position, UnityEngine.GUIContent label, System.Enum enumValue, System.Type enumType, bool includeObsolete, ref int changedFlags, ref bool changedToValue, UnityEngine.GUIStyle style );
 		static Method_EnumFlagsField_8_8 __EnumFlagsField_8_8;
 		static Func<UnityEngine.Rect,UnityEngine.GUIContent,int,System.Type,bool,UnityEngine.GUIStyle, int> __EnumFlagsField_9_6;
+		static Func<UnityEngine.Rect,int,UnityEngine.Color,bool,bool,bool, UnityEngine.Color> __DoColorField_0_6;
+		static MethodInfo __DoObjectField_0_8;
+		static MethodInfo __DoObjectField_1_9;
 	}
 }
 

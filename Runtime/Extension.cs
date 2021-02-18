@@ -9,6 +9,7 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
 
+using UnityObject = UnityEngine.Object;
 using UnityRandom = UnityEngine.Random;
 
 namespace HananokiRuntime.Extensions {
@@ -127,6 +128,19 @@ namespace HananokiRuntime.Extensions {
 			return false;
 		}
 #endif
+
+		public static T TryAddComponent<T>( this GameObject go ) where T : UnityObject {
+			return (T) TryAddComponent( go, typeof( T ) );
+		}
+
+		public static UnityObject TryAddComponent( this GameObject go, Type componentType ) {
+			var comp = go.GetComponent( componentType );
+			if( comp != null ) return comp;
+			comp = go.AddComponent( componentType );
+			return comp;
+		}
+
+
 
 		public static T First<T>( this List<T> lst ) {
 			return lst[ 0 ];

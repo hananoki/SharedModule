@@ -184,5 +184,8 @@ namespace HananokiEditor {
 		static Type _UnityEngine_Animator;
 		public static Type UnityEngine_Animator => Get( ref _UnityEngine_Animator, "UnityEngine.Animator", "UnityEngine" );
 
+		static Type _UnityEditor_SceneHierarchy;
+		public static Type UnityEditor_SceneHierarchy => Get( ref _UnityEditor_SceneHierarchy, "UnityEditor.SceneHierarchy", "UnityEditor" );
+
 	}
 }

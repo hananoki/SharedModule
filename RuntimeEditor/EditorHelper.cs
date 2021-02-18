@@ -228,6 +228,8 @@ namespace HananokiEditor {
 
 
 		public static Type GetTypeFromString( string typeName ) {
+			if( typeName.IsEmpty() ) return null;
+
 			var t = Type.GetType( typeName );
 			if( t != null ) return t;
 
@@ -863,6 +865,9 @@ namespace HananokiEditor {
 			return GUILayoutUtility.GetRect( TempContent( image ), style, option );
 		}
 
+		public static Rect CalcPrefixLabelRect(Rect totalRect) {
+			return new Rect( totalRect.x + EditorGUIUtility.labelWidth + 2f, totalRect.y, totalRect.width - EditorGUIUtility.labelWidth - 2f, totalRect.height );
+		}
 
 		/// <summary>
 		/// 
@@ -922,6 +927,8 @@ namespace HananokiEditor {
 			else {
 				inspector.MethodInvoke( "FlipLocked", null );
 			}
+
+			ProjectBrowserUtils.lockOnce();
 		}
 
 

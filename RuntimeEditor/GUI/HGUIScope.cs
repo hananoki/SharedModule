@@ -21,7 +21,7 @@ namespace HananokiEditor {
 		public static void End() => EditorGUI.EndDisabledGroup();
 	}
 	public static class ScopeIsCompile {
-		public static void Begin( bool disabled ) => EditorGUI.BeginDisabledGroup( disabled );
+		public static void Begin() => EditorGUI.BeginDisabledGroup( EditorApplication.isCompiling );
 		public static void End() => EditorGUI.EndDisabledGroup();
 	}
 	public static class ScopeChange {

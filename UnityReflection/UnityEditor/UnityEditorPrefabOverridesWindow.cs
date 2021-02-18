@@ -2,6 +2,7 @@
 
 using HananokiEditor;
 using System;
+using System.Reflection;
 
 namespace UnityReflection {
   public sealed partial class UnityEditorPrefabOverridesWindow {
@@ -11,13 +12,14 @@ namespace UnityReflection {
 			m_instance = instance;
     }
     public UnityEditorPrefabOverridesWindow( UnityEngine.GameObject selectedGameObject ) {
-			m_instance = Activator.CreateInstance( UnityTypes.UnityEditor_PrefabOverridesWindow, new object[] { selectedGameObject } );
+			var flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic;
+			m_instance = Activator.CreateInstance( UnityTypes.UnityEditor_PrefabOverridesWindow, flags, null, new object[] { selectedGameObject } , null );
     }
     public UnityEditorPrefabOverridesWindow( UnityEngine.GameObject[] selectedGameObjects ) {
 			m_instance = Activator.CreateInstance( UnityTypes.UnityEditor_PrefabOverridesWindow, new object[] { selectedGameObjects } );
     }
-    
-    
+
+        
 		public bool ApplyAll() {
 			if( __ApplyAll_0_0 == null ) {
 				__ApplyAll_0_0 = (Func<bool>) Delegate.CreateDelegate( typeof( Func<bool> ), m_instance, UnityTypes.UnityEditor_PrefabOverridesWindow.GetMethod( "ApplyAll", R.InstanceMembers, null, new Type[]{  }, null ) );

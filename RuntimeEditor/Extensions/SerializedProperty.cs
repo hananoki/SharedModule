@@ -3,6 +3,7 @@ using UnityEditor;
 using System.Runtime.CompilerServices;
 using System;
 using HananokiRuntime.Extensions;
+using UnityReflection;
 
 namespace HananokiEditor.Extensions {
 	public static partial class EditorExtensions {
@@ -30,11 +31,19 @@ namespace HananokiEditor.Extensions {
 			return EditorGUI.GetPropertyHeight( property, includeChildren );
 		}
 
-		public static string GetPropertyType( this SerializedProperty property ) {
-			var type = property.type;
-			var match = Regex.Match( type, @"PPtr<\$(.*?)>" );
-			return match.Success ? match.Groups[ 1 ].Value : type;
+
+		public static Type GetPropertyType( this SerializedProperty property ) {
+			Type type = null;
+			UnityEditorScriptAttributeUtility.GetFieldInfoFromProperty( property, ref type );
+			return type;
 		}
+
+		//[Obsolete( "Use Type GetPropertyType( this SerializedProperty property ) instead" )]
+		//public static string GetPropertyType( this SerializedProperty property ) {
+		//	var type = property.type;
+		//	var match = Regex.Match( type, @"PPtr<\$(.*?)>" );
+		//	return match.Success ? match.Groups[ 1 ].Value : type;
+		//}
 
 		public static Type GetManagedReferenceFieldType( this SerializedProperty property ) {
 #if UNITY_2019_3_OR_NEWER

@@ -20,6 +20,22 @@ namespace HananokiEditor {
 		}
 
 
+		public static float Slider( Rect position, float value,  float start, float end ) {
+			int controlID = GUIUtility.GetControlID( "HEditorSliderKnob".GetHashCode(), FocusType.Passive, position );
+			return GUI.Slider( position, value, 0, start, end, GUI.skin.horizontalSlider, GUI.skin.horizontalSliderThumb, true, controlID );
+		}
+
+
+		#region MiniLabel
+		public static void MiniLabel( Rect position, string title ) {
+			MiniLabel( position, EditorHelper.TempContent( title ) );
+		}
+		public static void MiniLabel( Rect position, GUIContent content ) {
+			GUI.Label( position, content, EditorStyles.miniLabel );
+		}
+		#endregion
+
+
 		#region MiniLabelR
 
 		public static void MiniLabelR( Rect position, string title ) {
@@ -126,7 +142,7 @@ namespace HananokiEditor {
 			//if( !path.IsEmpty() && !path.IsExistsFile() ) {
 			//	HEditorGUI.DrawDebugRect( position );
 			//}
-			var icon= EditorIcon.icons_processed_unityeditor_defaultasset_icon_asset;
+			var icon = EditorIcon.icons_processed_unityeditor_defaultasset_icon_asset;
 			if( content == null ) {
 				EditorGUI.LabelField( rcL, GUIContent.none, EditorHelper.TempContent( name, icon ), HEditorStyles.folderField );
 			}
@@ -167,7 +183,7 @@ namespace HananokiEditor {
 			var icon = EditorIcon.folder;
 
 			if( content == null ) {
-				EditorGUI.LabelField( rcL, GUIContent.none, EditorHelper.TempContent( name , icon ), HEditorStyles.folderField );
+				EditorGUI.LabelField( rcL, GUIContent.none, EditorHelper.TempContent( name, icon ), HEditorStyles.folderField );
 			}
 			else {
 				rcL = EditorGUI.PrefixLabel( rcL, GUIUtility.GetControlID( FocusType.Passive ), content );
@@ -246,6 +262,14 @@ namespace HananokiEditor {
 
 
 		#region FlatButton
+		public static bool FlatButton( Rect position, string text ) {
+			return FlatButton( position, text.content(), HEditorStyles.flatButton );
+		}
+
+		public static bool FlatButton( Rect position, string text, GUIStyle style ) {
+			return FlatButton( position, text.content(), style );
+		}
+
 		public static bool FlatButton( Rect position, GUIContent content, GUIStyle style ) {
 			bool result = false;
 			//EditorGUI.DrawRect( position, ColorUtils.RGBA( 149, 149, 149, 119 ) );

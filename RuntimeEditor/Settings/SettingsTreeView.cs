@@ -156,7 +156,18 @@ namespace HananokiEditor.SharedModule {
 
 
 		public void DrawCurrent() {
-			currentItem?.settings?.gui();
+			if( currentItem == null ) return;
+			if( currentItem.settings == null ) return;
+
+			if( currentItem.settings .customLayoutMode) {
+				currentItem.settings?.gui();
+			}
+			else {
+				using( new GUILayoutScope() ) {
+					GUILayout.Space( 4 );
+					currentItem.settings?.gui();
+				}
+			}
 		}
 
 

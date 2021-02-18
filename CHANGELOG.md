@@ -1,5 +1,13 @@
 # Shared Module
 
+## [1.7.6] - 2021-02-19
+
+### Added
+- Other functions added, etc.
+
+### Changed
+- Temporarily disable the automatic OFF function of AutoReference
+
 ## [1.7.5] - 2021-02-07
 
 ### Added
