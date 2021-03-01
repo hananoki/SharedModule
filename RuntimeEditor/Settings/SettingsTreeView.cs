@@ -111,17 +111,7 @@ namespace HananokiEditor.SharedModule {
 		protected override void OnRowGUI( RowGUIArgs args ) {
 			var item = (Item) args.item;
 			if( item.root && !args.selected ) {
-				//HEditorGUI.DrawDebugRect(args.rowRect);
-				var r = new GUIStyle();
-				//var r = new GUIStyle( "SceneTopBarBg" );
-				if( UnitySymbol.UNITY_2019_3_OR_NEWER ) {
-					r = new GUIStyle( "SceneTopBarBg" );
-				}
-				else {
-					r = new GUIStyle( "ProjectBrowserHeaderBgMiddle" );
-				}
-				
-				r.Draw( args.rowRect );
+				HEditorStyles.sceneTopBarBg.Draw( args.rowRect );
 			}
 
 			DefaultRowGUI( args );

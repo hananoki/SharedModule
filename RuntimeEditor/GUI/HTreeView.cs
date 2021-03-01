@@ -13,6 +13,20 @@ namespace HananokiEditor {
 		public HTreeView( TreeViewState state ) : base( state ) { }
 		public HTreeView( TreeViewState state, MultiColumnHeader multiColumnHeader ) : base( state, multiColumnHeader ) { }
 
+		public readonly string dragID = $"{typeof( T ).FullName}.GenericData";
+
+		protected SessionStateString m_lastSelectDisplayName = new SessionStateString( $"{typeof( T ).FullName}.m_lastSelectDisplayName" );
+
+		public void RollbackLastSelect() {
+			var select = m_registerItems.Find( x => x.displayName == m_lastSelectDisplayName );
+			if( select != null ) {
+				SelectItem( select.id );
+			}
+		}
+		public void BackupLastSelect( T item ) {
+			m_lastSelectDisplayName.Value = item == null ? "" : item.displayName;
+		}
+
 		public List<T> m_registerItems;
 		int m_id;
 
@@ -44,6 +58,9 @@ namespace HananokiEditor {
 		public void SelectItem( int id ) {
 			SetSelection( new int[] { id }, TreeViewSelectionOptions.FireSelectionChanged );
 			SetFocusAndEnsureSelectedItem();
+		}
+		public void SelectItem( TreeViewItem item ) {
+			SelectItem( item.id );
 		}
 
 		public void InitID() {

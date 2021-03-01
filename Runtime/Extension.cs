@@ -93,6 +93,10 @@ namespace HananokiRuntime.Extensions {
 			return string.IsNullOrEmpty( s );
 		}
 
+		public static UnityEngine.SceneManagement.Scene GetSceneByName( this string s ) {
+			return UnityEngine.SceneManagement.SceneManager.GetSceneByName( s );
+		}
+
 
 		public static string ToStringSafe( this string s ) {
 			if( s.IsEmpty() ) return "";
@@ -138,6 +142,18 @@ namespace HananokiRuntime.Extensions {
 			if( comp != null ) return comp;
 			comp = go.AddComponent( componentType );
 			return comp;
+		}
+
+
+		public static void RemoveComponent( this GameObject go, Type componentType ) {
+			var comp = go.GetComponent( componentType );
+			if( comp == null ) return;
+			if( Application.isPlaying ) {
+				UnityObject.Destroy( comp );
+			}
+			else {
+				UnityObject.DestroyImmediate( comp, true );
+			}
 		}
 
 

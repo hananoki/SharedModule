@@ -163,7 +163,11 @@ namespace HananokiEditor.Extensions {
 
 
 		public static Vector2 CalcSizeFromLabel( this string s ) {
-			return EditorStyles.label.CalcSize( EditorHelper.TempContent( s ) );
+			return CalcSize( s, EditorStyles.label );
+		}
+
+		public static Vector2 CalcSize( this string s, GUIStyle style ) {
+			return style.CalcSize( EditorHelper.TempContent( s ) );
 		}
 
 		public static string GenerateUniqueAssetPath( this string s ) {

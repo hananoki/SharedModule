@@ -20,7 +20,7 @@ namespace HananokiEditor {
 		}
 
 
-		public static float Slider( Rect position, float value,  float start, float end ) {
+		public static float Slider( Rect position, float value, float start, float end ) {
 			int controlID = GUIUtility.GetControlID( "HEditorSliderKnob".GetHashCode(), FocusType.Passive, position );
 			return GUI.Slider( position, value, 0, start, end, GUI.skin.horizontalSlider, GUI.skin.horizontalSliderThumb, true, controlID );
 		}
@@ -59,18 +59,22 @@ namespace HananokiEditor {
 
 		public static void DrawLine( Rect rc ) {
 			using( new GUIColorScope() ) {
-				if( EditorGUIUtility.isProSkin )
+				if( EditorGUIUtility.isProSkin ) {
 					GUI.color = ColorUtils.RGB( 176 );
-				else
+				}
+				else {
 					GUI.color = ColorUtils.RGB( 77 );
-				GUI.Box( rc, "", HEditorStyles.underLine );
+				}
+				rc.y = rc.yMax - 1;
+				rc.height = 1;
+				EditorGUI.DrawRect( rc, GUI.color );
 			}
 		}
 
 
 		public static void HeaderTitle( Rect position, string title ) {
 			try {
-				position.height = 18;
+				position.height = EditorGUIUtility.singleLineHeight;
 				//position.y += 4;
 				EditorGUI.LabelField( position, title, EditorStyles.boldLabel );
 				DrawLine( position );
@@ -388,8 +392,18 @@ namespace HananokiEditor {
 				if( safeCheck && value == null ) {
 					GUI.backgroundColor = HEditorStyles.fieldInvalidColor;
 				}
-				value = ObjectField<T>( position, value );
-				if( value == null ) return "";
+
+				if( value == null && !guid.IsEmpty() ) {
+					var sz = guid.CalcSize( EditorStyles.miniLabel );
+					EditorGUI.DrawRect( position.W( sz.x ).AlignCenterH( sz.y ), HEditorStyles.fieldInvalidColor );
+					HEditorGUI.MiniLabel( position, guid );
+					//HEditorGUI.MiniLabelR( position, guid );
+					value = ObjectField<T>( position.AlignR( 32 ), value );
+				}
+				else {
+					value = ObjectField<T>( position, value );
+				}
+				if( value == null ) return guid;
 			}
 
 			return AssetDatabase.AssetPathToGUID( AssetDatabase.GetAssetPath( value ) );

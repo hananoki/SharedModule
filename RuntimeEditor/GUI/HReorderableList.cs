@@ -180,7 +180,7 @@ namespace HananokiEditor {
 
 
 		public void DoLayoutList( Action changed = null ) {
-			EditorGUI.BeginChangeCheck();
+			ScopeChange.Begin();
 			if( m_serializedProperty == null ) {
 				if( isExpanded ) {
 					m_lst.DoLayoutList();
@@ -197,7 +197,7 @@ namespace HananokiEditor {
 					m_lst.DoListHeader( m_lstMethod );
 				}
 			}
-			if( EditorGUI.EndChangeCheck() ) {
+			if( ScopeChange.End() ) {
 				changed?.Invoke();
 			}
 		}

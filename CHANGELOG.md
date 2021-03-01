@@ -1,5 +1,19 @@
 # Shared Module
 
+## [1.7.7] - 2021-03-01
+
+### Added
+- Added attributes
+  - Hananoki_SceneView_ComponentButton
+  - HananokiEditor.Hananoki_SceneView_ComponentTool
+  - Hananoki_Hierarchy_ComponentTool
+- Other functions added, etc.
+
+### Changed
+- EditorContextHandler.ForceReserializeAssets: Folder can be specified
+- EditorHelper.FixSerializeReferencex: Enabled to specify field name
+- HTreeView: A function to restore the selected state is now available.
+
 ## [1.7.6] - 2021-02-19
 
 ### Added

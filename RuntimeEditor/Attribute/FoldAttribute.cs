@@ -35,10 +35,10 @@ namespace HananokiRuntime {
 	class HeaderTitleAttributeDrawer : DecoratorDrawer {
 
 		HeaderTitleAttribute atb { get { return (HeaderTitleAttribute) attribute; } }
-		
+
 		public override void OnGUI( Rect rc ) {
 			try {
-				HEditorGUI.HeaderTitle( rc , atb.name );
+				HEditorGUI.HeaderTitle( rc, atb.name );
 			}
 			catch( ExitGUIException ) {
 			}
@@ -48,7 +48,7 @@ namespace HananokiRuntime {
 		}
 
 		public override float GetHeight() {
-			return 26;
+			return EditorGUIUtility.singleLineHeight + 4;
 		}
 	}
 

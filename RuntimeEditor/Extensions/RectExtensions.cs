@@ -4,6 +4,12 @@ using UnityEngine;
 namespace HananokiEditor.Extensions {
 	public static partial class EditorExtensions {
 
+		/// <summary>
+		/// 幅を差し替えたRectを返します
+		/// </summary>
+		/// <param name="r"></param>
+		/// <param name="f"></param>
+		/// <returns></returns>
 		public static Rect W( this Rect r, float f ) {
 			r.width = f;
 			return r;

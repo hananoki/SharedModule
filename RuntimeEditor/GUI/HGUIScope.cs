@@ -5,6 +5,10 @@ using UnityEditor;
 using UnityEngine;
 
 namespace HananokiEditor {
+	public static class ScopeArea{
+		public static void Begin( Rect screenRect ) => GUILayout.BeginArea( screenRect );
+		public static void End() => GUILayout.EndArea();
+	}
 	public static class ScopeHorizontal {
 		public static void Begin( params GUILayoutOption[] options ) => GUILayout.BeginHorizontal( options );
 		public static void Begin( GUIStyle style, params GUILayoutOption[] options ) => GUILayout.BeginHorizontal( style, options );

@@ -32,10 +32,10 @@ namespace HananokiEditor {
 		}
 
 
-		public static void AddPreloadedAssets( params Object[] objects ) {
-			var lst = PlayerSettings.GetPreloadedAssets().ToList();
-			lst.AddRange( objects );
-			PlayerSettings.SetPreloadedAssets( lst.Distinct().ToArray() );
-		}
+		//public static void AddPreloadedAssets( params Object[] objects ) {
+		//	var lst = PlayerSettings.GetPreloadedAssets().ToList();
+		//	lst.AddRange( objects );
+		//	PlayerSettings.SetPreloadedAssets( lst.Distinct().ToArray() );
+		//}
 	}
 }

@@ -21,7 +21,7 @@ namespace HananokiRuntime {
 			if( obj != null ) return false;
 			obj = new List<T>( num );
 			for( int i = 0; i < num; i++ ) {
-				obj[ i ] = new T();
+				obj.Add( new T() );
 			}
 			return true;
 		}

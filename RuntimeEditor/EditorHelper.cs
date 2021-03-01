@@ -41,18 +41,33 @@ namespace HananokiEditor {
 
 		}
 
+
+		/// <summary>
+		/// シリアライズされたSerializeReferenceデータを書き換えます
+		/// "typeId"は今まで自分が設定していた名前がそれだったから、特に意味はなし
+		/// </summary>
+		/// <param name="self"></param>
 		public static void FixSerializeReference( UnityObject self ) {
+			FixSerializeReference( self, "typeId" );
+		}
+
+
+		/// <summary>
+		/// シリアライズされたSerializeReferenceデータを書き換えます
+		/// </summary>
+		/// <param name="self"></param>
+		/// <param name="typeIdName"></param>
+		public static void FixSerializeReference( UnityObject self, string typeIdName ) {
 			using( new AssetEditingScope() ) {
 				var meta = $"{self.ToAssetPath()}";
 				var aa = meta.ReadAllText().Split( '\n' );
 				var dic = new Dictionary<int, string>();
 
-				var aaa = UnityEditorEditorAssemblies.GetAllTypesWithAttribute<TypeIDAttribute>();
-				foreach( var p in aaa ) {
+				// 差し替え用の文字列を作成しておく
+				foreach( var p in UnityEditorEditorAssemblies.GetAllTypesWithAttribute<TypeIDAttribute>() ) {
 					var attr = p.GetCustomAttributes( typeof( TypeIDAttribute ), false );
 					var cls = $"class: {p.Name}, ns: {p.Namespace}, asm: {p.Assembly.FullName.Split( ',' )[ 0 ]}";
 					dic.Add( ( (TypeIDAttribute) attr[ 0 ] ).id, cls );
-					//Debug.Log( $"{( (TypeIDAttribute) attr[ 0 ] ).id} : {cls}" );
 				}
 
 				var b = new StringBuilder();
@@ -60,20 +75,30 @@ namespace HananokiEditor {
 					var p = aa[ i ];
 					if( p.IsEmpty() ) continue;
 
-					if( p.Contains( "type: {" ) ) {
-						//Debug.Log( p );
-						var p2 = aa[ i + 2 ].Split( ':' )[ 1 ].TrimStart().toInt();
-						//Debug.Log( p2 );
-						b.AppendLine( $"      type: {{{dic[ p2 ]}}}" );
+					// SerializeReferenceが格納するデータ形式で判定
+					// 2020.1の単一行シリアライズについては動作未確認
+					if( p.Contains( "type: {class" ) ) {
+						bool find = false;
+						for( int j = 0; j < 10; j++ ) {
+							var s = aa[ i + 2 + j ];
+							if( !s.Contains( typeIdName ) ) continue;
+
+							var p2 = s.Split( ':' )[ 1 ].TrimStart().toInt();
+							b.AppendLine( $"      type: {{{dic[ p2 ]}}}" );
+							find = true;
+							break;
+						}
+						if( !find ) {
+							// 書換え対象が見つからないのでそのまま出力
+							b.AppendLine( p );
+						}
 					}
 					else {
 						b.AppendLine( p );
 					}
 				}
-				var text = b.ToString().Replace( "\r\n", "\n" );
 
-				fs.WriteAllText( self.ToAssetPath(), text );
-				//fs.WriteAllText( "aaa.txt", text );
+				fs.WriteAllText( self.ToAssetPath(), b.ToString().Replace( "\r\n", "\n" ) );
 			}
 		}
 
@@ -126,11 +151,14 @@ namespace HananokiEditor {
 			UnityEditorInternalInternalEditorUtility.RequestScriptReload();
 		}
 
-
 		public static void ShowMessagePop( string text ) {
-			var content = new MessagePop( text );
-			var mouseRect = new Rect( Event.current.mousePosition, Vector2.one );
-			PopupWindow.Show( mouseRect, content );
+			ShowMessagePop( Event.current.mousePosition, text );
+		}
+
+		public static void ShowMessagePop( Vector2 pos, string text ) {
+			var content = new MessagePop( pos, text );
+			//var mouseRect = new Rect( pos, Vector2.one );
+			//PopupWindow.Show( mouseRect, content );
 		}
 
 
@@ -515,6 +543,9 @@ namespace HananokiEditor {
 				if( t == tt ) {
 					return mono;
 				}
+				else {
+					//Debug.Log( $"{mono.ToAssetPath()}: t={t.Name}: tt= {(tt != null ? tt.Name:"null")}" );
+				}
 			}
 			return null;
 		}
@@ -559,6 +590,10 @@ namespace HananokiEditor {
 		}
 
 		public static void PingAndSelectObject( object context ) {
+			if( context == null ) {
+				Debug.LogWarning( "context is null." );
+				return;
+			}
 			var o = context.ContextToObject();
 			EditorGUIUtility.PingObject( o );
 			Selection.activeObject = o;
@@ -865,7 +900,7 @@ namespace HananokiEditor {
 			return GUILayoutUtility.GetRect( TempContent( image ), style, option );
 		}
 
-		public static Rect CalcPrefixLabelRect(Rect totalRect) {
+		public static Rect CalcPrefixLabelRect( Rect totalRect ) {
 			return new Rect( totalRect.x + EditorGUIUtility.labelWidth + 2f, totalRect.y, totalRect.width - EditorGUIUtility.labelWidth - 2f, totalRect.height );
 		}
 

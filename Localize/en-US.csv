@@ -12,6 +12,7 @@ Directory
 Load
 Save
 Edit
+Hide
 Preferences
 Project Settings
 Settings (Editor)
@@ -97,6 +98,7 @@ File exists
 Update to the latest status
 Template file not found
 Script Templates
+Could not create asset
 Unsafe
 Allows you to compile code that uses the unsafe keyword
 Create New

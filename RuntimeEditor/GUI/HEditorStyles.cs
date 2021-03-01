@@ -217,7 +217,7 @@ namespace HananokiEditor {
 				if( s_treeViewLine != null ) return s_treeViewLine;
 
 				s_treeViewLine = new GUIStyle( "IconButton" );
-				GUIStyle _w =  "TV Line" ;
+				GUIStyle _w = "TV Line";
 
 				s_treeViewLine.font = _w.font;
 				s_treeViewLine.border = _w.border;
@@ -233,6 +233,25 @@ namespace HananokiEditor {
 				return s_treeViewLine;
 			}
 		}
+
+
+		// HEditorStyles.sceneTopBarBg
+		static GUIStyle s_sceneTopBarBg;
+		public static GUIStyle sceneTopBarBg {
+			get {
+				if( s_sceneTopBarBg != null ) return s_sceneTopBarBg;
+
+				if( UnitySymbol.UNITY_2019_3_OR_NEWER ) {
+					s_sceneTopBarBg = new GUIStyle( "SceneTopBarBg" );
+				}
+				else {
+					s_sceneTopBarBg = new GUIStyle( "ProjectBrowserHeaderBgMiddle" );
+				}
+
+				return s_sceneTopBarBg;
+			}
+		}
+
 	}
 
 

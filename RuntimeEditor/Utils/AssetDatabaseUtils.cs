@@ -1,5 +1,6 @@
 ﻿
 using HananokiEditor.Extensions;
+using HananokiRuntime;
 using UnityEditor;
 using UnityEngine;
 using System.Linq;
@@ -7,6 +8,7 @@ using System;
 using System.Collections.Generic;
 
 using UnityObject = UnityEngine.Object;
+using SS = HananokiEditor.SharedModule.S;
 
 namespace HananokiEditor {
 	public static class AssetDatabaseUtils {
@@ -79,7 +81,10 @@ namespace HananokiEditor {
 
 		public static UnityObject[] LoadAllSubAssets( object obj ) {
 			var assetPath = obj.ContextToAssetPath();
-			return AssetDatabase.LoadAllAssetsAtPath( assetPath ).Where( x => !x.IsMainAsset() ).ToArray();
+			return AssetDatabase.LoadAllAssetsAtPath( assetPath )
+				.Where( x => x != null )
+				.Where( x => !x.IsMainAsset() )
+				.ToArray();
 		}
 
 		#endregion
@@ -111,6 +116,34 @@ namespace HananokiEditor {
 		#endregion
 
 
+		public class LoadAssetResult {
+			public UnityObject main;
+			public UnityObject[] sub;
+
+			//public T MainAsset<T>() where T : UnityObject => (T) main;
+		}
+
+		public static LoadAssetResult LoadMainSubAssets( UnityObject obj ) {
+			UnityObject main = null;
+			List<UnityObject> sub = new List<UnityObject>( 128 );
+
+			var assets = AssetDatabase.LoadAllAssetsAtPath( obj.ToAssetPath() );
+			foreach( var p in assets ) {
+				if( Helper.IsNull( p ) ) return null;
+
+				if( p.IsMainAsset() ) {
+					main = p;
+				}
+				else {
+					sub.Add( p );
+				}
+			}
+
+			return new LoadAssetResult { main = main, sub = sub.ToArray() };
+		}
+
+
+
 
 		public static void SaveAssetsAndRefresh() {
 			AssetDatabase.SaveAssets();
@@ -124,11 +157,14 @@ namespace HananokiEditor {
 
 		public static UnityObject CreateScriptableObject( Type t, string path ) {
 			var so = ScriptableObject.CreateInstance( t );
-			//EditorApplication.delayCall += () => {
-				AssetDatabase.CreateAsset( so, path );
-				AssetDatabase.SaveAssets();
-				AssetDatabase.Refresh();
-			//};
+			if( so == null ) {
+				EditorUtility.DisplayDialog( t.FullName, SS._Couldnotcreateasset, SS._OK );
+				return null;
+			}
+
+			AssetDatabase.CreateAsset( so, path );
+			AssetDatabase.SaveAssets();
+			AssetDatabase.Refresh();
 			return so;
 		}
 

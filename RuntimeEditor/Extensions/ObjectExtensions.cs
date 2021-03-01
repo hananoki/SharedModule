@@ -107,6 +107,16 @@ namespace HananokiEditor.Extensions {
 		public static GUIContent ObjectContent( this UnityObject target ) {
 			return EditorGUIUtility.ObjectContent( target, target.GetType() );
 		}
+
+
+		public static Texture2D GetIcon( this GameObject go ) {
+			var status = PrefabUtility.GetPrefabInstanceStatus( go );
+			switch( status ) {
+			case PrefabInstanceStatus.Connected:
+				return EditorIcon.icons_processed_prefabmodel_icon_asset;
+			}
+			return EditorIcon.icons_processed_unityengine_gameobject_icon_asset;
+		}
 	}
 }
 

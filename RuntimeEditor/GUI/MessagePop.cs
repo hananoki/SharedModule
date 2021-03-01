@@ -15,7 +15,7 @@ namespace HananokiEditor {
 		GUIStyle label;
 
 		 float time;
-		public MessagePop( string text = "" ) {
+		public MessagePop( Vector2 pos,string text = "" ) {
 			this.text = text;
 			//this.folderPath = folderPath;
 			//if( singleton.instance.selectedType == null || singleton.instance.selectedType.type == null ) {
@@ -28,7 +28,7 @@ namespace HananokiEditor {
 			label = new GUIStyle( EditorStyles.label );
 			label.alignment = TextAnchor.MiddleCenter;
 
-			var mouseRect = new Rect( Event.current.mousePosition, Vector2.one );
+			var mouseRect = new Rect( pos, Vector2.one );
 			windowSize = label.CalcSize( EditorHelper.TempContent( text ) );
 			windowSize.x += 16;
 			windowSize.y += 16;

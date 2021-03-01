@@ -23,6 +23,14 @@ namespace HananokiEditor.Extensions {
 			return unityType.persistentTypeID;
 		}
 
+
+		/// <summary>
+		/// Typeからアイコンを取得します
+		/// 注意点、ObjectContentから取得できない場合、MonoScript検索が行われるため重いです
+		/// @todo キャッシュ化
+		/// </summary>
+		/// <param name="t"></param>
+		/// <returns></returns>
 		public static Texture2D GetIcon( this Type t ) {
 			var ico= (Texture2D) EditorGUIUtility.ObjectContent( null, t ).image;
 			if( ico != null ) return ico;

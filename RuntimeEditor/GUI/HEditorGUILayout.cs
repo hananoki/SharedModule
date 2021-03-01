@@ -418,6 +418,10 @@ namespace HananokiEditor {
 
 		#region ObjectFieldAndAction<T>
 
+		public static T ObjectField<T>( T obj, bool allowSceneObjects = false, bool safeCheck = true, params GUILayoutOption[] options ) where T : UnityObject {
+			return (T) ObjectField<T>( GUIContent.none, obj, allowSceneObjects, safeCheck, options );
+		}
+
 		public static T ObjectField<T>( UnityObject obj, bool allowSceneObjects = false, bool safeCheck = true, params GUILayoutOption[] options ) where T : UnityObject {
 			return (T) ObjectField<T>( GUIContent.none, obj, allowSceneObjects, safeCheck, options );
 		}

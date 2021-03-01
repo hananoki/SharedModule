@@ -1,6 +1,8 @@
 ﻿using HananokiEditor.Extensions;
 
+using UnityEngine;
 using UnityEditor;
+using System.Linq;
 
 using SS = HananokiEditor.SharedModule.S;
 
@@ -19,11 +21,31 @@ namespace HananokiEditor {
 			EditorHelper.DuplicateAsset( value );
 		}
 
+		public static void SetClipboardGUID( object context ) {
+			var path = context.ContextToAssetPath();
+
+			Clipboard.SetText( path.ToGUID() );
+			EditorHelper.ShowMessagePop( $"Copy  GUID\n{path.ToGUID()}" );
+		}
+
 
 		public static void ForceReserializeAssets( object context ) {
-			var value = context.ContextToAssetPath();
 #if UNITY_2017_3_OR_NEWER
-			AssetDatabase.ForceReserializeAssets( new string[] { value } );
+			var value = context.ContextToAssetPath();
+			if( value.IsExistsFile() ) {
+				AssetDatabase.ForceReserializeAssets( new string[] { value } );
+			}
+			else {
+				var objs = AssetDatabase.FindAssets( "t:Object", new string[] { value } ).Select( x => x.ToAssetPath() ).ToArray();
+				using( var prog = new ProgressBarScope( "ForceReserializeAssets", objs.Length ) ) {
+					foreach( var path in objs ) {
+						prog.Next( path );
+						AssetDatabase.ForceReserializeAssets( new string[] { path } );
+					}
+				}
+			}
+#else
+			Debug.LogError( "Available after UNITY_2017_3_OR_NEWER." );
 #endif
 		}
 

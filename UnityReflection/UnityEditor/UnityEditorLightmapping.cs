@@ -1,4 +1,4 @@
-﻿/// UnityEditor.Lightmapping : 2019.4.5f1
+﻿/// UnityEditor.Lightmapping : 2019.4.16f1
 
 using HananokiEditor;
 using System;
@@ -35,11 +35,19 @@ namespace UnityReflection {
 			return __BakeReflectionProbeSnapshot_0_1( probe );
 		}
 		
+		public static bool BakeAllReflectionProbesSnapshots() {
+			if( __BakeAllReflectionProbesSnapshots_0_0 == null ) {
+				__BakeAllReflectionProbesSnapshots_0_0 = (Func<bool>) Delegate.CreateDelegate( typeof( Func<bool> ), null, UnityTypes.UnityEditor_Lightmapping.GetMethod( "BakeAllReflectionProbesSnapshots", R.StaticMembers, null, new Type[]{  }, null ) );
+			}
+			return __BakeAllReflectionProbesSnapshots_0_0();
+		}
+		
 		
 		
 		static Func<string> __getter_diskCachePath;
 		static Func<long> __getter_diskCacheSize;
 		static Func<UnityEngine.ReflectionProbe, bool> __BakeReflectionProbeSnapshot_0_1;
+		static Func<bool> __BakeAllReflectionProbesSnapshots_0_0;
 	}
 }
 
