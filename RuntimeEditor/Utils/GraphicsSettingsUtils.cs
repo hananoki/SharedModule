@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+﻿
 //#if UNITY_2019_1_OR_NEWER
 using UnityReflection;
 //#else
@@ -15,13 +12,13 @@ namespace HananokiEditor {
 			get {
 				return UnityEngineRenderingGraphicsSettings.renderPipelineAsset;
 			}
-//			set {
-//#if UNITY_2019_3_OR_NEWER
-//				GraphicsSettings.renderPipelineAsset = value;
-//#else
-//				//GraphicsSettings.renderPipelineAsset = value; ;
-//#endif
-//			}
+			//			set {
+			//#if UNITY_2019_3_OR_NEWER
+			//				GraphicsSettings.renderPipelineAsset = value;
+			//#else
+			//				//GraphicsSettings.renderPipelineAsset = value; ;
+			//#endif
+			//			}
 		}
 	}
 }

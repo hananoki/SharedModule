@@ -3,10 +3,9 @@
 
 using System.IO;
 using System.Linq;
-using UnityEngine;
-
 using UnityEditor;
 using UnityEditor.Animations;
+using UnityEngine;
 
 namespace HananokiEditor {
 
@@ -21,7 +20,7 @@ namespace HananokiEditor {
 
 		public static void AddFolder( AnimatorController controller, string apath ) {
 			DefaultStatePosition( controller );
-						var st = controller.layers[ 0 ].stateMachine.states;
+			var st = controller.layers[ 0 ].stateMachine.states;
 			int addcnt = 0;
 			var files = Directory.GetFiles( apath, "*.fbx" );
 			float fval = 0.00f;

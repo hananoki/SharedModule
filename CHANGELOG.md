@@ -1,5 +1,15 @@
 # Shared Module
 
+## [1.8.0] - 2021-04-03
+### Added
+- Add miscellaneous classes and methods
+
+### Changed
+- EditorHelper.GetTypeFromString: Changed to cache search results
+- EditorIcon: Changed to use the output file for each version
+- Changed to get the platform icon from the system
+- Organized code format and unused using
+
 ## [1.7.7] - 2021-03-01
 
 ### Added

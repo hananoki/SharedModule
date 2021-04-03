@@ -55,9 +55,6 @@ namespace HananokiEditor {
 		static Type _UnityEditor_UnityType;
 		public static Type UnityEditor_UnityType => Get( ref _UnityEditor_UnityType, "UnityEditor.UnityType", "UnityEditor" );
 
-		static Type _UnityEditor_Build_BuildPlatforms;
-		public static Type UnityEditor_Build_BuildPlatforms => Get( ref _UnityEditor_Build_BuildPlatforms, "UnityEditor.Build.BuildPlatforms", "UnityEditor" );
-
 		static Type _UnityEditor_Timeline_TimelineWindow;
 		public static Type UnityEditor_Timeline_TimelineWindow {
 			get {
@@ -175,9 +172,6 @@ namespace HananokiEditor {
 		static Type _UnityEditor_EditorSettings;
 		public static Type UnityEditor_EditorSettings => Get( ref _UnityEditor_EditorSettings, "UnityEditor.EditorSettings", "UnityEditor" );
 
-		static Type _UnityEditorInternal_AnimationWindowState;
-		public static Type UnityEditorInternal_AnimationWindowState => Get( ref _UnityEditorInternal_AnimationWindowState, "UnityEditorInternal.AnimationWindowState", "UnityEditor" );
-
 		static Type _UnityEditor_AnimatorInspector;
 		public static Type UnityEditor_AnimatorInspector => Get( ref _UnityEditor_AnimatorInspector, "UnityEditor.AnimatorInspector", "UnityEditor" );
 
@@ -186,6 +180,9 @@ namespace HananokiEditor {
 
 		static Type _UnityEditor_SceneHierarchy;
 		public static Type UnityEditor_SceneHierarchy => Get( ref _UnityEditor_SceneHierarchy, "UnityEditor.SceneHierarchy", "UnityEditor" );
+
+		static Type _UnityEditor_EditorStyles;
+		public static Type UnityEditor_EditorStyles => Get( ref _UnityEditor_EditorStyles, "UnityEditor.EditorStyles", "UnityEditor" );
 
 	}
 }

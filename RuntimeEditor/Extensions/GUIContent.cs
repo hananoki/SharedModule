@@ -14,7 +14,7 @@ namespace HananokiEditor.Extensions {
 		}
 
 		public static float CalcWidth_miniLabel( this GUIContent content ) {
-			return CalcSize( content , EditorStyles.miniLabel ).x;
+			return CalcSize( content, EditorStyles.miniLabel ).x;
 		}
 
 		public static Vector2 CalcSize( this GUIContent content, GUIStyle style ) {

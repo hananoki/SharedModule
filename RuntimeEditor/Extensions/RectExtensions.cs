@@ -15,6 +15,15 @@ namespace HananokiEditor.Extensions {
 			return r;
 		}
 
+		public static Rect H( this Rect r, float f ) {
+			r.height = f;
+			return r;
+		}
+
+		public static Rect AddX( this Rect r, float f ) {
+			r.x += f;
+			return r;
+		}
 
 		/// <summary>
 		/// 矩形の中心から幅を広げる
@@ -70,6 +79,13 @@ namespace HananokiEditor.Extensions {
 			r.width = width;
 			return r;
 		}
+		public static Rect AlignCenterW( this Rect r, float width ) {
+			r.x += ( r.width * 0.5f );
+			r.x -= ( width * 0.5f );
+			r.width = width;
+			return r;
+		}
+
 		public static Rect AlignCenterH( this Rect r, float height ) {
 			r.y += ( r.height * 0.5f );
 			r.y -= ( height * 0.5f );
@@ -107,7 +123,7 @@ namespace HananokiEditor.Extensions {
 
 		public static float CalcHeight( this GUIStyle style, string text ) {
 
-			return style.CalcHeight( EditorHelper.TempContent(text), 16 );
+			return style.CalcHeight( EditorHelper.TempContent( text ), 16 );
 		}
 	}
 }

@@ -6,10 +6,9 @@
 #if UNITY_EDITOR
 
 
-//using Hananoki.Reflection;
 using HananokiEditor.SharedModule;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityReflection;
@@ -17,7 +16,24 @@ using UnityReflection;
 namespace HananokiEditor {
 	public static class PlatformUtils {
 
-		static List<BuildTargetGroup> s_buildTargetGroup;
+		static List<UnityEditorBuildBuildPlatform> s_buildTargetGroup;
+
+		static void Init() {
+			if( s_buildTargetGroup != null ) return;
+
+			var lst = new List<UnityEditorBuildBuildPlatform>();
+
+			var instance = new UnityEditorBuildBuildPlatforms( UnityEditorBuildBuildPlatforms.instance );
+
+			foreach( var p in instance.buildPlatforms ) {
+				var buildPlatform = new UnityEditorBuildBuildPlatform( p );
+				if( buildPlatform.forceShowTarget ) {
+					lst.Add( buildPlatform );
+				}
+			}
+			s_buildTargetGroup = lst.OrderBy( x => x.targetGroup ).ToList();
+		}
+
 
 		/// <summary>
 		/// 確認チェック付きのSwitchプラットフォーム
@@ -28,6 +44,7 @@ namespace HananokiEditor {
 			var target = UnityEditorEditorUserBuildSettingsUtils.CalculateSelectedBuildTarget( group );
 			return SwitchActiveBuildTarget( group, target );
 		}
+
 
 		/// <summary>
 		/// 確認チェック付きのSwitchプラットフォーム
@@ -45,82 +62,54 @@ namespace HananokiEditor {
 		}
 
 
-		public static Texture2D GetIconSmall( BuildTargetGroup platform ) {
-			return (Texture2D) GetIcon( platform );
-		}
+		public static Texture2D GetIcon( int platform ) => GetIcon( (BuildTargetGroup) platform );
+
 
 		public static Texture2D GetIcon( BuildTargetGroup platform ) {
-			var name = platform.ToString();
-			if( name == "Standalone" )
-				return (Texture2D) EditorGUIUtility.IconContent( "BuildSettings.Standalone" ).image;
-			if( name == "Android" )
-				return (Texture2D) EditorGUIUtility.IconContent( "BuildSettings.Android" ).image;
-			if( name == "iPhone" || name == "iOS" )
-				return (Texture2D) EditorGUIUtility.IconContent( "BuildSettings.iPhone" ).image;
-			if( name == "WebGL" )
-				return (Texture2D) EditorGUIUtility.IconContent( "BuildSettings.WebGL" ).image;
-			if( name == "PS4" )
-				return (Texture2D) EditorGUIUtility.IconContent( "BuildSettings.PS4" ).image;
-			if( name == "XboxOne" )
-				return (Texture2D) EditorGUIUtility.IconContent( "BuildSettings.XboxOne" ).image;
-			if( name == "Facebook" ) {
-				if( UnitySymbol.Has( "UNITY_2019_3_OR_NEWER" ) ) {
-					return null; // アイコンあるけどビルド出来ない
+			Init();
+			try {
+				var buildTarget = s_buildTargetGroup.Find( x => x.targetGroup == platform );
+				if( buildTarget == null ) return null;
+				if( UnitySymbol.UNITY_2019_3_OR_NEWER ) {
+					return (Texture2D) buildTarget.title.image;
 				}
-				return (Texture2D) EditorGUIUtility.IconContent( "BuildSettings.Facebook" ).image;
+				else {
+					return (Texture2D) buildTarget.m_instance.GetField<GUIContent>( "title" ).image;
+				}
 			}
-			if( name == "tvOS" )
-				return (Texture2D) EditorGUIUtility.IconContent( "BuildSettings.tvOS" ).image;
-			if( name == "WSA" || name == "Metro" )
-				return (Texture2D) EditorGUIUtility.IconContent( "BuildSettings.Metro" ).image;
-			if( name == "Switch" )
-				return (Texture2D) EditorGUIUtility.IconContent( "BuildSettings.Switch" ).image;
-			if( name == "Lumin" )
-				return (Texture2D) EditorGUIUtility.IconContent( "BuildSettings.Lumin" ).image;
-			if( name == "Stadia" )
-				return (Texture2D) EditorGUIUtility.IconContent( "BuildSettings.Stadia" ).image;
+			catch( System.Exception e ) {
+				Debug.LogException( e );
+			}
 			return null;
 		}
 
-		public static Texture2D GetIcon( int platform ) {
-			return GetIcon( (BuildTargetGroup) platform );
-		}
 
-
-
-		public static List<BuildTargetGroup> GetSupportList() {
-			if( s_buildTargetGroup != null ) return s_buildTargetGroup;
-
-			s_buildTargetGroup = new List<BuildTargetGroup>();
-
-			//var ll = EnumUtils.GetArray<BuildTargetGroup>();
-			//foreach( var e in ll ) {
-			//	// iOS、WSAとかダブるので除外
-			//	if( 0 <= lst.IndexOf( e ) ) continue;
-
-			//	// ビルドできるプラットフォームならアイコンがあるはず、、という判定
-			//	if( e.Icon() == null ) continue;
-
-			//	lst.Add( e );
-			//}
-			var instance = UnityTypes.UnityEditor_Build_BuildPlatforms.GetProperty<object>( "instance" );
-
-			//var instance = R.Property( "instance", "UnityEditor.Build.BuildPlatforms" );
-
-			var buildPlatforms = instance.GetField<ICollection>( "buildPlatforms" );
-			//var buildPlatforms = R.Field( "buildPlatforms", "UnityEditor.Build.BuildPlatforms" );
-
-			//var forceShowTarget = R.Field( "forceShowTarget", "UnityEditor.Build.BuildPlatform" );
-			//var targetGroup = R.Field( "targetGroup", "UnityEditor.Build.BuildPlatform" );
-
-			//var lst = buildPlatforms.Get<IList>( instance.GetValue( null ) );
-			foreach( var ab in buildPlatforms ) {
-				if(  ab.GetField<bool>( "forceShowTarget" )  ) {
-					s_buildTargetGroup.Add( ab.GetField<BuildTargetGroup>( "targetGroup" ) /*targetGroup.Get<BuildTargetGroup>( ab )*/ );
+		public static Texture2D GetIconSmall( BuildTargetGroup platform ) {
+			Init();
+			try {
+				var buildTarget = s_buildTargetGroup.Find( x => x.targetGroup == platform );
+				if( buildTarget == null ) return null;
+				if( UnitySymbol.UNITY_2019_3_OR_NEWER ) {
+					return buildTarget.smallIcon;
+				}
+				else {
+					return buildTarget.m_instance.GetField<Texture2D>( "smallIcon" );
 				}
 			}
-			s_buildTargetGroup.Sort();
-			return s_buildTargetGroup;
+			catch( System.Exception e ) {
+				Debug.LogException( e );
+			}
+			return null;
+		}
+
+		/// <summary>
+		/// BuildSettingsで表示されるプラットフォームのBuildTargetGroupを返します
+		/// </summary>
+		/// <returns>List<BuildTargetGroup></returns>
+		public static List<BuildTargetGroup> GetSupportList() {
+			Init();
+
+			return s_buildTargetGroup.Select( x => x.targetGroup ).ToList();
 		}
 	}
 }

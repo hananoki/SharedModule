@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEditor.Callbacks;
 using UnityEngine;
 
 namespace HananokiEditor {
@@ -39,7 +38,7 @@ namespace HananokiEditor {
 			}
 
 			if( instance.m_gabageOn ) OnDidReloadScripts();
-			
+
 			instance.m_textures.Add( texture );
 		}
 	}

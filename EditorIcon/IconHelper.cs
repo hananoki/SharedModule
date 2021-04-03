@@ -24,11 +24,13 @@ namespace HananokiEditor {
 
 
 		public static Texture2D GetOrLoadFromBuiltin( string iconName ) {
+			if( iconName.IsEmpty() ) return null;
 			Texture2D tex = null;
 			s_iconCache.TryGetValue( iconName, out tex );
 			if( tex == null ) {
 				//Debug.Log( iconName );
 				tex = UnityEditorEditorGUIUtility.LoadIcon( iconName );
+				if( tex == null ) return null;
 				s_iconCache.Add( iconName, tex );
 			}
 			return tex;

@@ -1,10 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using HananokiRuntime;
 using UnityEditor;
 using UnityReflection;
-using HananokiEditor.Extensions;
-using HananokiRuntime;
 
 namespace HananokiEditor {
 	public class SceneHierarchyUtils {
@@ -52,6 +48,6 @@ namespace HananokiEditor {
 			s_sceneHierarchyWindow.SetSearchFilter( searchString, mode, true );
 		}
 
-		
+
 	}
 }

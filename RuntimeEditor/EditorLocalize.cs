@@ -1,8 +1,5 @@
 ﻿using HananokiEditor.Extensions;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using UnityEditor;
 
 using E = HananokiEditor.SharedModule.SettingsEditor;
 
@@ -93,7 +90,7 @@ namespace HananokiEditor {
 			return strings;
 		}
 	}
-	
 
-	
+
+
 }

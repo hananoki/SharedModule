@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Reflection;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Reflection;
 
 namespace HananokiEditor {
 	public static class R {
@@ -75,7 +74,7 @@ namespace HananokiEditor {
 
 
 
-		
+
 		#region MethodInvoke
 		static MethodInfo _MethodInvoke( object obj, string propertyName ) {
 			if( obj == null ) throw new ArgumentNullException( "obj" );
@@ -88,32 +87,32 @@ namespace HananokiEditor {
 			return t.GetMethod( propertyName, InstanceMembers, null, types, null );
 		}
 
-		public static T MethodInvoke<T>( this object obj, string propertyName,  object[] args ) {
+		public static T MethodInvoke<T>( this object obj, string propertyName, object[] args ) {
 			return (T) _MethodInvoke( obj, propertyName ).Invoke( obj, args );
 		}
 
-		public static void MethodInvoke( this object obj, string propertyName,  object[] args ) {
+		public static void MethodInvoke( this object obj, string propertyName, object[] args ) {
 			_MethodInvoke( obj, propertyName ).Invoke( obj, args );
 		}
 
-		public static void MethodInvoke( this object obj, string propertyName, Type[] types,  object[] args ) {
+		public static void MethodInvoke( this object obj, string propertyName, Type[] types, object[] args ) {
 			_MethodInvoke( obj, propertyName, types ).Invoke( obj, args );
 		}
 
 
 
-		public static void MethodInvoke( this Type t, string methodName,  object[] args ) {
+		public static void MethodInvoke( this Type t, string methodName, object[] args ) {
 			t.GetMethod( methodName, AllMembers ).Invoke( null, args );
 		}
-		public static T MethodInvoke<T>( this Type t, string methodName,  object[] args ) {
+		public static T MethodInvoke<T>( this Type t, string methodName, object[] args ) {
 			return (T) t.GetMethod( methodName, AllMembers ).Invoke( null, args );
 		}
 
-		public static void MethodInvoke( this Type t, string methodName, Type[] types,  object[] args ) {
+		public static void MethodInvoke( this Type t, string methodName, Type[] types, object[] args ) {
 			t.GetMethod( methodName, AllMembers, null, types, null ).Invoke( null, args );
 		}
 
-		public static T MethodInvoke<T>( this Type t, Type generic, string methodName,  object[] args ) {
+		public static T MethodInvoke<T>( this Type t, Type generic, string methodName, object[] args ) {
 			var mk = t.GetMethod( methodName, AllMembers ).MakeGenericMethod( generic );
 			return (T) mk.Invoke( null, args );
 		}
@@ -170,8 +169,10 @@ namespace HananokiEditor {
 			info.SetValue( null, prm );
 		}
 
+
 		public static T GetProperty<T>( this Type t, string propertyName ) {
 			var p = t.GetProperty( propertyName, AllMembers );
+			if( p == null ) return default( T );
 			return (T) p.GetValue( null, null );
 		}
 
@@ -227,17 +228,24 @@ namespace HananokiEditor {
 			return t.GetField( name, AllMembers );
 		}
 
-		public static T GetField<T>( this object obj, string propertyName ) {
+		public static T GetField<T>( this Type t, string fieldName ) {
+			var p = t.GetField( fieldName, AllMembers );
+			if( p == null ) return default( T );
+			return (T) p.GetValue( null );
+		}
+
+
+		public static T GetField<T>( this object obj, string fieldName ) {
 			if( obj == null ) throw new ArgumentNullException( "The argument obj is null." );
 			var t = obj.GetType();
-			var p = t.GetField( propertyName, InstanceMembers );
+			var p = t.GetField( fieldName, InstanceMembers );
 			return (T) p.GetValue( obj );
 		}
 
-		public static void SetField<T>( this object obj, string propertyName, T parameter ) {
+		public static void SetField<T>( this object obj, string fieldName, T parameter ) {
 			if( obj == null ) throw new ArgumentNullException( "The argument obj is null." );
 			var t = obj.GetType();
-			var p = t.GetField( propertyName, InstanceMembers );
+			var p = t.GetField( fieldName, InstanceMembers );
 			p.SetValue( obj, parameter );
 		}
 

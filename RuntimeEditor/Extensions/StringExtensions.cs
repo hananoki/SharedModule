@@ -1,12 +1,11 @@
-﻿
+﻿using HananokiRuntime.Extensions;
+using System;
 using System.IO;
 using System.Linq;
-using System;
 using UnityEditor;
 using UnityEngine;
-using HananokiRuntime.Extensions;
-using HananokiEditor.Extensions;
 using UnityObject = UnityEngine.Object;
+
 
 namespace HananokiEditor.Extensions {
 	public static partial class EditorExtensions {
@@ -32,6 +31,18 @@ namespace HananokiEditor.Extensions {
 			s = s.separatorToSlash();
 			return s;
 		}
+
+
+		/// <summary>
+		/// 絶対パスを相対パスに変換
+		/// </summary>
+		/// <returns></returns>
+		public static string ToRelativePath( this string s ) {
+			Uri u1 = new Uri( Environment.CurrentDirectory );
+			Uri u2 = new Uri( s );
+			return u1.MakeRelativeUri( u2 ).ToString();
+		}
+
 
 		public static string nicify( this string s ) {
 			return ObjectNames.NicifyVariableName( s );
@@ -242,5 +253,14 @@ namespace HananokiEditor.Extensions {
 			fs.WriteAllText( path, contents );
 		}
 
+
+		public static void ExecuteMenuItem( this string path ) {
+			EditorApplication.ExecuteMenuItem( path );
+		}
+
+
+		public static Type TypeGetType( this string s ) {
+			return s.IsEmpty() ? null : Type.GetType( s );
+		}
 	}
 }

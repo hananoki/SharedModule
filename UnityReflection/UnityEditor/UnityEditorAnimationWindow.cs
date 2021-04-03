@@ -1,4 +1,4 @@
-﻿/// UnityEditor.AnimationWindow : 2020.2.1f1
+﻿/// UnityEditor.AnimationWindow : 2020.3.0f1
 
 using HananokiEditor;
 using System;
@@ -35,10 +35,18 @@ namespace UnityReflection {
 			__OnEnable_0_0();
 		}
 		
+		public void Repaint() {
+			if( __Repaint_0_0 == null ) {
+				__Repaint_0_0 = (Action) Delegate.CreateDelegate( typeof( Action ), m_instance, UnityTypes.UnityEditor_AnimationWindow.GetMethod( "Repaint", R.InstanceMembers, null, new Type[]{  }, null ) );
+			}
+			__Repaint_0_0();
+		}
+		
 		
 		
 		Func<object> __getter_state;
 		Action __OnEnable_0_0;
+		Action __Repaint_0_0;
 	}
 }
 

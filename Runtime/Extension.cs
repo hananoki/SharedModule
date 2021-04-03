@@ -2,19 +2,25 @@
 #pragma warning disable 0618
 
 using System;
-using System.IO;
-using System.Linq;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
-using UnityEngine.UI;
 
 using UnityObject = UnityEngine.Object;
-using UnityRandom = UnityEngine.Random;
 
 namespace HananokiRuntime.Extensions {
 	public static partial class Extensions {
-#if UNITY_2018_3_OR_NEWER
+#if CSHARP_7_3_OR_NEWER
+
+		public static (short, short) GetWord( this int i ) {
+			return ((short) ( ( i >> 16 ) & 0x0000FFFF ), (short) ( i & 0x0000FFFF ));
+		}
+		public static void SetWord( ref this int i, int high, int low ) {
+			i = (int) ( ( high << 16 ) & 0xFFFF0000 ) | ( low & 0x0000FFFF );
+		}
+
+		public static int MakeWord( this int i, int high, int low ) {
+			return (int) ( ( high << 16 ) & 0xFFFF0000 ) | ( low & 0x0000FFFF );
+		}
 
 		public static bool Invert( ref this bool b ) {
 			b = !b;
@@ -83,9 +89,17 @@ namespace HananokiRuntime.Extensions {
 		//	v.z = 0;
 		//}
 #endif
+
+
 		public static bool IsEmpty<T>( this T[] s ) {
 			if( s == null ) return true;
 			if( s.Length == 0 ) return true;
+			return false;
+		}
+
+		public static bool IsEmpty<T>( this List<T> s ) {
+			if( s == null ) return true;
+			if( s.Count == 0 ) return true;
 			return false;
 		}
 
@@ -103,7 +117,7 @@ namespace HananokiRuntime.Extensions {
 			return s.ToString();
 		}
 
-#if UNITY_2018_3_OR_NEWER
+#if CSHARP_7_3_OR_NEWER
 		public static void Alpha( ref this Color col, float a ) {
 			col.a = a;
 		}
@@ -176,6 +190,16 @@ namespace HananokiRuntime.Extensions {
 
 		public static T Choice<T>( this T[] lst ) {
 			return lst[ UnityEngine.Random.Range( 0, lst.Length ) ];
+		}
+
+
+
+		public static Vector3 PositionToBottomSphre( this CharacterController cc ) {
+			var ofs = cc.center;
+			var pos = cc.transform.TransformPoint( ofs );
+
+			pos.y -= ( ( cc.height * 0.5f ) - cc.radius );
+			return pos;
 		}
 	}
 }

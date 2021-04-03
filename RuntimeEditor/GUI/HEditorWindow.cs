@@ -1,8 +1,8 @@
-﻿
+﻿#pragma warning disable 0618
+
 using HananokiEditor.Extensions;
 //using Hananoki.Reflection;
 using System;
-using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityReflection;
@@ -146,11 +146,9 @@ namespace HananokiEditor {
 		//}
 
 
-		public static EditorWindow ShowWindow( Type editorWindowType, bool utility = false ) {
-			return GetWindow( editorWindowType, utility );
-		}
 
-		
+
+
 
 
 		public static void RepaintWindow( Type editorWindowType ) {
@@ -158,7 +156,7 @@ namespace HananokiEditor {
 		}
 
 
-		
+
 	}
 
 
@@ -218,8 +216,8 @@ namespace HananokiEditor {
 
 		public UnityEditorDockArea _dockArea;
 
-		public bool hasFocus => m_self.hasFocus;
-		public bool docked => m_self.docked;
+		new public bool hasFocus => m_self.hasFocus;
+		new public bool docked => m_self.docked;
 
 		public int showMode => m_self.showMode;
 
@@ -260,7 +258,7 @@ namespace HananokiEditor {
 
 				if( position.height < 25 ) {
 					var rr = position;
-					rr.height = m_height+21;
+					rr.height = m_height + 21;
 					m_self.containerWindow.SetProperty<Rect>( "position", rr );
 				}
 				else {

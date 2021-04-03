@@ -37,8 +37,13 @@ namespace HananokiRuntime {
 	[AttributeUsage( AttributeTargets.Class )]
 	public class TypeIDAttribute : Attribute {
 		public int id;
-		public TypeIDAttribute( int id ) { this.id = id; }
+
+		public TypeIDAttribute( int id ) {
+			this.id = id;
+		}
+
 		public TypeIDAttribute( Type t ) : this( t.FullName ) { }
+
 		public TypeIDAttribute( string s ) {
 			int h = id;
 			if( h == 0 && s.Length > 0 ) {
@@ -57,4 +62,29 @@ namespace HananokiRuntime {
 		public UtilityWindowAttribute() {
 		}
 	}
+
+
+
+	#region BuildAssist
+
+	/// <summary>
+	/// BuildCommands.Buildの開始直後のイベント
+	/// </summary>
+	[AttributeUsage( AttributeTargets.Method )]
+	public class Hananoki_BuildStartProcess : Attribute { }
+
+	/// <summary>
+	/// IBuildPlatform.BuildPackageの開始時イベント
+	/// </summary>
+	[AttributeUsage( AttributeTargets.Method )]
+	public class Hananoki_BuildPreProcess : Attribute { }
+
+
+	/// <summary>
+	/// IBuildPlatform.BuildPackageの終了時イベント
+	/// </summary>
+	[AttributeUsage( AttributeTargets.Method )]
+	public class Hananoki_BuildPostProcess : Attribute { }
+
+	#endregion
 }

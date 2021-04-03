@@ -1,4 +1,4 @@
-﻿/// UnityEditor.EditorAssemblies : 2019.4.5f1
+﻿/// UnityEditor.EditorAssemblies : 2020.3.0f1
 
 using HananokiEditor;
 using System;
@@ -108,6 +108,13 @@ namespace UnityReflection {
 			return __SubclassesOfGenericType_0_1( genericType );
 		}
 		
+		public static System.Object[] Internal_GetAllMethodsWithAttribute( System.Type attrType, System.Reflection.BindingFlags staticness ) {
+			if( __Internal_GetAllMethodsWithAttribute_0_2 == null ) {
+				__Internal_GetAllMethodsWithAttribute_0_2 = (Func<System.Type,System.Reflection.BindingFlags, System.Object[]>) Delegate.CreateDelegate( typeof( Func<System.Type,System.Reflection.BindingFlags, System.Object[]> ), null, UnityTypes.UnityEditor_EditorAssemblies.GetMethod( "Internal_GetAllMethodsWithAttribute", R.StaticMembers, null, new Type[]{ typeof( System.Type ), typeof( System.Reflection.BindingFlags ) }, null ) );
+			}
+			return __Internal_GetAllMethodsWithAttribute_0_2( attrType, staticness );
+		}
+		
 		
 		
 		static Func<System.Reflection.Assembly[]> __getter_loadedAssemblies;
@@ -122,6 +129,7 @@ namespace UnityReflection {
 		static Func<System.Type, IEnumerable<Type>> __SubclassesOf_0_1;
 		static Func<System.Type, IEnumerable<Type>> __SubclassesOfClass_0_1;
 		static Func<System.Type, IEnumerable<Type>> __SubclassesOfGenericType_0_1;
+		static Func<System.Type,System.Reflection.BindingFlags, System.Object[]> __Internal_GetAllMethodsWithAttribute_0_2;
 	}
 }
 

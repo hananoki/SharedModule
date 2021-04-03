@@ -1,11 +1,9 @@
-﻿
-using System.Runtime.CompilerServices;
-using System;
+﻿using System;
 using UnityEditor;
 using UnityEngine;
 
 namespace HananokiEditor {
-	public static class ScopeArea{
+	public static class ScopeArea {
 		public static void Begin( Rect screenRect ) => GUILayout.BeginArea( screenRect );
 		public static void End() => GUILayout.EndArea();
 	}
@@ -99,7 +97,7 @@ namespace HananokiEditor {
 			EditorGUI.BeginDisabledGroup( disabled );
 		}
 
-		
+
 
 		static float _right;
 		[Obsolete( "Layout -> using( new GUILayoutScope() )" )]

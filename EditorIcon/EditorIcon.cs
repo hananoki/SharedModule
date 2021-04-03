@@ -1,7 +1,7 @@
 ﻿
-using UnityEngine;
-using UnityEditor;
 using System;
+using UnityEditor;
+using UnityEngine;
 
 namespace HananokiEditor {
 	public static partial class EditorIcon {
@@ -16,9 +16,9 @@ namespace HananokiEditor {
 		public static Texture2D warning            => console_warnicon_sml;
 		public static Texture2D info               => console_infoicon_sml;
 
-		public static Texture2D folder => icons_processed_folder_icon_asset;
+		public static Texture2D folder      => icons_processed_folder_icon_asset;
 		public static Texture2D folderEmpty => icons_processed_folderempty_icon_asset;
-		
+
 
 		public static Texture2D collabFileDeletedIcon => icons_processed_collabdeleted_icon_asset;
 
@@ -31,7 +31,7 @@ namespace HananokiEditor {
 		public static Texture2D minus               => IconDictionary.GetSelect( SharedModule.Icon.ol_minus_, SharedModule.Icon.d_ol_minus_ );
 		public static Texture2D plus                => IconDictionary.GetSelect( SharedModule.Icon.ol_plus_, SharedModule.Icon.d_ol_plus_ );
 		public static Texture2D burger              => IconDictionary.GetSelect( SharedModule.Icon.burger_, SharedModule.Icon.d_burger_ );
-		public static Texture2D dopesheetBackground =>  SharedModule.Icon.DopesheetBackground_ ;
+		public static Texture2D dopesheetBackground => SharedModule.Icon.DopesheetBackground_;
 
 		//public static Texture2D installed => Icon.GetPackageManagerIcon( "installed" );
 
@@ -61,7 +61,11 @@ namespace HananokiEditor {
 
 		public static Texture2D scriptableobject => icons_processed_unityengine_scriptableobject_icon_asset;
 
-		public static Texture2D assemblyDefinition => icons_processed_unityeditorinternal_assemblydefinitionasset_icon_asset;
+		public static Texture2D assetIcon_CsScript           => icons_processed_cs_script_icon_asset;
+		public static Texture2D assetIcon_SceneAsset         => icons_processed_unityeditor_sceneasset_icon_asset;
+		public static Texture2D assetIcon_ScriptableObject   => icons_processed_unityengine_scriptableobject_icon_asset;
+		public static Texture2D assetIcon_AssemblyDefinition => icons_processed_unityeditorinternal_assemblydefinitionasset_icon_asset;
+		public static Texture2D assetIcon_Preset             => icons_processed_unityeditor_presets_preset_icon_asset;
 	}
 
 

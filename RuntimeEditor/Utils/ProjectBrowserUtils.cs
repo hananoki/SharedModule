@@ -110,7 +110,7 @@ namespace HananokiEditor {
 				}
 			}
 			set {
-				if( !init() ) return ;
+				if( !init() ) return;
 
 				var browser = new UnityEditorProjectBrowser();
 				if( browser.m_instance == null ) return;

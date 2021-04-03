@@ -1,26 +1,24 @@
 ﻿//#pragma warning disable 618
 #if UNITY_EDITOR
 using HananokiEditor.Extensions;
-using HananokiRuntime.Extensions;
 using HananokiRuntime;
+using HananokiRuntime.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Text;
+using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEditor.SceneManagement;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityReflection;
-using UnityEditorInternal;
-using System.Threading.Tasks;
 //using UnityEditor.Compilation;
 
 using CustomEditorAttributes = UnityReflection.UnityEditorCustomEditorAttributes;
 using UnityObject = UnityEngine.Object;
-using CompilationAssembly = UnityEditor.Compilation.Assembly;
 
 namespace HananokiEditor {
 
@@ -34,12 +32,45 @@ namespace HananokiEditor {
 
 	public static class EditorHelper {
 
+		/// <summary>
+		/// 返り値+1がアクティブな状態
+		/// エディタの現在有効なコントロール値はGUIUtility.keyboardControlから取得
+		/// なので GUIUtility.keyboardControl == (返り値+1) を満たす場合は現在入力中のテキストフィールドであると判断できる
+		/// </summary>
+		/// <param name="rect"></param>
+		/// <returns></returns>
+		public static int GetTextFieldControlID( Rect rect ) {
+			return GUIUtility.GetControlID( "s_TagFieldHash".GetHashCode(), FocusType.Keyboard, rect );
+		}
+
+		public static int GetActiveTextFieldControlID( Rect rect ) {
+			return GetTextFieldControlID( rect ) + 1;
+		}
+
+		public static bool IsActiveTextField( Rect rect ) {
+			return GUIUtility.keyboardControl == GetActiveTextFieldControlID( rect );
+		}
+
 		public static void AddSceneToBuildSetting( params string[] pathAndGuids ) {
 			var ss = EditorBuildSettings.scenes.ToList();
 			ss.AddRange( pathAndGuids.Select( x => new EditorBuildSettingsScene( x.ToAssetPath(), true ) ) );
 			EditorBuildSettings.scenes = ss.ToArray();
 
 		}
+
+		public static void RemoveSceneToBuildSetting( params string[] pathAndGuids ) {
+			var ss = EditorBuildSettings.scenes.ToList();
+			foreach( var p in pathAndGuids.Select( x => x.ToAssetPath() ) ) {
+				var index = ss.FindIndex( x => x.path == p );
+				if( 0 <= index ) {
+					ss.RemoveAt( index );
+
+				}
+			}
+			EditorBuildSettings.scenes = ss.ToArray();
+
+		}
+
 
 
 		/// <summary>
@@ -255,8 +286,13 @@ namespace HananokiEditor {
 		}
 
 
+		static System.Collections.Hashtable s_typeCache = new System.Collections.Hashtable();
+
 		public static Type GetTypeFromString( string typeName ) {
 			if( typeName.IsEmpty() ) return null;
+
+			Type cache = (Type) s_typeCache[ typeName ];
+			if( cache != null ) return cache;
 
 			var t = Type.GetType( typeName );
 			if( t != null ) return t;
@@ -275,7 +311,10 @@ namespace HananokiEditor {
 				var ss = new List<string>( p.SplitFullName() );
 				if( ss.Count != tt.Length ) continue;
 				ss.AddRange( tt );
-				if( tt.Length == ss.Distinct().Count() ) return p;
+				if( tt.Length == ss.Distinct().Count() ) {
+					s_typeCache.Add( typeName, p );
+					return p;
+				}
 			}
 
 			return null;
@@ -296,8 +335,9 @@ namespace HananokiEditor {
 
 
 		public static void Reboot() {
-			ShellUtils.Start( EditorApplication.applicationPath, $"-projectPath \"{Application.dataPath.DirectoryName()}\"" );
-			EditorApplication.Exit( 0 );
+			//ShellUtils.Start( EditorApplication.applicationPath, $"-projectPath \"{Application.dataPath.DirectoryName()}\"" );
+			//EditorApplication.Exit( 0 );
+			EditorApplication.OpenProject( Environment.CurrentDirectory, new string[ 0 ] );
 		}
 
 		public static UnityObject[] LoadSerializedFileAll( string path ) {
@@ -390,34 +430,54 @@ namespace HananokiEditor {
 			else {
 				v = prop.vector3Value;
 			}
+			MenuCopyPos( v );
+		}
+
+		public static void MenuCopyPos( Vector3 v ) {
 			GUIUtility.systemCopyBuffer = string.Format( "{0}, {1}, {2}", v.x, v.y, v.z );
 		}
 
 		public static void MenuPastePos( SerializedProperty prop ) {
+			Vector3 tmp = default;
+			if( MenuPastePos( ref tmp ) ) {
 
-			var mm = Regex.Matches( GUIUtility.systemCopyBuffer, @"(-?[0-9]+\.*[0-9]*)[\s,]+(-?[0-9]+\.*[0-9]*)[\s,]+(-?[0-9]+\.*[0-9]*)" );
-			if( 0 < mm.Count ) {
-				if( mm[ 0 ].Groups.Count == 4 ) {
-					var a = float.Parse( mm[ 0 ].Groups[ 1 ].Value );
-					var b = float.Parse( mm[ 0 ].Groups[ 2 ].Value );
-					var c = float.Parse( mm[ 0 ].Groups[ 3 ].Value );
-
-					prop.serializedObject.Update();
-					if( prop.propertyType == SerializedPropertyType.Quaternion ) {
-						prop.quaternionValue = Quaternion.Euler( a, b, c );
-						//m_positionProperty.vector3Value = new Vector3( a, b, c );
-					}
-					else {
-						prop.vector3Value = new Vector3( a, b, c );
-					}
-					prop.serializedObject.ApplyModifiedProperties();
+				prop.serializedObject.Update();
+				if( prop.propertyType == SerializedPropertyType.Quaternion ) {
+					prop.quaternionValue = Quaternion.Euler( tmp );
+					//m_positionProperty.vector3Value = new Vector3( a, b, c );
 				}
-			}
-			else {
-				Debug.LogWarning( "transform is parse failed" );
+				else {
+					prop.vector3Value = tmp;
+
+				}
+				prop.serializedObject.ApplyModifiedProperties();
 			}
 		}
 
+		public static bool MenuPastePos( ref Vector3 v ) {
+			var mm = Regex.Matches( GUIUtility.systemCopyBuffer, @"(-?[0-9]+\.*[0-9]*)[\s,]+(-?[0-9]+\.*[0-9]*)[\s,]+(-?[0-9]+\.*[0-9]*)" );
+			if( 0 < mm.Count ) {
+				if( mm[ 0 ].Groups.Count == 4 ) {
+					v.x = float.Parse( mm[ 0 ].Groups[ 1 ].Value );
+					v.y = float.Parse( mm[ 0 ].Groups[ 2 ].Value );
+					v.z = float.Parse( mm[ 0 ].Groups[ 3 ].Value );
+					return true;
+				}
+			}
+			return false;
+		}
+		public static Vector3 GetMenuPastePos() {
+			Vector3 v = default;
+			var mm = Regex.Matches( GUIUtility.systemCopyBuffer, @"(-?[0-9]+\.*[0-9]*)[\s,]+(-?[0-9]+\.*[0-9]*)[\s,]+(-?[0-9]+\.*[0-9]*)" );
+			if( 0 < mm.Count ) {
+				if( mm[ 0 ].Groups.Count == 4 ) {
+					v.x = float.Parse( mm[ 0 ].Groups[ 1 ].Value );
+					v.y = float.Parse( mm[ 0 ].Groups[ 2 ].Value );
+					v.z = float.Parse( mm[ 0 ].Groups[ 3 ].Value );
+				}
+			}
+			return v;
+		}
 
 		public static Type[] GetInheritType( Type type ) {
 			var types = new List<Type>();
@@ -862,6 +922,7 @@ namespace HananokiEditor {
 		static GUIContent s_Text = new GUIContent();
 		public static GUIContent TempContent( string t ) {
 			s_Text.text = t;
+			s_Text.image = null;
 			return s_Text;
 		}
 
@@ -1053,10 +1114,10 @@ namespace HananokiEditor {
 		/// EditorBuildSettingsからシーン名の配列を取得する
 		/// </summary>
 		/// <returns>シーン名の配列</returns>
-		public static string[] GetBuildSceneNames() {
+		public static string[] GetBuildSceneNames( bool enableOnly = true ) {
 			return EditorBuildSettings
 						.scenes
-						.Where( x => x.enabled )
+						.Where( x => enableOnly ? x.enabled : true )
 						.Select( x => x.path )
 						.ToArray();
 		}

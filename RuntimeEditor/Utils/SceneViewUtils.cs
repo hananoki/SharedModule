@@ -2,10 +2,10 @@
 #pragma warning disable 618
 
 
+using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using System.Collections.Generic;
-using System;
 
 namespace HananokiEditor {
 	public static class SceneViewUtils {

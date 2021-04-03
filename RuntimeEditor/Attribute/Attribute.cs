@@ -1,7 +1,5 @@
-﻿
-
-using System;
-
+﻿using System;
+using UnityEngine;
 
 
 namespace HananokiEditor {
@@ -16,6 +14,7 @@ namespace HananokiEditor {
 	public class HananokiDebugMonitor : Attribute { }
 
 
+	#region SceneViewTools
 
 	[AttributeUsage( AttributeTargets.Method )]
 	public class Hananoki_SceneView_ComponentButton : Attribute {
@@ -36,6 +35,11 @@ namespace HananokiEditor {
 		}
 	}
 
+	#endregion
+
+
+	#region CustomHierarchy
+
 	[AttributeUsage( AttributeTargets.Class )]
 	public class Hananoki_Hierarchy_ComponentTool : Attribute {
 		public Type type;
@@ -46,8 +50,25 @@ namespace HananokiEditor {
 			type = EditorHelper.GetTypeFromString( t );
 		}
 	}
+
+	#endregion
+
+
+	#region CustomHierarchy
+
+	//[AttributeUsage( AttributeTargets.Class )]
+	public class ScriptableObjectSelectorAttribute : PropertyAttribute {
+		public bool disablePrefixLabel;
+		public ScriptableObjectSelectorAttribute( bool disablePrefixLabel = false ) {
+			this.disablePrefixLabel = disablePrefixLabel;
+		}
+	}
+
+	#endregion
 }
 
+
 namespace HananokiRuntime {
+
 
 }

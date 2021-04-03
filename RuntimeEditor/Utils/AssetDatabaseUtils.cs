@@ -1,14 +1,13 @@
 ﻿
 using HananokiEditor.Extensions;
 using HananokiRuntime;
-using UnityEditor;
-using UnityEngine;
-using System.Linq;
 using System;
 using System.Collections.Generic;
-
-using UnityObject = UnityEngine.Object;
+using System.Linq;
+using UnityEditor;
+using UnityEngine;
 using SS = HananokiEditor.SharedModule.S;
+using UnityObject = UnityEngine.Object;
 
 namespace HananokiEditor {
 	public static class AssetDatabaseUtils {
@@ -169,7 +168,11 @@ namespace HananokiEditor {
 		}
 
 		public static string[] FindAssets( Type type ) {
-			return AssetDatabase.FindAssets( $"t:{type.FullName}" );
+			return AssetDatabase.FindAssets( $"t:{type.Name}" );
+		}
+
+		public static IEnumerable<T> FindAssetsAndLoad<T>() {
+			return FindAssetsAndLoad( typeof( T ) ).Cast<T>();
 		}
 
 		public static IEnumerable<UnityObject> FindAssetsAndLoad( Type type ) {

@@ -28,7 +28,6 @@ namespace HananokiEditor.SharedModule {
 		public bool m_disableSyncVS;
 		public bool m_windowShade;
 
-		public string selectSettingName;
 
 		public string projectSettingsPath;
 		string projectSettingsPathCache;
@@ -115,7 +114,7 @@ namespace HananokiEditor.SharedModule {
 				try {
 					m.Invoke( null, null );
 				}
-				catch(Exception) {
+				catch( Exception ) {
 				}
 			}
 			HEditorWindow.RepaintWindow( typeof( EditorWindow ) );

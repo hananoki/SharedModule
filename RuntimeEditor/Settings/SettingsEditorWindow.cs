@@ -84,7 +84,7 @@ namespace HananokiEditor.SharedModule {
 			HEditorGUILayout.HeaderTitle( "AssetPostprocessor" );
 
 			E.i.m_asmdefNameSync = HEditorGUILayout.ToggleLeft( S._MaketheNamefieldthesameasthefilenamewhenimportingasmdef, E.i.m_asmdefNameSync );
-			ScopeDisable.Begin(true);
+			ScopeDisable.Begin( true );
 			E.i.m_asmdefAutoReferenceOFF = HEditorGUILayout.ToggleLeft( S._TurnoffAutoReferencedwhenimportingasmdef, E.i.m_asmdefAutoReferenceOFF );
 			if( E.i.m_asmdefAutoReferenceOFF ) {
 				E.i.m_asmdefAutoReferenceOFF = false;

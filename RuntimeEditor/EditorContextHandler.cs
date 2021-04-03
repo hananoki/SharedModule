@@ -1,9 +1,6 @@
 ﻿using HananokiEditor.Extensions;
-
-using UnityEngine;
-using UnityEditor;
 using System.Linq;
-
+using UnityEditor;
 using SS = HananokiEditor.SharedModule.S;
 
 namespace HananokiEditor {

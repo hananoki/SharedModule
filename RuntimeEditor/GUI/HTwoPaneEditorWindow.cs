@@ -2,7 +2,6 @@
 #if UNITY_2019_1_OR_NEWER
 
 using UnityEditor;
-using UnityEngine;
 using UnityEngine.UIElements;
 using UnityReflection;
 
@@ -16,7 +15,7 @@ namespace HananokiEditor {
 		UnityEditorUIElementsVisualSplitter m_Splitter;
 		UnityEngineUIElementsIMGUIContainer m_TreeViewContainerL;
 		UnityEngineUIElementsIMGUIContainer m_TreeViewContainerR;
-		VisualElement m_rightPanel;
+		public VisualElement m_rightPanel;
 
 		protected virtual void OnDrawToolBar() { }
 		protected virtual void OnDrawLeftPane() { }
@@ -29,7 +28,7 @@ namespace HananokiEditor {
 			//Debug.Log( m_rightPanel.style.flexGrow );
 		}
 
-		public void SetupUI( float defaultLeftWidth = 0.2f ) {
+		public void SetupUI( float defaultLeftWidth = 0.2f, bool rightDisable = false ) {
 			if( m_leftPaneSize == null ) {
 				m_leftPaneSize = new SessionStateFloat( $"{typeof( T ).Name}.m_leftPaneSize", defaultLeftWidth );
 			}
@@ -47,7 +46,7 @@ namespace HananokiEditor {
 			m_TreeViewContainerL = new UnityEngineUIElementsIMGUIContainer( OnDrawLeftPane );
 
 			IMGUIContainer ccc = (IMGUIContainer) m_TreeViewContainerL.m_instance;
-			ccc.style.flexGrow =  m_leftPaneSize.Value;
+			ccc.style.flexGrow = m_leftPaneSize.Value;
 			ccc.style.flexBasis = 0f;
 			m_TreeViewContainerL.focusOnlyIfHasFocusableControls = false;
 			( (IMGUIContainer) m_TreeViewContainerL.m_instance ).AddToClassList( "settings-tree-imgui-container" );
@@ -60,11 +59,13 @@ namespace HananokiEditor {
 			};
 			m_rightPanel.AddToClassList( "settings-panel" );
 
-			m_TreeViewContainerR = new UnityEngineUIElementsIMGUIContainer( OnDrawRightPane );
-			IMGUIContainer cccc = (IMGUIContainer) m_TreeViewContainerR.m_instance;
-			cccc.style.flexGrow = 1;
-			cccc.style.flexBasis = 0f;
-			m_TreeViewContainerR.focusOnlyIfHasFocusableControls = false;
+			if( !rightDisable ) {
+				m_TreeViewContainerR = new UnityEngineUIElementsIMGUIContainer( OnDrawRightPane );
+				IMGUIContainer cccc = (IMGUIContainer) m_TreeViewContainerR.m_instance;
+				cccc.style.flexGrow = 1;
+				cccc.style.flexBasis = 0f;
+				m_TreeViewContainerR.focusOnlyIfHasFocusableControls = false;
+			}
 
 			//////////////////////////
 
@@ -73,7 +74,10 @@ namespace HananokiEditor {
 			m_Splitter.Add( (VisualElement) m_TreeViewContainerL.m_instance );
 			m_Splitter.Add( m_rightPanel );
 			//m_rightPanel.Add( toolbarSearchField );
-			m_rightPanel.Add( (VisualElement) m_TreeViewContainerR.m_instance );
+
+			if( !rightDisable ) {
+				m_rightPanel.Add( (VisualElement) m_TreeViewContainerR.m_instance );
+			}
 		}
 
 

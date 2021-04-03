@@ -1,10 +1,10 @@
 ﻿
-using HananokiRuntime.Extensions;
 using HananokiEditor.Extensions;
+using HananokiRuntime;
+using HananokiRuntime.Extensions;
 using System;
 using UnityEditor;
 using UnityEngine;
-using HananokiRuntime;
 using UnityObject = UnityEngine.Object;
 
 namespace HananokiEditor {
@@ -17,6 +17,22 @@ namespace HananokiEditor {
 		}
 		public static void DrawDebugRectAtLastRect() {
 			DrawDebugRect( GUILayoutUtility.GetLastRect() );
+		}
+
+
+		public static Vector3 Vector3Field( Rect position, GUIContent content, Vector3 _value, params GUILayoutOption[] options ) {
+			var r = EditorGUI.PrefixLabel( position, content );
+			//EditorGUI.DrawRect( , Color.black );
+			if( EditorHelper.HasMouseClick( position.W( r.x - EditorGUI.indentLevel * 16 ), EventMouseButton.R ) ) {
+				var m = new GenericMenu();
+				m.AddItem( SharedModule.S._Copy, ( context ) => EditorHelper.MenuCopyPos( (Vector3) context ), _value );
+				//m.AddItem( SharedModule.S._Paste, ( context ) => {
+				//	//ref Vector3 = (ref Vector3)context;
+				//	_value = EditorHelper.GetMenuPastePos();
+				//} );
+				m.DropDownPopupRect( position );
+			}
+			return EditorGUI.Vector3Field( r, "", _value );
 		}
 
 
@@ -408,6 +424,35 @@ namespace HananokiEditor {
 
 			return AssetDatabase.AssetPathToGUID( AssetDatabase.GetAssetPath( value ) );
 		}
+
+		public static string GUIDObjectField<T>( Rect position, GUIContent content, string guid, bool safeCheck = true ) where T : UnityObject {
+			T value = null;
+			var path = AssetDatabase.GUIDToAssetPath( guid );
+			if( !path.IsEmpty() ) {
+				value = AssetDatabase.LoadAssetAtPath<T>( path );
+			}
+
+			using( new GUIBackgroundColorScope() ) {
+				if( safeCheck && value == null ) {
+					GUI.backgroundColor = HEditorStyles.fieldInvalidColor;
+				}
+
+				if( value == null && !guid.IsEmpty() ) {
+					var sz = guid.CalcSize( EditorStyles.miniLabel );
+					EditorGUI.DrawRect( position.W( sz.x ).AlignCenterH( sz.y ), HEditorStyles.fieldInvalidColor );
+					HEditorGUI.MiniLabel( position, guid );
+					//HEditorGUI.MiniLabelR( position, guid );
+					value = ObjectField<T>( position.AlignR( 32 ), content, value );
+				}
+				else {
+					value = ObjectField<T>( position, content, value );
+				}
+				if( value == null ) return string.Empty;
+			}
+
+			return AssetDatabase.AssetPathToGUID( AssetDatabase.GetAssetPath( value ) );
+		}
+
 
 		#endregion
 

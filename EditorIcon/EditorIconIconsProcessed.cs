@@ -1,4 +1,5 @@
-﻿
+﻿#if !UNITY_2018_4 && !UNITY_2019_1 && !UNITY_2019_2 && !UNITY_2019_3 && !UNITY_2019_4 && !UNITY_2020_1 && !UNITY_2020_2 && !UNITY_2020_3 && !UNITY_2021_1
+
 using UnityEngine;
 
 namespace HananokiEditor {
@@ -356,3 +357,4 @@ namespace HananokiEditor {
 	}
 }
 
+#endif

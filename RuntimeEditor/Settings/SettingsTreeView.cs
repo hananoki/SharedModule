@@ -14,19 +14,24 @@ using E = HananokiEditor.SharedModule.SettingsEditor;
 
 namespace HananokiEditor.SharedModule {
 
-	using Item = SettingsTreeViewItem;
+	using Item = SettingsTreeView.Item;
 
-	public class SettingsTreeViewItem : TreeViewItem {
-		public string guid;
-		public SettingsItem settings;
 
-		public bool root;
-	}
 
 
 	public class SettingsTreeView : HTreeView<Item> {
 
+		public class Item : TreeViewItem {
+			public string guid;
+			public SettingsItem settings;
+
+			public bool root;
+		}
+
 		List<Item> m_rootItems;
+
+		SessionStateInt m_lastSelect = new SessionStateInt( $"{nameof( SettingsTreeView )}.m_lastSelect" );
+
 
 		public SettingsTreeView() : base( new TreeViewState() ) {
 			//showAlternatingRowBackgrounds = true;
@@ -41,8 +46,8 @@ namespace HananokiEditor.SharedModule {
 				displayName = "Editor",
 				//settings = settings,
 				depth = 0,
-				icon=EditorIcon.settings,
-				root=true,
+				icon = EditorIcon.settings,
+				root = true,
 			} );
 			m_rootItems.Add( new Item() {
 				id = "Project".GetHashCode(),
@@ -61,7 +66,7 @@ namespace HananokiEditor.SharedModule {
 		public void SelectAndExpand( string itemName, int mode ) {
 			if( itemName.IsEmpty() ) return;
 
-			var item = FindItem( itemName.GetHashCode()+mode );
+			var item = FindItem( itemName.GetHashCode() + mode );
 
 			//var item = m_registerItems.Find( x => x.displayName == itemName );
 			if( item == null ) return;
@@ -84,7 +89,7 @@ namespace HananokiEditor.SharedModule {
 				m_rootItems[ settings.mode ].AddChild( item );
 			}
 			else {
-				var it=m_rootItems[ settings.mode ].children.Find( x => x.displayName == ss[ 0 ] );
+				var it = m_rootItems[ settings.mode ].children.Find( x => x.displayName == ss[ 0 ] );
 
 				//var it = m_registerItems.Find( x => x.displayName == ss[ 0 ] );
 				var newi = new Item() {
@@ -105,6 +110,26 @@ namespace HananokiEditor.SharedModule {
 			}
 			//m_registerItems = m_registerItems.OrderBy( x => x.displayName ).ToList();
 			Reload();
+
+			// ExpandAllするとアイテムセレクトが無効になる
+			ExpandAll();
+
+			//RollbackLastSelect();
+			// ExpandAll後に選択を復元する
+			for( int i = 0; i < m_rootItems.Count; i++ ) {
+				var select = m_rootItems[ i ].children.Find( x => ( (Item) x ).settings.hashCode == m_lastSelect );
+				if( select != null ) {
+					SelectItem( select );
+					break;
+				}
+			}
+		}
+
+
+
+		protected override void SingleClickedItem( int id ) {
+			var item = ToItem( id );
+			m_lastSelect.Value = item.settings.hashCode;
 		}
 
 
@@ -149,7 +174,7 @@ namespace HananokiEditor.SharedModule {
 			if( currentItem == null ) return;
 			if( currentItem.settings == null ) return;
 
-			if( currentItem.settings .customLayoutMode) {
+			if( currentItem.settings.customLayoutMode ) {
 				currentItem.settings?.gui();
 			}
 			else {
@@ -161,13 +186,7 @@ namespace HananokiEditor.SharedModule {
 		}
 
 
-		protected override void SingleClickedItem( int id ) {
-			var it = FindItem( id );
-			E.i.selectSettingName = it.displayName;
-			E.Save();
-			//Debug.Log(it.displayName);
-			//Debug.Log( E.i.selectSettingMode );
-		}
+
 	}
 }
 

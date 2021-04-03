@@ -5,8 +5,8 @@ namespace HananokiEditor {
 
 		public static void Window_Hananoki_Settings() {
 			//if( EditorHelper.IsDefine( "ENABLE_HANANOKI_SETTINGS" ) ) {
-				EditorApplication.ExecuteMenuItem( "Window/Hananoki/Settings" );
-	//}
+			EditorApplication.ExecuteMenuItem( "Window/Hananoki/Settings" );
+			//}
 		}
 
 		public static void File_Build_Settings() {

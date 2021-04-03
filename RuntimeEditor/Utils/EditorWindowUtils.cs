@@ -1,12 +1,9 @@
-﻿/**/
-using System;
+﻿using System;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityReflection;
-
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
+using EE = HananokiEditor.SharedModule.SettingsEditor;
 
 namespace HananokiEditor {
 	public static class EditorWindowUtils {
@@ -21,6 +18,19 @@ namespace HananokiEditor {
 		Tooltip,
 		ModalUtility
 		*/
+
+		public static T ShowWindow<T>() where T : EditorWindow {
+			return (T) EditorWindow.GetWindow( typeof( T ), EE.IsUtilityWindow( typeof( T ) ) );
+		}
+
+		public static EditorWindow ShowWindow( Type editorWindowType ) {
+			return EditorWindow.GetWindow( editorWindowType, EE.IsUtilityWindow( editorWindowType ) );
+		}
+
+		public static EditorWindow ShowWindow( Type editorWindowType, bool utility ) {
+			return EditorWindow.GetWindow( editorWindowType, utility );
+		}
+
 
 		public static void Attach( EditorWindow moveWindow, EditorWindow attachToWindow ) {
 
@@ -80,7 +90,11 @@ namespace HananokiEditor {
 
 		public static void RepaintInspector() {
 			foreach( var p in FindArray( UnityTypes.UnityEditor_InspectorWindow ) ) p.Repaint();
-			//SceneView.RepaintAll();
+		}
+		public static void FocusInspector() {
+			foreach( var p in FindArray( UnityTypes.UnityEditor_InspectorWindow ) ) {
+				if( !p.hasFocus ) p.Focus();
+			}
 		}
 
 		public static void RepaintSceneView() {

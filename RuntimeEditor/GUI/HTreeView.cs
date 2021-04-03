@@ -1,15 +1,14 @@
 ﻿//using Hananoki.Reflection;
-using HananokiEditor.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
-using System;
 
 namespace HananokiEditor {
-	public abstract class HTreeView<T> : TreeView where T : TreeViewItem {
+	public abstract class HTreeView<T> : TreeView where T : TreeViewItem, new() {
 		public HTreeView( TreeViewState state ) : base( state ) { }
 		public HTreeView( TreeViewState state, MultiColumnHeader multiColumnHeader ) : base( state, multiColumnHeader ) { }
 
@@ -17,18 +16,10 @@ namespace HananokiEditor {
 
 		protected SessionStateString m_lastSelectDisplayName = new SessionStateString( $"{typeof( T ).FullName}.m_lastSelectDisplayName" );
 
-		public void RollbackLastSelect() {
-			var select = m_registerItems.Find( x => x.displayName == m_lastSelectDisplayName );
-			if( select != null ) {
-				SelectItem( select.id );
-			}
-		}
-		public void BackupLastSelect( T item ) {
-			m_lastSelectDisplayName.Value = item == null ? "" : item.displayName;
-		}
-
+		public T m_root;
 		public List<T> m_registerItems;
 		int m_id;
+		public Rect rectGUI;
 
 		public T currentItem {
 			get {
@@ -38,41 +29,81 @@ namespace HananokiEditor {
 			}
 		}
 
+
+
+		/////////////////////////////////////////
+		public T RollbackLastSelect() {
+			var select = m_registerItems.Find( x => x.displayName == m_lastSelectDisplayName );
+			if( select != null ) {
+				SelectItem( select.id );
+				return select;
+			}
+			return null;
+		}
+
+
+		/////////////////////////////////////////
+		public void BackupLastSelect( T item ) {
+			m_lastSelectDisplayName.Value = item == null ? "" : item.displayName;
+		}
+
+
+		/////////////////////////////////////////
 		public T ToItem( int id ) {
 			return (T) FindItem( id, rootItem );
 		}
 
+
+		/////////////////////////////////////////
 		public T[] ToItems( IList<int> ids ) {
 			return ids.Select( _id => (T) FindItem( _id, rootItem ) ).Where( x => x != null ).ToArray();
 		}
 
+
+		/////////////////////////////////////////
 		public T[] GetSelectionItems() {
 			return ToItems( GetSelection() );
 		}
 
+
+		/////////////////////////////////////////
 		public T FindItem( int id ) {
 			return (T) FindItem( id, rootItem );
 		}
 
 
+		/////////////////////////////////////////
 		public void SelectItem( int id ) {
 			SetSelection( new int[] { id }, TreeViewSelectionOptions.FireSelectionChanged );
 			SetFocusAndEnsureSelectedItem();
 		}
+
+
+		/////////////////////////////////////////
 		public void SelectItem( TreeViewItem item ) {
 			SelectItem( item.id );
 		}
 
+
+		/////////////////////////////////////////
+		public T MakeRoot() => new T { depth = -1 };
+
+
+
+		/////////////////////////////////////////
 		public void InitID() {
 			m_id = 0;
 		}
 
+
+		/////////////////////////////////////////
 		public int GetID() {
 			m_id++;
 			return m_id;
 		}
 
 
+		/////////////////////////////////////////
 		public void SetExpandedFollowParents( TreeViewItem item ) {
 			while( item.parent != null ) {
 				SetExpanded( item.parent.id, true );
@@ -81,6 +112,8 @@ namespace HananokiEditor {
 		}
 
 
+
+		/////////////////////////////////////////
 		public void DisableSelectionStyle() {
 			// 2019.3以降はm_SelectionStyleで独立してるので書き換えれる
 			try {
@@ -99,6 +132,7 @@ namespace HananokiEditor {
 		}
 
 
+		/////////////////////////////////////////
 		public void DrawLayoutGUI() {
 			GUILayout.Box( "", HEditorStyles.treeViweArea, GUILayout.ExpandWidth( true ), GUILayout.ExpandHeight( true ) );
 
@@ -108,8 +142,9 @@ namespace HananokiEditor {
 			OnGUI( dropRc );
 		}
 
-		public Rect rectGUI;
 
+
+		/////////////////////////////////////////
 		public override void OnGUI( Rect rect ) {
 			if( !isInitialized ) return;
 
@@ -122,19 +157,26 @@ namespace HananokiEditor {
 		}
 
 
+		/////////////////////////////////////////
 		protected virtual void OnSelectionNone() { }
 
 
+
+		/////////////////////////////////////////
 		public void SetSelectionNone() {
 			SetSelection( new int[ 0 ], TreeViewSelectionOptions.FireSelectionChanged );
 			OnSelectionNone();
 		}
 
+
+		/////////////////////////////////////////
 		new public void ExpandAll() {
 			if( rootItem == null ) return;
 			base.ExpandAll();
 		}
 
+
+		/////////////////////////////////////////
 		new public void Reload() {
 			//if( m_registerItems.Count == 0 ) return;
 			try {
@@ -148,8 +190,10 @@ namespace HananokiEditor {
 		}
 
 
+		/////////////////////////////////////////
 		protected override TreeViewItem BuildRoot() {
-			//Debug.Log( "BuildRoot" );
+			if( m_root != null ) return m_root;
+
 			var root = new TreeViewItem { depth = -1 };
 
 			if( m_registerItems.Count == 0 ) {
@@ -165,20 +209,43 @@ namespace HananokiEditor {
 			return root;
 		}
 
+
+		/////////////////////////////////////////
 		sealed protected override void RowGUI( RowGUIArgs args ) {
 			if( args.item.id == -1 ) return;
 
 			OnRowGUI( args );
 		}
 
+
+
+		/////////////////////////////////////////
 		protected virtual void OnRowGUI( RowGUIArgs args ) { }
 
+
+		/////////////////////////////////////////
 		protected void DefaultRowGUI( RowGUIArgs args ) {
 			base.RowGUI( args );
 		}
 
 
+		/////////////////////////////////////////
+		protected override void SelectionChanged( IList<int> selectedIds ) {
+			var items = ToItems( selectedIds );
+			if( items.Length == 0 ) return;
+
+			SingleSelectionChanged( items[ 0 ] );
+		}
+
+
+		/////////////////////////////////////////
+		protected virtual void SingleSelectionChanged( T item ) { }
+
+
+
+		//////////////////////////////////////////////////////////////////////////////////
 		#region m_ContextOnItem
+
 		bool _ContextOnItem = false;
 
 		protected virtual void OnContextClicked() { }
@@ -202,18 +269,8 @@ namespace HananokiEditor {
 		#endregion
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+		//////////////////////////////////////////////////////////////////////////////////
+		#region Label
 
 		public GUIStyle ControlLabel;
 
@@ -244,8 +301,10 @@ namespace HananokiEditor {
 			_Label( rect, content, ControlLabel, args );
 		}
 
-
+		#endregion
 	}
+
+
 
 	public abstract class HTreeViewContextMenu<T> where T : TreeViewItem {
 		protected Action<T[]> m_action;

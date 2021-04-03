@@ -1,8 +1,7 @@
 ﻿
 using System.Collections.Generic;
-using UnityEditor;
-using UnityEngine;
 using System.Linq;
+using UnityEditor;
 using UnityEditorEditorUserBuildSettings = UnityReflection.UnityEditorEditorUserBuildSettings;
 
 namespace HananokiEditor {

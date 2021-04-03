@@ -1,13 +1,8 @@
 ﻿#pragma warning disable 618
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEditor;
-using UnityEngine;
-using System.Text.RegularExpressions;
 using HananokiRuntime.Extensions;
-
+using System;
+using UnityEngine;
 using UnityObject = UnityEngine.Object;
 
 namespace HananokiEditor.Extensions {

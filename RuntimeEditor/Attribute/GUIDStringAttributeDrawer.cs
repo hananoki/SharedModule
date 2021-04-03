@@ -1,9 +1,9 @@
 ﻿
 #if UNITY_EDITOR
 
+using HananokiRuntime;
 using UnityEditor;
 using UnityEngine;
-using HananokiRuntime;
 using UnityObject = UnityEngine.Object;
 
 namespace HananokiEditor {
@@ -38,7 +38,7 @@ namespace HananokiEditor {
 			if( m_scnCache == null && !string.IsNullOrEmpty( property.stringValue ) ) {
 				//var col = GUI.contentColor;
 				//GUI.contentColor = Color.red;
-				EditorGUI.DrawRect( rc , new Color(1,0,0,0.2f) );
+				EditorGUI.DrawRect( rc, new Color( 1, 0, 0, 0.2f ) );
 				rc = EditorGUI.PrefixLabel( rc, GUIUtility.GetControlID( FocusType.Passive ), new GUIContent( $"{label.text}: missing" ) );
 				//GUI.contentColor = col;
 			}

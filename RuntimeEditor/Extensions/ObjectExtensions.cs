@@ -1,11 +1,12 @@
-﻿using UnityEditor;
-using UnityEngine;
+﻿using HananokiRuntime;
 using System;
-using HananokiRuntime;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.Assertions;
 using UnityObject = UnityEngine.Object;
 
 namespace HananokiEditor.Extensions {
-	public static class ObjectExtensions {
+	public static partial class EditorExtensions {
 
 		/// <summary>
 		/// parent に child を追加
@@ -99,6 +100,7 @@ namespace HananokiEditor.Extensions {
 			return Helper.IsNull( target );
 		}
 
+
 		public static SerializedObject CreateSerializedObject( this UnityObject o ) {
 			return new SerializedObject( o );
 		}
@@ -108,14 +110,10 @@ namespace HananokiEditor.Extensions {
 			return EditorGUIUtility.ObjectContent( target, target.GetType() );
 		}
 
-
-		public static Texture2D GetIcon( this GameObject go ) {
-			var status = PrefabUtility.GetPrefabInstanceStatus( go );
-			switch( status ) {
-			case PrefabInstanceStatus.Connected:
-				return EditorIcon.icons_processed_prefabmodel_icon_asset;
-			}
-			return EditorIcon.icons_processed_unityengine_gameobject_icon_asset;
+		public static bool HasType( this UnityObject target, Type t ) {
+			if( target == null ) return false;
+			Assert.IsTrue( t != null );
+			return t.IsAssignableFrom( target.GetType() );
 		}
 	}
 }

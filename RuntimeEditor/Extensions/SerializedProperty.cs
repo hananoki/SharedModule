@@ -1,8 +1,8 @@
-﻿using System.Text.RegularExpressions;
-using UnityEditor;
-using System.Runtime.CompilerServices;
+﻿using HananokiRuntime.Extensions;
 using System;
-using HananokiRuntime.Extensions;
+using System.Collections.Generic;
+using System.Reflection;
+using UnityEditor;
 using UnityReflection;
 
 namespace HananokiEditor.Extensions {
@@ -129,5 +129,10 @@ namespace HananokiEditor.Extensions {
 		}
 
 
+
+		public static void Invoke( this IEnumerable<MethodInfo> methodInfos ) {
+			foreach( var p in methodInfos ) p.Invoke( null, null );
+
+		}
 	}
 }

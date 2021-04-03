@@ -33,17 +33,17 @@ namespace HananokiEditor {
 				var t = new Texture2D( Widht, Height );
 				t.LoadImage( bb );
 				IconGarbage.Set( t );
-				
+
 				//t.hideFlags |= HideFlags.DontUnloadUnusedAsset;
 				if( icons.ContainsKey( n ) ) {
 					icons[ n ] = t;
 				}
 				else {
 					icons.Add( n, t );
-					
+
 				}
 			}
-			
+
 			return icons[ n ];
 		}
 

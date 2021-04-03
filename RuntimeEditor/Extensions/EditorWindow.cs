@@ -1,17 +1,11 @@
-﻿//using Hananoki.Reflection;
+﻿#pragma warning disable 618
 using System;
 using UnityEditor;
 using UnityEngine;
-//#if UNITY_2019_1_OR_NEWER
-//using UnityEngine.UIElements;
-//using UnityEditor.UIElements;
-//#else
-//using UnityEngine.Experimental.UIElements;
-//using UnityEditor.Experimental.UIElements;
-//#endif
+
 
 namespace HananokiEditor.Extensions {
-	public static partial class EditorWindowExtensions {
+	public static partial class EditorExtensions {
 
 		public static void SetTitle( this EditorWindow wnd, string text ) {
 			wnd.SetTitle( new GUIContent( text ) );

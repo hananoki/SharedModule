@@ -4,16 +4,18 @@ namespace HananokiEditor {
 
 	public sealed class AudioUtils {
 
-		public static void PlayClip( UnityEngine.AudioClip clip, int startSample = 0, bool loop = false ) {
+		public static void PlayClip( UnityEngine.AudioClip audioClip, int startSample = 0, bool loop = false ) {
+			if( audioClip == null ) return;
+
 			if( UnitySymbol.UNITY_2020_2_OR_NEWER ) {
-				UnityEditorAudioUtil.PlayPreviewClip( clip, startSample, loop );
+				UnityEditorAudioUtil.PlayPreviewClip( audioClip, startSample, loop );
 			}
 			else {
-				UnityEditorAudioUtil.PlayClip( clip, startSample, loop );
+				UnityEditorAudioUtil.PlayClip( audioClip, startSample, loop );
 			}
 		}
 
-		public static void StopAllClips(  ) {
+		public static void StopAllClips() {
 			if( UnitySymbol.UNITY_2020_2_OR_NEWER ) {
 				UnityEditorAudioUtil.StopAllPreviewClips();
 			}

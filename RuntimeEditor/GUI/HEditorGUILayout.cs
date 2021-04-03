@@ -21,6 +21,9 @@ namespace HananokiEditor {
 			GUILayout.Label( EditorHelper.TempContent( text, image ), style, options );
 		}
 
+
+
+
 		/*
 		public static bool Toggle( bool value, string text, params GUILayoutOption[] options ) {
 			return Toggle( value, EditorHelper.TempContent( text ), EditorStyles.toggle, options );
@@ -93,6 +96,12 @@ namespace HananokiEditor {
 
 
 	public static class HEditorGUILayout {
+
+		public static Vector3 Vector3Field( string label, Vector3 value, params GUILayoutOption[] options ) {
+			var cont = EditorHelper.TempContent( label );
+			var rect = GUILayoutUtility.GetRect( cont, EditorStyles.numberField );
+			return HEditorGUI.Vector3Field( rect, cont, value );
+		}
 
 		#region LabelField
 
@@ -395,7 +404,7 @@ namespace HananokiEditor {
 
 
 		public static bool SessionToggleLeft( string s, bool b ) {
-			return SessionToggleLeft( s, s, b );
+			return SessionToggleLeft( s, "", b );
 		}
 
 		public static bool SessionToggleLeft( string s1, string s2, bool b ) {
@@ -408,7 +417,8 @@ namespace HananokiEditor {
 				rr.x -= 16;
 				rr.width += 16;
 				EditorGUI.DrawRect( rr, new Color( 0f, 1f, 0f, 0.25f ) );
-				GUI.Label( r, EditorHelper.TempContent( s1, s2 ), EditorStyles.label );
+				if( s2.IsEmpty() ) GUI.Label( r, EditorHelper.TempContent( s1 ), EditorStyles.label );
+				else GUI.Label( r, EditorHelper.TempContent( s1, s2 ), EditorStyles.label );
 				bool b11 = GUI.Toggle( rt, b, "" );
 				return b11;
 			}
@@ -452,7 +462,7 @@ namespace HananokiEditor {
 				rc.width = 16;
 				if( HEditorGUI.IconButton( rc, EditorIcon.plus ) ) {
 					var path = $"{ProjectBrowserUtils.activeFolderPath}/New {typeof( T ).Name}.asset".GenerateUniqueAssetPath();
-					_obj = (T)AssetDatabaseUtils.CreateScriptableObject( typeof( T ), path );
+					_obj = (T) AssetDatabaseUtils.CreateScriptableObject( typeof( T ), path );
 				}
 			}
 			return _obj;

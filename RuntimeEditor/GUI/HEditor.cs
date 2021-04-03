@@ -1,11 +1,11 @@
-﻿using HananokiRuntime;
+﻿using HananokiEditor.Extensions;
+using HananokiRuntime;
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using HananokiEditor.Extensions;
-using System;
-//using Hananoki.Reflection;
 using ScriptAttributeUtility = UnityReflection.UnityEditorScriptAttributeUtility;
+
 
 namespace HananokiEditor {
 	public class HEditor : Editor {
@@ -184,6 +184,7 @@ namespace HananokiEditor {
 				}
 				else if( it.objectReferenceValue.GetType().IsSubclassOf( typeof( ScriptableObject ) ) ) {
 					Editor ed = null;
+					if( _editorLists == null ) return;
 					_editorLists.TryGetValue( it.displayName, out ed );
 					if( ed == null ) {
 						ed = Editor.CreateEditor( it.objectReferenceValue );
@@ -195,7 +196,7 @@ namespace HananokiEditor {
 					var r = GUILayoutUtility.GetLastRect();
 					r.y = r.yMax - h;
 					r.height = h;
-					it.isExpanded = EditorGUI.Foldout( r, it.isExpanded, EditorHelper.TempContent( it.displayName ),true );
+					it.isExpanded = EditorGUI.Foldout( r, it.isExpanded, EditorHelper.TempContent( it.displayName ), true );
 					if( it.isExpanded ) {
 						try {
 							EditorGUI.indentLevel++;
@@ -207,8 +208,8 @@ namespace HananokiEditor {
 							EditorGUIUtility.hierarchyMode = true;
 							EditorGUI.indentLevel--;
 						}
-						catch(Exception e) {
-							Debug.LogException(e);
+						catch( Exception e ) {
+							Debug.LogException( e );
 						}
 					}
 				}

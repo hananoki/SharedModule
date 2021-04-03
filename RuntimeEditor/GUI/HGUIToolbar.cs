@@ -1,4 +1,5 @@
 ﻿using HananokiEditor.Extensions;
+using HananokiRuntime.Extensions;
 using System;
 using UnityEditor;
 using UnityEngine;
@@ -22,7 +23,7 @@ namespace HananokiEditor {
 		//	}
 		//}
 		static GUIStyle s_ToolbarDropDown;
-		static GUIStyle toolbarDropDown {
+		public static GUIStyle toolbarDropDown {
 			get {
 				if( s_ToolbarDropDown == null ) {
 					s_ToolbarDropDown = new GUIStyle( "ToolbarDropDown" );
@@ -33,14 +34,15 @@ namespace HananokiEditor {
 		}
 
 
-		public static void Begin( float space = 0 ) {
-			GUILayout.BeginHorizontal();
-			if( 0 < space ) GUILayout.Space( space );
+		public static void Begin() {
+			//GUILayout.BeginHorizontal();
+			//if( 0 < space ) GUILayout.Space( space );
 			GUILayout.BeginHorizontal( EditorStyles.toolbar );
 		}
 
+
 		public static void End() {
-			GUILayout.EndHorizontal();
+			//GUILayout.EndHorizontal();
 			//if( 0 < space ) GUILayout.Space( space*2 );
 			GUILayout.EndHorizontal();
 		}
@@ -69,11 +71,14 @@ namespace HananokiEditor {
 		}
 		public static bool Button( GUIContent content, params GUILayoutOption[] options ) {
 			try {
-				var rc = GUILayoutUtility.GetRect( content, EditorStyles.toolbarButton, options );
-
-				//if( EditorHelper.HasMouseClick( rc ) ) {
-				//	return true;
-				//}
+				Rect rc;
+				if( !content.text.IsEmpty() && content.image != null ) {
+					var xxx = EditorStyles.toolbarButton.CalcSize( new GUIContent( content.text ) ).x + 20;
+					rc = GUILayoutUtility.GetRect( content, EditorStyles.toolbarButton, GUILayout.Width( xxx ) );
+				}
+				else {
+					rc = GUILayoutUtility.GetRect( content, EditorStyles.toolbarButton, options );
+				}
 
 				return GUI.Button( rc, content, EditorStyles.toolbarButton );
 			}
@@ -99,7 +104,7 @@ namespace HananokiEditor {
 			return Toggle( value, EditorHelper.TempContent( image ), EditorStyles.toolbarButton, GUILayout.Width( 26 ) );
 		}
 
-		public static bool Toggle( bool value, Texture image , GUIStyle style ) {
+		public static bool Toggle( bool value, Texture image, GUIStyle style ) {
 			var cont = EditorHelper.TempContent( image );
 			return Toggle( value, EditorHelper.TempContent( image ), style, GUILayout.Width( 26 ) );
 		}
@@ -169,6 +174,45 @@ namespace HananokiEditor {
 				Event.current.Use();//ボタンがアクティブになるため
 			}
 			GUI.Button( r, content, toolbarDropDown );
+			return result;
+		}
+
+		#endregion
+
+
+		#region DropDown2
+
+		public static bool DropDown2( string text, Action buttonAction, Action allowAction, params GUILayoutOption[] options ) {
+			return DropDown2( EditorHelper.TempContent( text ), buttonAction, allowAction, options );
+		}
+		public static bool DropDown2( string text, Texture2D image, Action buttonAction, Action allowAction, params GUILayoutOption[] options ) {
+			return DropDown2( EditorHelper.TempContent( text, image ), buttonAction, allowAction, options );
+		}
+
+		public static bool DropDown2( GUIContent content, Action buttonAction, Action allowAction, params GUILayoutOption[] options ) {
+			var size = EditorStyles.toolbarDropDown.CalcSize( EditorHelper.TempContent( content.text ) );
+			var r = GUILayoutUtility.GetRect( content, toolbarDropDown, options.Length == 0 ? new GUILayoutOption[] { GUILayout.Width( size.x + 16 ) } : options );
+			HEditorGUI.lastRect = r;
+
+			var lRect = r;
+			lRect.width = 18;
+			lRect.x += r.width;
+			lRect.x -= lRect.width;
+			if( EditorHelper.HasMouseClick( lRect ) ) {
+				allowAction?.Invoke();
+				Event.current.Use();
+			}
+			var result = EditorHelper.HasMouseClick( r );
+			if( result ) {
+				buttonAction?.Invoke();
+				Event.current.Use();//ボタンがアクティブになるため
+			}
+			GUI.Button( r, content, toolbarDropDown );
+
+			var rr = lRect.AlignCenter( 12, 12 );
+			GUI.DrawTexture( rr, SharedModule.Icon.icondropdown_, ScaleMode.ScaleToFit );
+			GUI.Label( lRect.AddH( -3 ), GUIContent.none, HEditorStyles.dopesheetBackground );
+
 			return result;
 		}
 

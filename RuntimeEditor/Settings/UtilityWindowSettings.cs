@@ -2,6 +2,7 @@
 using HananokiEditor.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using E = HananokiEditor.SharedModule.SettingsEditor;
@@ -65,9 +66,12 @@ namespace HananokiEditor.SharedModule {
 			using( new GUILayout.HorizontalScope() ) {
 				if( GUILayout.Button( "add" ) ) {
 					var m = new GenericMenu();
-					var list = AssemblieUtils.SubclassesOf<EditorWindow>();
+					var list = AssemblieUtils.SubclassesOf<EditorWindow>()
+						.OrderBy( x => x.Assembly.FullName )
+						.ThenBy( x => x.FullName );
 					foreach( var p in list ) {
-						m.AddItem( p.FullName.Replace(".","/"), reg, p );
+						var asmName = p.Assembly.FullName.Split( ',' )[ 0 ];
+						m.AddItem( $"{asmName[ 0 ]}/{asmName}/{p.Name}", reg, p );
 					}
 					m.DropDownAtMousePosition();
 					void reg( object context ) {

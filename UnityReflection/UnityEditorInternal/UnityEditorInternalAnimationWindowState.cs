@@ -1,7 +1,9 @@
-﻿/// UnityEditorInternal.AnimationWindowState : 2020.2.1f1
+﻿/// UnityEditorInternal.AnimationWindowState : 2020.3.0f1
 
 using HananokiEditor;
 using System;
+using System.Reflection;
+using System.Collections;
 
 namespace UnityReflection {
   public sealed partial class UnityEditorInternalAnimationWindowState {
@@ -18,6 +20,21 @@ namespace UnityReflection {
 			m_instance = Activator.CreateInstance( UnityTypes.UnityEditorInternal_AnimationWindowState, new object[] {} );
     }
     
+
+		public object hierarchyData {
+			get {
+				if( __hierarchyData == null ) {
+					__hierarchyData = UnityTypes.UnityEditorInternal_AnimationWindowState.GetField( "hierarchyData", R.InstanceMembers );
+				}
+				return (object) __hierarchyData.GetValue( m_instance );
+			}
+			set {
+				if( __hierarchyData == null ) {
+					__hierarchyData = UnityTypes.UnityEditorInternal_AnimationWindowState.GetField( "hierarchyData", R.InstanceMembers );
+				}
+				__hierarchyData.SetValue( m_instance, value );
+			}
+		}
 
 		public UnityEngine.AnimationClip activeAnimationClip {
 			get {
@@ -76,6 +93,24 @@ namespace UnityReflection {
 			}
 		}
 
+		public IList allCurves {
+			get {
+				if( __getter_allCurves == null ) {
+					__getter_allCurves = (Func<IList>) Delegate.CreateDelegate( typeof( Func<IList> ), m_instance, UnityTypes.UnityEditorInternal_AnimationWindowState.GetMethod( "get_allCurves", R.InstanceMembers ) );
+				}
+				return __getter_allCurves();
+			}
+		}
+
+		public IList dopelines {
+			get {
+				if( __getter_dopelines == null ) {
+					__getter_dopelines = (Func<IList>) Delegate.CreateDelegate( typeof( Func<IList> ), m_instance, UnityTypes.UnityEditorInternal_AnimationWindowState.GetMethod( "get_dopelines", R.InstanceMembers ) );
+				}
+				return __getter_dopelines();
+			}
+		}
+
 		public void StartPreview() {
 			if( __StartPreview_0_0 == null ) {
 				__StartPreview_0_0 = (Action) Delegate.CreateDelegate( typeof( Action ), m_instance, UnityTypes.UnityEditorInternal_AnimationWindowState.GetMethod( "StartPreview", R.InstanceMembers, null, new Type[]{  }, null ) );
@@ -106,6 +141,7 @@ namespace UnityReflection {
 		
 		
 		
+		FieldInfo __hierarchyData;
 		Func<UnityEngine.AnimationClip> __getter_activeAnimationClip;
 		Action<UnityEngine.AnimationClip> __setter_activeAnimationClip;
 		Func<UnityEngine.GameObject> __getter_activeGameObject;
@@ -113,6 +149,8 @@ namespace UnityReflection {
 		Action<float> __setter_currentTime;
 		Func<bool> __getter_previewing;
 		Func<bool> __getter_playing;
+		Func<IList> __getter_allCurves;
+		Func<IList> __getter_dopelines;
 		Action __StartPreview_0_0;
 		Action __StopPreview_0_0;
 		Action __StartPlayback_0_0;

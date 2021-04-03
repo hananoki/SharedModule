@@ -1,8 +1,4 @@
-﻿
-using HananokiEditor.Extensions;
-using System.IO;
-using System.Linq;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
 
@@ -14,8 +10,8 @@ namespace HananokiEditor {
 		//string[] dirPopup;
 		GUIStyle label;
 
-		 float time;
-		public MessagePop( Vector2 pos,string text = "" ) {
+		float time;
+		public MessagePop( Vector2 pos, string text = "" ) {
 			this.text = text;
 			//this.folderPath = folderPath;
 			//if( singleton.instance.selectedType == null || singleton.instance.selectedType.type == null ) {
@@ -33,10 +29,10 @@ namespace HananokiEditor {
 			windowSize.x += 16;
 			windowSize.y += 16;
 			//mouseRect.width = windowSize.x;
-			mouseRect.x -= windowSize.x +8;
-			mouseRect.y -= windowSize.y*0.5f;
+			mouseRect.x -= windowSize.x + 8;
+			mouseRect.y -= windowSize.y * 0.5f;
 
-			time =Time.realtimeSinceStartup;
+			time = Time.realtimeSinceStartup;
 			EditorApplication.update += Calc;
 
 			PopupWindow.Show( mouseRect, this );

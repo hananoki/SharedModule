@@ -19,6 +19,8 @@ Settings (Editor)
 Settings (Project)
 Settings
 General
+Project
+Preset
 Add
 Replace
 Clear
@@ -38,6 +40,7 @@ Stop
 Deprecated
 Warning
 Info
+Error
 Enable
 Row color
 Context Menu With Icon Click
@@ -84,6 +87,7 @@ Animator
 Timeline
 Console
 Profiler
+Audio Clip
 Make JSON Pretty Print
 Where to save Project settings
 Make package settings

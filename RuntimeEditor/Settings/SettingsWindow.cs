@@ -6,14 +6,12 @@
 using HananokiEditor.Extensions;
 //using Hananoki.Reflection;
 using System;
-using System.Reflection;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using System.Linq;
 using UnityReflection;
-
-using SS = HananokiEditor.SharedModule.S;
 using E = HananokiEditor.SharedModule.SettingsEditor;
+using SS = HananokiEditor.SharedModule.S;
 
 
 namespace HananokiEditor.SharedModule {
@@ -47,6 +45,8 @@ namespace HananokiEditor.SharedModule {
 
 		static bool selectionOpen;
 
+
+
 		[MenuItem( "Window/Hananoki/Settings", false, 190 )]
 		public static void Open() {
 			var window = GetWindow<SettingsWindow>();
@@ -58,14 +58,17 @@ namespace HananokiEditor.SharedModule {
 			E.i.selectSettingMode = Mode.Editor;
 			Open( $"{displayName}", 0 );
 		}
+
+
 		public static void OpenProject( string displayName ) {
 			E.i.selectSettingMode = Mode.Project;
 			Open( $"{displayName}", 1 );
 		}
 
+
 		public static void Open( string displayName, int mode ) {
 			Open();
-			E.i.selectSettingName = displayName;
+			selectSettingName = displayName;
 			selectionOpen = true;
 		}
 
@@ -127,16 +130,17 @@ namespace HananokiEditor.SharedModule {
 			}
 
 			m_treeView.ReloadAndSorting();
-			m_treeView.ExpandAll();
+			//m_treeView.ExpandAll();
 			selectionOpen = true;
 		}
 
 
+		static string selectSettingName;
 
 
 		void DrawLeftPane() {
 			if( selectionOpen ) {
-				m_treeView.SelectAndExpand( E.i.selectSettingName, (int) E.i.selectSettingMode );
+				m_treeView.SelectAndExpand( selectSettingName, (int) E.i.selectSettingMode );
 				selectionOpen = false;
 			}
 
@@ -151,7 +155,7 @@ namespace HananokiEditor.SharedModule {
 
 					//using( new GUILayoutScope() ) {
 					//	GUILayout.Space( 4 );
-						m_treeView.DrawCurrent();
+					m_treeView.DrawCurrent();
 					//}
 				}
 			}

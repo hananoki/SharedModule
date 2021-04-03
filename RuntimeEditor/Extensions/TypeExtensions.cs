@@ -1,7 +1,7 @@
 ﻿using System;
-using UnityReflection;
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
+using UnityReflection;
 
 namespace HananokiEditor.Extensions {
 	public static partial class EditorExtensions {
@@ -32,7 +32,7 @@ namespace HananokiEditor.Extensions {
 		/// <param name="t"></param>
 		/// <returns></returns>
 		public static Texture2D GetIcon( this Type t ) {
-			var ico= (Texture2D) EditorGUIUtility.ObjectContent( null, t ).image;
+			var ico = (Texture2D) EditorGUIUtility.ObjectContent( null, t ).image;
 			if( ico != null ) return ico;
 			var mono = EditorHelper.GetMonoScriptFromType( t );
 			if( mono == null ) return null;
