@@ -135,7 +135,7 @@ namespace HananokiEditor.SharedModule {
 
 
 		static void SaveFile() {
-			fs.WriteFile( "Assets/csc.rsp", ( b ) => {
+			fs.WriteFileAll( "Assets/csc.rsp", ( b ) => {
 				var names = CSPFileData.NameOf();
 				var str = new List<string>( 16 );
 				for( int i = 0; i < names.Length; i++ ) {

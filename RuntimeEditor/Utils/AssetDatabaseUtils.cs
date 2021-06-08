@@ -115,6 +115,13 @@ namespace HananokiEditor {
 		#endregion
 
 
+		public static bool OpenAsset( string guid_or_path ) {
+			var obj = guid_or_path.LoadAsset();
+			return AssetDatabase.OpenAsset( obj );
+		}
+
+
+
 		public class LoadAssetResult {
 			public UnityObject main;
 			public UnityObject[] sub;
@@ -172,7 +179,7 @@ namespace HananokiEditor {
 		}
 
 		public static IEnumerable<T> FindAssetsAndLoad<T>() {
-			return FindAssetsAndLoad( typeof( T ) ).Cast<T>();
+			return FindAssetsAndLoad( typeof( T ) ).OfType<T>();
 		}
 
 		public static IEnumerable<UnityObject> FindAssetsAndLoad( Type type ) {

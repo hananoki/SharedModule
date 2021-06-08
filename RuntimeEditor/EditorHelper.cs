@@ -148,7 +148,7 @@ namespace HananokiEditor {
 			var ss = content.Replace( "\r", "" ).Split( '\n' );
 			int step = 0;
 
-			fs.WriteFile( cspath, ( b ) => {
+			fs.WriteFileAll( cspath, ( b ) => {
 				foreach( var s in ss ) {
 					if( step == 0 ) {
 						if( s.Contains( "Compile Include" ) ) {
@@ -288,7 +288,8 @@ namespace HananokiEditor {
 
 		static System.Collections.Hashtable s_typeCache = new System.Collections.Hashtable();
 
-		public static Type GetTypeFromString( string typeName ) {
+
+		public static Type GetTypeFromString( string typeName, bool インナークラスの検索を有効にする = false ) {
 			if( typeName.IsEmpty() ) return null;
 
 			Type cache = (Type) s_typeCache[ typeName ];
@@ -297,10 +298,13 @@ namespace HananokiEditor {
 			var t = Type.GetType( typeName );
 			if( t != null ) return t;
 
-			var lst = AssemblieUtils.loadedTypes
-					.Where( x => x.FullName.Contains( typeName ) )
-					.Where( x => !x.FullName.Contains( "+" ) )
-					.ToList();
+			var e = AssemblieUtils.loadedTypes.Where( x => x.FullName.Contains( typeName ) );
+
+			if( !インナークラスの検索を有効にする ) {
+				e = e.Where( x => !x.FullName.Contains( "+" ) );
+			}
+
+			var lst = e.ToList();
 
 			if( lst.Count == 0 ) return null;
 			if( lst.Count == 1 ) return lst[ 0 ];
@@ -317,7 +321,8 @@ namespace HananokiEditor {
 				}
 			}
 
-			return null;
+
+			return lst[ 0 ];
 		}
 
 
@@ -620,11 +625,14 @@ namespace HananokiEditor {
 		}
 
 		public static void EditScript( UnityObject obj ) {
-			if( obj.IsSubclassOf( UnityTypes.UnityEngine_ScriptableObject ) ) {
+			if( obj.IsSubclassOf( typeof( ScriptableObject ) ) ) {
 				EditScriptIsScriptableObject( (ScriptableObject) obj );
 			}
-			else {
+			else if( obj.IsSubclassOf( typeof( MonoBehaviour ) ) ) {
 				EditScriptIsMonoBehaviour( (MonoBehaviour) obj );
+			}
+			else {
+				AssetDatabase.OpenAsset( obj );
 			}
 		}
 
@@ -634,6 +642,12 @@ namespace HananokiEditor {
 
 		public static void EditScriptIsMonoBehaviour( MonoBehaviour obj ) {
 			AssetDatabase.OpenAsset( MonoScript.FromMonoBehaviour( obj ) );
+		}
+
+		public static void EditScript( string guid_or_path ) {
+			var obj = guid_or_path.LoadAsset();
+
+			EditScript( obj );
 		}
 
 
@@ -647,6 +661,11 @@ namespace HananokiEditor {
 
 		public static void PingObject( object context ) {
 			EditorGUIUtility.PingObject( context.ContextToObject() );
+		}
+
+		public static void PingAndSelectObject( string guid_or_path ) {
+			var obj = guid_or_path.LoadAsset();
+			PingAndSelectObject( obj );
 		}
 
 		public static void PingAndSelectObject( object context ) {
@@ -892,8 +911,8 @@ namespace HananokiEditor {
 
 		public static void DrawTexture( Rect r, Texture2D tex, bool useDropshadow, GUIStyle style ) {
 			if( !( tex == null ) ) {
-				float num = (float) tex.width;
-				float num2 = (float) tex.height;
+				float num = tex.width;
+				float num2 = tex.height;
 				if( num >= num2 && num > r.width ) {
 					num2 = num2 * r.width / num;
 					num = r.width;
@@ -1007,24 +1026,34 @@ namespace HananokiEditor {
 		}
 
 
+		static UnityObject s_selectBak;
+
+
+		/// <summary>
+		/// 指定したオブジェクトを新しいインスペクタで開く
+		/// </summary>
+		/// <param name="uobj"></param>
 		public static void ShowNewInspectorWindow( UnityObject uobj ) {
+
+			s_selectBak = Selection.activeObject;
 			Selection.activeObject = uobj;
 
-			var t = typeof( Editor ).Assembly.GetType( "UnityEditor.InspectorWindow" );
-			var inspector = ScriptableObject.CreateInstance( t ) as EditorWindow;
+			var window = ScriptableObject.CreateInstance( UnityTypes.UnityEditor_InspectorWindow ) as EditorWindow;
 
-			inspector.titleContent = new GUIContent( uobj.name, EditorIcon.unityeditor_inspectorwindow );
-			inspector.Show( true );
-			inspector.Repaint();
+			window.titleContent = new GUIContent( uobj.name, EditorIcon.unityeditor_inspectorwindow );
+			window.Show( true );
+			window.Repaint();
 
 			if( UnitySymbol.Has( "UNITY_2018_3_OR_NEWER" ) ) {
-				inspector.SetProperty( "isLocked", true );
+				window.SetProperty( "isLocked", true );
 			}
 			else {
-				inspector.MethodInvoke( "FlipLocked", null );
+				window.MethodInvoke( "FlipLocked", null );
 			}
 
-			ProjectBrowserUtils.lockOnce();
+			EditorApplication.delayCall += () => {
+				Selection.activeObject = s_selectBak;
+			};
 		}
 
 

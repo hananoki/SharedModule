@@ -33,6 +33,9 @@ namespace HananokiEditor {
 
 		public static bool UNITY_2020_1_OR_NEWER => Has( "UNITY_2020_1_OR_NEWER" );
 		public static bool UNITY_2020_2_OR_NEWER => Has( "UNITY_2020_2_OR_NEWER" );
+		public static bool UNITY_2020_3_OR_NEWER => Has( "UNITY_2020_3_OR_NEWER" );
+
+		public static bool UNITY_2021_1_OR_NEWER => Has( "UNITY_2021_1_OR_NEWER" );
 
 		/// <summary>
 		/// ゲームコードから Unity エディターのスクリプトを呼び出すための #define ディレクティブ

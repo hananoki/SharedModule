@@ -16,5 +16,8 @@ namespace HananokiEditor {
 		static Type _UnityEditor_AssetPostprocessingInternal;
 		public static Type UnityEditor_AssetPostprocessingInternal => Get( ref _UnityEditor_AssetPostprocessingInternal, "UnityEditor.AssetPostprocessingInternal", "UnityEditor" );
 
+		static Type _UnityEditor_Toolbars_EditorToolbarUtility;
+		public static Type UnityEditor_Toolbars_EditorToolbarUtility => Get( ref _UnityEditor_Toolbars_EditorToolbarUtility, "UnityEditor.Toolbars.EditorToolbarUtility", "UnityEditor" );
+
 	}
 }

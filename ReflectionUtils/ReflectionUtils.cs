@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using UnityEngine;
 
 namespace HananokiEditor {
 	public static class R {
@@ -92,13 +93,20 @@ namespace HananokiEditor {
 		}
 
 		public static void MethodInvoke( this object obj, string propertyName, object[] args ) {
-			_MethodInvoke( obj, propertyName ).Invoke( obj, args );
+			var m = _MethodInvoke( obj, propertyName );
+			if( m == null ) {
+				Debug.Log( $"{propertyName} not found" );
+				return;
+			}
+			m.Invoke( obj, args );
 		}
 
 		public static void MethodInvoke( this object obj, string propertyName, Type[] types, object[] args ) {
 			_MethodInvoke( obj, propertyName, types ).Invoke( obj, args );
 		}
-
+		public static T MethodInvoke<T>( this object obj, string propertyName, Type[] types, object[] args ) {
+			return (T) _MethodInvoke( obj, propertyName, types ).Invoke( obj, args );
+		}
 
 
 		public static void MethodInvoke( this Type t, string methodName, object[] args ) {

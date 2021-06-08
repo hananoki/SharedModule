@@ -38,6 +38,13 @@ namespace HananokiEditor.Extensions {
 
 		/////////////////////////////////////////
 
+		public static IEnumerable<T> OrEmptyIfNull<T>( this IEnumerable<T> collection ) {
+			return collection ?? Enumerable.Empty<T>();
+		}
+
+
+		/////////////////////////////////////////
+
 		/// <summary>
 		/// 引数のリスト（何らかの名称のリスト）から、重複する要素を抽出する。
 		/// </summary>

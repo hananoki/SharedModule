@@ -17,6 +17,15 @@ namespace HananokiEditor {
 		public static Texture2D info               => console_infoicon_sml;
 
 		public static Texture2D folder      => icons_processed_folder_icon_asset;
+		public static Texture2D folderOpen =>
+#if UNITY_2020_1_OR_NEWER
+			icons_processed_folderopened_icon_asset;
+#elif UNITY_2019_3_OR_NEWER
+			icons_processed_openedfolder_icon_asset;
+#else
+			icons_processed_folder_icon_asset;
+#endif
+
 		public static Texture2D folderEmpty => icons_processed_folderempty_icon_asset;
 
 

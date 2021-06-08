@@ -20,6 +20,8 @@ namespace HananokiEditor {
 		public List<T> m_registerItems;
 		int m_id;
 		public Rect rectGUI;
+		protected bool m_expandEventLock;
+
 
 		public T currentItem {
 			get {
@@ -86,7 +88,7 @@ namespace HananokiEditor {
 
 
 		/////////////////////////////////////////
-		public T MakeRoot() => new T { depth = -1 };
+		public void MakeRoot() => m_root = new T { depth = -1 };
 
 
 
@@ -179,6 +181,25 @@ namespace HananokiEditor {
 		/////////////////////////////////////////
 		new public void Reload() {
 			//if( m_registerItems.Count == 0 ) return;
+
+			try {
+				base.Reload();
+			}
+			catch( UnityException ) {
+			}
+			catch( Exception e ) {
+				Debug.LogException( e );
+			}
+		}
+
+
+		/////////////////////////////////////////
+
+		//↑のReloadと同じだけど、m_registerItemsとm_rootは共存できないので分離
+		public void ReloadRoot() {
+			if( m_root == null ) return;
+			if( m_root.children == null ) return;
+
 			try {
 				base.Reload();
 			}
@@ -243,6 +264,16 @@ namespace HananokiEditor {
 
 
 
+		/////////////////////////////////////////
+		sealed protected override void ExpandedStateChanged() {
+			if( m_expandEventLock ) return;
+
+			OnExpandedStateChanged();
+		}
+
+		protected virtual void OnExpandedStateChanged() { }
+
+
 		//////////////////////////////////////////////////////////////////////////////////
 		#region m_ContextOnItem
 
@@ -294,9 +325,14 @@ namespace HananokiEditor {
 		protected void Label( RowGUIArgs args, Rect rect, string text, Texture2D image ) {
 			Label( rect, EditorHelper.TempContent( text, image ), args );
 		}
+		protected void Label( RowGUIArgs args, Rect rect, string text, Texture2D image, GUIStyle style ) {
+			_Label( rect, EditorHelper.TempContent( text, image ), style, args );
+		}
+
 		protected void Label( Rect rect, GUIContent content, RowGUIArgs args ) {
 			if( ControlLabel == null ) {
 				ControlLabel = new GUIStyle( "TV Line" );
+				ControlLabel.richText = true;
 			}
 			_Label( rect, content, ControlLabel, args );
 		}

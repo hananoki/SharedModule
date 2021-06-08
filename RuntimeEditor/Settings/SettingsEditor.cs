@@ -9,10 +9,10 @@ using HananokiRuntime;
 using HananokiRuntime.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
-
 using E = HananokiEditor.SharedModule.SettingsEditor;
 
 namespace HananokiEditor.SharedModule {
@@ -27,6 +27,7 @@ namespace HananokiEditor.SharedModule {
 		public bool m_asmdefAutoReferenceOFF;
 		public bool m_disableSyncVS;
 		public bool m_windowShade;
+		public bool m_uielementsFontFix;
 
 
 		public string projectSettingsPath;
@@ -61,6 +62,9 @@ namespace HananokiEditor.SharedModule {
 		public static E i;
 		static List<MethodInfo> s_localizeEvent;
 
+#if UNITY_2019_1_OR_NEWER
+		static EditorWindow s_focusedWindow;
+#endif
 
 		static SettingsEditor() {
 			//var lst = PlayerSettingsUtils.GetScriptingDefineSymbolsAtList();
@@ -70,6 +74,31 @@ namespace HananokiEditor.SharedModule {
 			//	PlayerSettingsUtils.SetScriptingDefineSymbols( lst );
 			//}
 			Load();
+
+			if( E.i.m_uielementsFontFix ) {
+#if UNITY_2019_1_OR_NEWER
+				EditorApplication.update -= FixFont;
+				EditorApplication.update += FixFont;
+				void FixFont() {
+					if( EditorStylesHelper.standardFont == null ) return;
+					if( EditorWindow.focusedWindow != s_focusedWindow ) {
+						if( s_focusedWindow == null ) {
+							foreach( var p in Resources.FindObjectsOfTypeAll( typeof( EditorWindow ) ).OfType<EditorWindow>() ) {
+								var ve = (UnityEngine.UIElements.VisualElement) p.GetRootVisualElement();
+								ve.SetFont( EditorStyles.standardFont );
+							}
+						}
+						else {
+							if( EditorWindow.focusedWindow != null ) {
+								var ve = (UnityEngine.UIElements.VisualElement) EditorWindow.focusedWindow.GetRootVisualElement();
+								ve.SetFont( EditorStyles.standardFont );
+							}
+						}
+					}
+					s_focusedWindow = EditorWindow.focusedWindow;
+				}
+#endif
+			}
 		}
 
 

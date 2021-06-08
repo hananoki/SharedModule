@@ -18,6 +18,10 @@ namespace HananokiEditor {
 		Tooltip,
 		ModalUtility
 		*/
+		public static T GetWindow<T>() where T : EditorWindow  {
+			return EditorWindow.GetWindow<T>( EE.IsUtilityWindow( typeof( T ) ) );
+		}
+
 
 		public static T ShowWindow<T>() where T : EditorWindow {
 			return (T) EditorWindow.GetWindow( typeof( T ), EE.IsUtilityWindow( typeof( T ) ) );
@@ -92,8 +96,8 @@ namespace HananokiEditor {
 			foreach( var p in FindArray( UnityTypes.UnityEditor_InspectorWindow ) ) p.Repaint();
 		}
 		public static void FocusInspector() {
-			foreach( var p in FindArray( UnityTypes.UnityEditor_InspectorWindow ) ) {
-				if( !p.hasFocus ) p.Focus();
+			foreach( var p in FindArray( UnityTypes.UnityEditor_InspectorWindow ).Select( x => new UnityEditorEditorWindow( x ) ) ) {
+				if( !p.hasFocus ) ( (EditorWindow) p.m_instance ).Focus();
 			}
 		}
 

@@ -13,6 +13,8 @@ namespace HananokiEditor {
 	[AttributeUsage( AttributeTargets.Method )]
 	public class HananokiDebugMonitor : Attribute { }
 
+	[AttributeUsage( AttributeTargets.Method )]
+	public class HananokiEditorMDViewerRegister : Attribute { }
 
 	#region SceneViewTools
 
@@ -54,17 +56,6 @@ namespace HananokiEditor {
 	#endregion
 
 
-	#region CustomHierarchy
-
-	//[AttributeUsage( AttributeTargets.Class )]
-	public class ScriptableObjectSelectorAttribute : PropertyAttribute {
-		public bool disablePrefixLabel;
-		public ScriptableObjectSelectorAttribute( bool disablePrefixLabel = false ) {
-			this.disablePrefixLabel = disablePrefixLabel;
-		}
-	}
-
-	#endregion
 }
 
 

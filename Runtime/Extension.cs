@@ -11,9 +11,11 @@ namespace HananokiRuntime.Extensions {
 	public static partial class Extensions {
 #if CSHARP_7_3_OR_NEWER
 
+#if UNITY_2019_2_OR_NEWER
 		public static (short, short) GetWord( this int i ) {
 			return ((short) ( ( i >> 16 ) & 0x0000FFFF ), (short) ( i & 0x0000FFFF ));
 		}
+#endif
 		public static void SetWord( ref this int i, int high, int low ) {
 			i = (int) ( ( high << 16 ) & 0xFFFF0000 ) | ( low & 0x0000FFFF );
 		}
@@ -171,6 +173,10 @@ namespace HananokiRuntime.Extensions {
 		}
 
 
+		public static void AddRangeSafe<T>( this List<T> lst, IEnumerable<T> collection ) {
+			if( collection == null ) return;
+			lst.AddRange( collection );
+		}
 
 		public static T First<T>( this List<T> lst ) {
 			return lst[ 0 ];

@@ -57,11 +57,6 @@ namespace HananokiRuntime {
 	}
 
 
-	[AttributeUsage( AttributeTargets.Class )]
-	public class UtilityWindowAttribute : PropertyAttribute {
-		public UtilityWindowAttribute() {
-		}
-	}
 
 
 

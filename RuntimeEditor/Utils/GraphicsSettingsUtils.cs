@@ -1,5 +1,6 @@
 ﻿
 //#if UNITY_2019_1_OR_NEWER
+using UnityEditor;
 using UnityReflection;
 //#else
 //using UnityEngine.Rendering;
@@ -19,6 +20,17 @@ namespace HananokiEditor {
 			//				//GraphicsSettings.renderPipelineAsset = value; ;
 			//#endif
 			//			}
+		}
+
+
+		public static void 選択中のマテリアルをアップグレードする() {
+			if( UnityProject.URP ) {
+				EditorApplication.ExecuteMenuItem( "Edit/Render Pipeline/Universal Render Pipeline/Upgrade Selected Materials to UniversalRP Materials" );
+			}
+			if( UnityProject.HDRP ) {
+				EditorApplication.ExecuteMenuItem( "Edit/Render Pipeline/HD Render Pipeline/Upgrade from Builtin pipeline/Upgrade Selected Materials to High Definition Materials" );
+			}
+
 		}
 	}
 }

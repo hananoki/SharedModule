@@ -1,5 +1,8 @@
-﻿using HananokiRuntime;
+﻿using HananokiEditor.Extensions;
+using HananokiRuntime;
+using HananokiRuntime.Extensions;
 using System;
+using System.Collections;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -32,6 +35,46 @@ namespace HananokiEditor {
 			var t = EditorHelper.GetTypeFromString( "HananokiEditor.ScriptableObjectManager.MainWindow" );
 			var m = t.GetMethod( "Open", R.AllMembers );
 			t.MethodInvoke( "Open", null );
+		}
+
+
+		public static Hashtable m_enables;
+		public static bool check( string guid ) {
+			if( m_enables == null ) m_enables = new Hashtable();
+
+			var item = m_enables[ guid ];
+			if( item == null ) {
+				m_enables[ guid ] = !guid.ToAssetPath().IsEmpty();
+				item = m_enables[ guid ];
+			}
+			return (bool) item;
+		}
+
+		#region ScriptableObjectManager 
+
+		public class ScriptableObjectManager {
+			public static bool enabled => check( "885435c0eb7180a4aad886bc82f9aea3" );
+
+			public static void ShowCreateMenu() {
+				var t = EditorHelper.GetTypeFromString( "HananokiEditor.ScriptableObjectManager.Utils" );
+				t.MethodInvoke( "ShowMenu", null );
+			}
+		}
+
+
+
+		#endregion
+
+		public static bool ManifestJsonUtility => check( "91a50302e95aae445aa204c762274bfb" );
+
+
+		public delegate void myDelegate( string a, string b, ref Rect c );
+
+		public static myDelegate PBcall;
+
+		//public static Action<string,string,ref Rect> PBcall;
+		public static void AddPB( myDelegate a ) {
+			PBcall += a;
 		}
 	}
 

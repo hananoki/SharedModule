@@ -1,6 +1,7 @@
 ﻿
 using HananokiEditor.Extensions;
 using HananokiRuntime;
+using HananokiRuntime.Extensions;
 using System.Reflection;
 using UnityEditor;
 using UnityReflection;
@@ -58,8 +59,11 @@ namespace HananokiEditor {
 		}
 
 
-		public static void CreateScriptAssetFromTemplateFile( string templatePath ) {
-			var filepath = $"{activeFolderPath}/{templatePath.Split( '-' )[ 2 ].FileNameWithoutExtension()}";
+		public static void CreateScriptAssetFromTemplateFile( string templatePath, string createFolderPath ="" ) {
+			if( createFolderPath.IsEmpty() ) {
+				createFolderPath = activeFolderPath;
+			}
+			var filepath = $"{createFolderPath}/{templatePath.Split( '-' )[ 2 ].FileNameWithoutExtension()}";
 			if( UnitySymbol.UNITY_2019_1_OR_NEWER ) {
 				//ProjectWindowUtil.CreateScriptAssetFromTemplateFile( templatePath, filepath );
 				UnityEditorProjectWindowUtil.CreateScriptAssetFromTemplateFile( templatePath, filepath );
@@ -70,13 +74,19 @@ namespace HananokiEditor {
 		}
 
 
-		public static void CreateFolder( string name ) {
-			string s = activeFolderPath;
 
-			var ss = AssetDatabase.GenerateUniqueAssetPath( $"{s}/{name}" );
-			AssetDatabase.CreateFolder( System.IO.Path.GetDirectoryName( ss ), System.IO.Path.GetFileName( ss ) );
+		public static string CreateFolder( string name ) {
+			var ss = AssetDatabase.GenerateUniqueAssetPath( $"{activeFolderPath}/{name}" );
+			return AssetDatabase.CreateFolder( System.IO.Path.GetDirectoryName( ss ), System.IO.Path.GetFileName( ss ) );
 		}
 
+
+		public static void SetFolderSelection( bool revealSelectionAndFrameLastSelected, params string[] paths ) {
+			if( !init() ) return;
+
+			var ids = UnityEditorProjectBrowser.GetFolderInstanceIDs( paths );
+			s_projectBrowser.SetFolderSelection( ids, true );
+		}
 
 
 		/// <summary>

@@ -28,6 +28,8 @@ namespace HananokiEditor {
 				if( s_ToolbarDropDown == null ) {
 					s_ToolbarDropDown = new GUIStyle( "ToolbarDropDown" );
 					s_ToolbarDropDown.alignment = TextAnchor.MiddleCenter;
+
+					s_ToolbarDropDown.padding.right = 18;
 				}
 				return s_ToolbarDropDown;
 			}
@@ -188,9 +190,28 @@ namespace HananokiEditor {
 		public static bool DropDown2( string text, Texture2D image, Action buttonAction, Action allowAction, params GUILayoutOption[] options ) {
 			return DropDown2( EditorHelper.TempContent( text, image ), buttonAction, allowAction, options );
 		}
+		public static bool DropDown2( Texture2D image, Action buttonAction, Action allowAction, params GUILayoutOption[] options ) {
+			return DropDown2( EditorHelper.TempContent( image ), buttonAction, allowAction, options );
+		}
+
 
 		public static bool DropDown2( GUIContent content, Action buttonAction, Action allowAction, params GUILayoutOption[] options ) {
-			var size = EditorStyles.toolbarDropDown.CalcSize( EditorHelper.TempContent( content.text ) );
+			return ToggleDropDown2( false, content, buttonAction, allowAction, options );
+		}
+
+		public static bool ToggleDropDown2( bool toggle, Texture2D image, Action buttonAction, Action allowAction, params GUILayoutOption[] options ) {
+			return ToggleDropDown2( toggle, EditorHelper.TempContent( image ), buttonAction, allowAction, options );
+		}
+
+
+		public static bool ToggleDropDown2( bool toggle, GUIContent content, Action buttonAction, Action allowAction, params GUILayoutOption[] options ) {
+			Vector2 size;
+			if( content.text.IsEmpty() ) {
+				size = new Vector2( 28, EditorGUIUtility.singleLineHeight );
+			}
+			else {
+				size = EditorStyles.toolbarDropDown.CalcSize( EditorHelper.TempContent( content.text ) );
+			}
 			var r = GUILayoutUtility.GetRect( content, toolbarDropDown, options.Length == 0 ? new GUILayoutOption[] { GUILayout.Width( size.x + 16 ) } : options );
 			HEditorGUI.lastRect = r;
 
@@ -207,12 +228,14 @@ namespace HananokiEditor {
 				buttonAction?.Invoke();
 				Event.current.Use();//ボタンがアクティブになるため
 			}
-			GUI.Button( r, content, toolbarDropDown );
+			GUI.Toggle( r, toggle, content, toolbarDropDown );
 
-			var rr = lRect.AlignCenter( 12, 12 );
-			GUI.DrawTexture( rr, SharedModule.Icon.icondropdown_, ScaleMode.ScaleToFit );
-			GUI.Label( lRect.AddH( -3 ), GUIContent.none, HEditorStyles.dopesheetBackground );
-
+			if( UnitySymbol.UNITY_2019_3_OR_NEWER ) {
+				var rr = lRect.AlignCenter( 12, 12 );
+				GUI.DrawTexture( rr, SharedModule.Icon.icondropdown_, ScaleMode.ScaleToFit );
+				GUI.Label( lRect.AddH( -3 ), GUIContent.none, HEditorStyles.dopesheetBackground );
+			}
+			//EditorGUI.DrawRect( lRect , new Color(0,0,1,0.2f));
 			return result;
 		}
 

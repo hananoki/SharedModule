@@ -1,5 +1,28 @@
 # Shared Module
 
+## [1.9.0] - 2021-06-09
+
+### Added
+- Add options to Settings Editor: `UIElements Font Fix`	
+- Added `EditorIcon.folderOpen`
+- Added `EditorExtensions.L10n`
+- Added `IEnumerableExtensions.OrEmptyIfNull`
+- Added `AssetDatabaseUtils.OpenAsset`
+- Added `EditorPrefsFloat`
+- Added `EditorStylesHelper.standardFont`
+- Added `ExternalPackages.ScriptableObjectManager`
+  - `enabled`
+  - `ShowCreateMenu`
+- Added `ProjectBrowserUtils.SetFolderSelection`
+
+### Changed
+- `fs.WriteFile` is now `fs.WriteFileAll`
+-  `EditorHelper.GetTypeFromString`: Added arguments for inner class
+- 
+### Fixed
+- `EditorHelper.ShowNewInspectorWindow`: Fixed to return the state of Selection
+- Fixed p4 icons for 2020_1
+
 ## [1.8.0] - 2021-04-03
 ### Added
 - Add miscellaneous classes and methods

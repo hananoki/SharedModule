@@ -6,15 +6,43 @@ using UnityEngine;
 namespace HananokiEditor {
 
 	[Serializable]
+	public class EditorPrefsFloat {
+		[SerializeField]
+		string name = "";
+
+		float initValue;
+
+		public EditorPrefsFloat( string name, float initValue = 0 ) {
+			this.name = name;
+			this.initValue = initValue;
+		}
+
+		public float Value {
+			get {
+				return EditorPrefs.GetFloat( name, initValue );
+			}
+			set {
+				EditorPrefs.SetFloat( name, value );
+			}
+		}
+	}
+
+
+	[Serializable]
 	public class EditorPrefsInt {
 		[SerializeField]
 		string name = "";
 
-		public EditorPrefsInt( string name ) { this.name = name; }
+		int initValue;
+
+		public EditorPrefsInt( string name, int initValue = 0 ) {
+			this.name = name;
+			this.initValue = initValue;
+		}
 
 		public int Value {
 			get {
-				return EditorPrefs.GetInt( name, 0 );
+				return EditorPrefs.GetInt( name, initValue );
 			}
 			set {
 				EditorPrefs.SetInt( name, value );
@@ -23,6 +51,11 @@ namespace HananokiEditor {
 
 		public bool Has( int flag ) {
 			return ( Value & flag ) != 0;
+		}
+
+		public void Toggle( int chk, bool b ) {
+			if( b ) EditorPrefs.SetInt( name, Value | chk );
+			else EditorPrefs.SetInt( name, Value & ~chk );
 		}
 	}
 

@@ -58,10 +58,10 @@ namespace UnityReflection {
 		
 		
 		static MethodInfo __Show_0_4;
-		static MethodInfo __Show_1_4;
-		static MethodInfo __Show_2_5;
-		MethodInfo __Show_0_0;
-		MethodInfo __Show_1_1;
+		//static MethodInfo __Show_1_4;
+		//static MethodInfo __Show_2_5;
+		//MethodInfo __Show_0_0;
+		//MethodInfo __Show_1_1;
 	}
 }
 

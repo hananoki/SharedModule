@@ -20,5 +20,11 @@ namespace HananokiEditor.Extensions {
 		public static Vector2 CalcSize( this GUIContent content, GUIStyle style ) {
 			return style.CalcSize( content );
 		}
+
+
+		public static GUIContent L10n( this GUIContent content ) {
+			content.text = UnityEditor.L10n.Tr( content.text );
+			return content;
+		}
 	}
 }

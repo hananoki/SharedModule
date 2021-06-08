@@ -1,0 +1,31 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: Tue Jun 09 2020 02:44:37 GMT+0000 (Coordinated Universal Time)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: po-conv\n"
+"Language: ja\n"
+"Project-Id-Version: 54\n"
+
+msgid "Application Key"
+msgstr "アプリケーションキー"
+
+msgid "Client Key"
+msgstr "クライアントキー"
+
+msgid "Response Validation"
+msgstr "応答の検証"
+
+msgid "Use Push"
+msgstr "プッシュ通知を使う"
+
+msgid "Use Analytics"
+msgstr "アナリティクスを使う"
+
+msgid "Next Scene"
+msgstr "次のシーン"
+
+msgid "Commands"
+msgstr "コマンド"

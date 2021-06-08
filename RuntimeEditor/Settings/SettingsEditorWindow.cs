@@ -77,6 +77,8 @@ namespace HananokiEditor.SharedModule {
 
 			E.i.m_windowShade = HEditorGUILayout.ToggleLeft( S._WindowShade, E.i.m_windowShade );
 
+			E.i.m_uielementsFontFix = HEditorGUILayout.ToggleLeft( "UIElements Font Fix", E.i.m_uielementsFontFix );
+
 			//////////////////////////////////
 
 			GUILayout.Space( 8 );
@@ -113,6 +115,7 @@ namespace HananokiEditor.SharedModule {
 			}
 			ScopeHorizontal.End();
 
+			//HGUILayout.LinkLabel( "hoge" );
 
 			//#if ENABLE_HANANOKI_SETTINGS && LOCAL_TEST
 			//			using( new GUILayout.HorizontalScope() ) {

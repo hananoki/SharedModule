@@ -28,5 +28,14 @@ namespace HananokiEditor {
 		static Type _TMPro_EditorUtilities_TMP_UiEditorPanel;
 		public static Type TMPro_EditorUtilities_TMP_UiEditorPanel => Get( ref _TMPro_EditorUtilities_TMP_UiEditorPanel, "TMPro.EditorUtilities.TMP_UiEditorPanel", "Unity.TextMeshPro" );
 
+		static Type _UnityEditor_LocalizationDatabase;
+		public static Type UnityEditor_LocalizationDatabase => Get( ref _UnityEditor_LocalizationDatabase, "UnityEditor.LocalizationDatabase", "UnityEditor" );
+
+		static Type _UnityEditor_WebView;
+		public static Type UnityEditor_WebView => Get( ref _UnityEditor_WebView, "UnityEditor.WebView", "UnityEditor" );
+
+		static Type _UnityEditor_Web_WebScriptObject;
+		public static Type UnityEditor_Web_WebScriptObject => Get( ref _UnityEditor_Web_WebScriptObject, "UnityEditor.Web.WebScriptObject", "UnityEditor" );
+
 	}
 }

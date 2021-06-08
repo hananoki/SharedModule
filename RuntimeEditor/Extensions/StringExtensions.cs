@@ -187,32 +187,37 @@ namespace HananokiEditor.Extensions {
 
 
 		public static string FileNameWithoutExtension( this string s ) {
+			if( s.IsEmpty() ) return string.Empty;
 			return Path.GetFileNameWithoutExtension( s );
 		}
 
 		public static string DirectoryName( this string s ) {
+			if( s.IsEmpty() ) return string.Empty;
 			return Path.GetDirectoryName( s );
 		}
 
 		public static string FileName( this string s ) {
+			if( s.IsEmpty() ) return string.Empty;
 			return Path.GetFileName( s );
 		}
 
 		public static string Extension( this string s ) {
+			if( s.IsEmpty() ) return string.Empty;
 			return Path.GetExtension( s );
 		}
 
 		public static string GetExtension( this string s ) {
+			if( s.IsEmpty() ) return string.Empty;
 			return Path.GetExtension( s );
 		}
 
 		public static string GetDirectory( this string s ) {
-			if( s == "" ) return "";
+			if( s.IsEmpty() ) return string.Empty;
 			return Path.GetDirectoryName( s );
 		}
 
 		public static string TryReplace( this string s, string oldValue, string newValue ) {
-			if( s == null ) return string.Empty;
+			if( s.IsEmpty() ) return string.Empty;
 			return s.Replace( oldValue, newValue );
 		}
 
@@ -241,6 +246,13 @@ namespace HananokiEditor.Extensions {
 				s = s.DirectoryName();
 			}
 			return s;
+		}
+
+
+		public static T FromJson<T>( this string path ) where T : class {
+			var json = path.ReadAllText();
+			if( json.IsEmpty() ) return null;
+			return JsonUtility.FromJson<T>( json );
 		}
 
 		public static string ReadAllText( this string path ) {

@@ -32,8 +32,8 @@ namespace UnityReflection {
 
 		
 		
-		Func<object> __getter_draggingLocked;
-		Action<object> __setter_draggingLocked;
+		//Func<object> __getter_draggingLocked;
+		//Action<object> __setter_draggingLocked;
 	}
 }
 

@@ -223,7 +223,7 @@ namespace HananokiEditor {
 			}
 			else {
 				//Debug.Log( type .Name);
-				EditorGUILayout.PropertyField( it, true );
+				EditorGUILayout.PropertyField( it, EditorHelper.TempContent( L10n.Tr( it.displayName ) ), true );
 			}
 		}
 	}

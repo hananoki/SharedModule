@@ -1,5 +1,6 @@
 ﻿#if UNITY_EDITOR
 
+using HananokiEditor.Extensions;
 using HananokiRuntime.Extensions;
 using System;
 using System.IO;
@@ -25,6 +26,7 @@ namespace HananokiEditor {
 		public static string[] GetFiles( string path, string searchPattern ) {
 			if( !Directory.Exists( path ) ) return new string[ 0 ];
 
+			// SearchOptionはTopDirectoryOnly扱い
 			return Directory
 					.GetFiles( path, searchPattern )
 					.Select( c => Prettyfy( c ) )
@@ -170,8 +172,13 @@ namespace HananokiEditor {
 			if( !Directory.Exists( Path.GetDirectoryName( dst ) ) ) {
 				Directory.CreateDirectory( Path.GetDirectoryName( dst ) );
 			}
-			if( !File.Exists( src ) ) return;
-			File.Copy( src, dst, overwrite );
+
+			if( File.Exists( src ) ) {
+				File.Copy( src, dst, overwrite );
+			}
+			if( Directory.Exists( src ) ) {
+				DirectoryUtils.DirectoryCopy( src, dst );
+			}
 		}
 		public static void rm( string path, bool recursive = false ) {
 			//try {
@@ -227,7 +234,7 @@ namespace HananokiEditor {
 		/// <param name="func">書き出しアクション</param>
 		/// <param name="autoRefresh">AssetDataBaseにリフレッシュを呼び出すかどうか</param>
 		/// <param name="utf8bom">UTF8のbomをつけるかどうか</param>
-		public static void WriteFile( string fname, Action<StringBuilder> func, bool autoRefresh = true, bool utf8bom = true, bool newLineLinux = true ) {
+		public static void WriteFileAll( string fname, Action<StringBuilder> func, bool autoRefresh = true, bool utf8bom = true, bool newLineLinux = true ) {
 			if( fname.IsEmpty() ) return;
 
 			var builder = new StringBuilder();
@@ -252,6 +259,17 @@ namespace HananokiEditor {
 				AssetDatabase.Refresh( ImportAssetOptions.ImportRecursive );
 			}
 		}
+
+
+		public static void WriteFile( string fname, Action<StringBuilder> func, bool autoRefresh = true ) {
+			WriteFileAll( fname, func,
+				autoRefresh: autoRefresh,
+				utf8bom: false,
+				newLineLinux: true );
+		}
+
+		public static string currentDirectory => Environment.CurrentDirectory.separatorToSlash();
+
 	}
 }
 

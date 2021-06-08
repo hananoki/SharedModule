@@ -90,6 +90,38 @@ namespace HananokiEditor {
 		}
 
 
+		public static GUIStyle LinkStyle {
+			get {
+				if( m_LinkStyle == null ) {
+					m_LinkStyle = new GUIStyle( EditorStyles.label );
+					m_LinkStyle.wordWrap = true;
+					//m_LinkStyle.fontSize = 14;
+					m_LinkStyle.wordWrap = false;
+					// Match selection color which works nicely for both light and dark skins
+					m_LinkStyle.normal.textColor = new Color( 0x00 / 255f, 0x78 / 255f, 0xDA / 255f, 1f );
+					m_LinkStyle.stretchWidth = false;
+				}
+				return m_LinkStyle;
+			}
+		}
+		public static GUIStyle m_LinkStyle;
+
+		public static bool LinkLabel( string label, params GUILayoutOption[] options ) {
+			return LinkLabel(EditorHelper.TempContent( label ), options );
+		}
+		public static bool LinkLabel( GUIContent label, params GUILayoutOption[] options ) {
+			var position = GUILayoutUtility.GetRect(label, LinkStyle, options);
+
+			Handles.BeginGUI();
+			Handles.color = LinkStyle.normal.textColor;
+			Handles.DrawLine( new Vector3( position.xMin, position.yMax ), new Vector3( position.xMax, position.yMax ) );
+			Handles.color = Color.white;
+			Handles.EndGUI();
+
+			EditorGUIUtility.AddCursorRect( position, MouseCursor.Link );
+
+			return GUI.Button( position, label, LinkStyle );
+		}
 	}
 
 
@@ -193,11 +225,7 @@ namespace HananokiEditor {
 		#endregion
 
 
-		public static void LabelBox( string text ) {
-			ScopeHorizontal.Begin( EditorStyles.helpBox );
-			GUILayout.Label( text );
-			ScopeHorizontal.End();
-		}
+
 
 
 		public static string TextFieldAndAction( string label, string text, Action buttonAction, bool safeCheck = true, params GUILayoutOption[] options ) {

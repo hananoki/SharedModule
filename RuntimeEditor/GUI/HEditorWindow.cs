@@ -1,4 +1,5 @@
 ﻿#pragma warning disable 0618
+#pragma warning disable 0109 // newの隠蔽
 
 using HananokiEditor.Extensions;
 //using Hananoki.Reflection;
