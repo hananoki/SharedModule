@@ -251,17 +251,26 @@ namespace HananokiEditor {
 
 
 		/////////////////////////////////////////
-		protected override void SelectionChanged( IList<int> selectedIds ) {
+		sealed protected override void SelectionChanged( IList<int> selectedIds ) {
 			var items = ToItems( selectedIds );
 			if( items.Length == 0 ) return;
 
-			SingleSelectionChanged( items[ 0 ] );
+			OnSelectionChanged( items );
 		}
 
 
 		/////////////////////////////////////////
-		protected virtual void SingleSelectionChanged( T item ) { }
+		protected virtual void OnSelectionChanged( T[] items ) { }
 
+
+
+		/////////////////////////////////////////
+		sealed protected override void SingleClickedItem( int id ) {
+			var item = ToItem( id );
+			if( item == null ) return;
+			OnSingleClickedItem( item );
+		}
+		protected virtual void OnSingleClickedItem( T item ) { }
 
 
 		/////////////////////////////////////////

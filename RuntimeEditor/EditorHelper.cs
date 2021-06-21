@@ -20,6 +20,7 @@ using UnityReflection;
 using CustomEditorAttributes = UnityReflection.UnityEditorCustomEditorAttributes;
 using UnityObject = UnityEngine.Object;
 
+
 namespace HananokiEditor {
 
 	public enum EventMouseButton {
@@ -1026,15 +1027,20 @@ namespace HananokiEditor {
 		}
 
 
+#if !UNITY_2020_1_OR_NEWER
 		static UnityObject s_selectBak;
+#endif
 
 
 		/// <summary>
 		/// 指定したオブジェクトを新しいインスペクタで開く
+		/// UNITY_2020_1_OR_NEWER以降は専用のエディタウィンドウが出来たのでそちらを使う
 		/// </summary>
 		/// <param name="uobj"></param>
 		public static void ShowNewInspectorWindow( UnityObject uobj ) {
-
+#if UNITY_2020_1_OR_NEWER
+			UnityEditorPropertyEditor.OpenPropertyEditor( uobj, true );
+#else
 			s_selectBak = Selection.activeObject;
 			Selection.activeObject = uobj;
 
@@ -1054,6 +1060,7 @@ namespace HananokiEditor {
 			EditorApplication.delayCall += () => {
 				Selection.activeObject = s_selectBak;
 			};
+#endif
 		}
 
 

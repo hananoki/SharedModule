@@ -1,5 +1,6 @@
 ﻿#if UNITY_EDITOR
 
+using HananokiRuntime;
 using UnityEditor;
 using UnityEngine;
 
@@ -7,6 +8,10 @@ namespace HananokiEditor {
 
 
 	public static class HEditorStyles {
+
+
+		static Color s_backGroundColor = EditorGUIUtility.isProSkin ? ColorUtils.RGB( 56 ) : ColorUtils.RGB( 200 );
+		public static Color backGroundColor => s_backGroundColor;
 
 		static GUIStyle s_underLine;
 		public static GUIStyle underLine {

@@ -1,5 +1,18 @@
 # Shared Module
 
+## [1.10.0] - 2021-06-21
+
+### Added
+- Added `Extensions.Invert`
+- Added `EditorExtensions.GetAssetType`
+- Added `HEditorGUI.FolderObjectField`
+- Added `HEditorStyles.backGroundColor`
+- Added `HTreeView.OnSingleClickedItem`
+
+### Changed
+- Changed `HTreeView.SelectionChanged` to sealed
+Do `HTreeView.OnSelectionChanged` instead
+
 ## [1.9.0] - 2021-06-09
 
 ### Added

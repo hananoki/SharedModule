@@ -139,6 +139,10 @@ namespace HananokiEditor.SharedModule {
 		public static string _member_isobsolete__text_ => L.Tr( 124 );
 		public static string _Field_field_isneverassignedto_andwillalwayshaveitsdefaultvalue_value_ => L.Tr( 125 );
 		public static string _Thelocalfunction_function_isdeclaredbutneverused => L.Tr( 126 );
+		public static string _UpgradeSelectedMaterialstoUniversalRPMaterials => L.Tr( 127 );
+		public static string _UpgradeSelectedMaterialstoHighDefinitionMaterials => L.Tr( 128 );
+		public static string _ForceReserializeAssets => L.Tr( 129 );
+		public static string _CopyGUIDToClipboard => L.Tr( 130 );
 	}
 
 #if UNITY_EDITOR

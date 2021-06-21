@@ -25,7 +25,7 @@ namespace HananokiEditor.SharedModule {
 
 	internal class UtilityWindowGUI : HSettingsEditorWindow {
 
-		const string kCom = "Version=0.0.0.0, Culture=neutral, PublicKeyToken=null";
+		//const string kCom = "Version=0.0.0.0, Culture=neutral, PublicKeyToken=null";
 
 		//static string[] typeList = {
 		//	$"HananokiEditor.ScriptableObjectManager.MainWindow",

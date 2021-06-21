@@ -16,7 +16,17 @@ using SS = HananokiEditor.SharedModule.S;
 
 namespace HananokiEditor.SharedModule {
 
-	public class SettingsEditorWindow : HSettingsEditorWindow {
+	public class SettingsEditorWindowGUI {
+
+		[HananokiSettingsRegister]
+		public static SettingsItem RegisterSettings() {
+			return new SettingsItem() {
+				//mode = 1,
+				displayName = Package.nameNicify,
+				version = Package.version,
+				gui = DrawGUI,
+			};
+		}
 
 
 		public static string[] localeFilesPopup;
@@ -28,16 +38,6 @@ namespace HananokiEditor.SharedModule {
 
 		public static List<EditorLocalize.LCIDString> m_localeNames;
 		public static int m_localeIndex;
-
-
-
-		public static void Open() {
-			var w = GetWindow<SettingsEditorWindow>();
-			w.SetTitle( new GUIContent( Package.name, EditorIcon.settings ) );
-			w.headerMame = Package.name;
-			w.headerVersion = Package.version;
-			w.gui = DrawGUI;
-		}
 
 
 
@@ -57,29 +57,42 @@ namespace HananokiEditor.SharedModule {
 				m_localeNames = m_localeNames.OrderBy( x => x.NAME ).ToList();
 			}
 
-			EditorGUI.BeginChangeCheck();
+			ScopeChange.Begin();
 			var idx = m_localeNames.FindIndex( x => x.LCID == E.i.LCID );
 			if( idx < 0 ) {
 				idx = m_localeNames.FindIndex( x => x.LCID == "en-US" );
 			}
 			idx = EditorGUILayout.Popup( S._Language, idx, m_localeNames.Select( x => x.NAME ).ToArray() );
-			if( EditorGUI.EndChangeCheck() ) {
+			if( ScopeChange.End() ) {
 				E.i.LCID = m_localeNames[ idx ].LCID;
 				E.LoadLocalize();
 				E.Save();
 			}
 
+			//////////////////////////////////
+
 			ScopeChange.Begin();
 			GUILayout.Space( 4 );
-			E.i.versionTextColor.value = EditorGUILayout.ColorField( S._VersionTextColor, E.i.versionTextColor.value );
+			var _versionTextColor = EditorGUILayout.ColorField( S._VersionTextColor, E.i.versionTextColor.value );
 
-			E.i.versionBackColor.value = EditorGUILayout.ColorField( S._VersionBackColor, E.i.versionBackColor.value );
+			var _versionBackColor = EditorGUILayout.ColorField( S._VersionBackColor, E.i.versionBackColor.value );
 
-			E.i.m_windowShade = HEditorGUILayout.ToggleLeft( S._WindowShade, E.i.m_windowShade );
+			var _windowShade = HEditorGUILayout.ToggleLeft( S._WindowShade, E.i.m_windowShade );
 
-			E.i.m_uielementsFontFix = HEditorGUILayout.ToggleLeft( "UIElements Font Fix", E.i.m_uielementsFontFix );
+			var _uielementsFontFix = HEditorGUILayout.ToggleLeft( "UIElements Font Fix", E.i.m_uielementsFontFix );
+
+			if( ScopeChange.End() ) {
+				E.i.versionTextColor.value = _versionTextColor;
+				E.i.versionBackColor.value = _versionBackColor;
+				E.i.m_windowShade = _windowShade;
+				E.i.m_uielementsFontFix = _uielementsFontFix;
+				E.Save();
+				EditorWindowUtils.RepaintProjectWindow();
+			}
 
 			//////////////////////////////////
+
+			ScopeChange.Begin();
 
 			GUILayout.Space( 8 );
 
@@ -139,43 +152,5 @@ namespace HananokiEditor.SharedModule {
 			} );
 			m.DropDownAtMousePosition();
 		}
-
-
-
-#if !ENABLE_HANANOKI_SETTINGS
-#if UNITY_2018_3_OR_NEWER && !ENABLE_LEGACY_PREFERENCE
-		[SettingsProvider]
-		public static SettingsProvider PreferenceView() {
-			var provider = new SettingsProvider( $"Preferences/Hananoki", SettingsScope.User ) {
-				label = $"Hananoki",
-				guiHandler = PreferencesGUI,
-				titleBarGuiHandler = () => GUILayout.Label( $"{Package.version}", EditorStyles.miniLabel ),
-			};
-			return provider;
-		}
-		public static void PreferencesGUI( string searchText ) {
-#else
-		[PreferenceItem( "Hananoki" )]
-		public static void PreferencesGUI() {
-#endif
-			using( new LayoutScope() ) DrawGUI();
-		}
-#endif
 	}
-
-
-#if ENABLE_HANANOKI_SETTINGS
-	//[SettingsClass]
-	public class SettingsEditorEvent {
-		[HananokiSettingsRegister]
-		public static SettingsItem RegisterSettings() {
-			return new SettingsItem() {
-				//mode = 1,
-				displayName = Package.nameNicify,
-				version = Package.version,
-				gui = SettingsEditorWindow.DrawGUI,
-			};
-		}
-	}
-#endif
 }

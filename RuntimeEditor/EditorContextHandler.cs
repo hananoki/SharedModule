@@ -12,6 +12,7 @@ namespace HananokiEditor {
 			EditorHelper.ShowNewInspectorWindow( value );
 		}
 
+
 		public static void DuplicateAsset( object context ) {
 			var value = context.ContextToObject();
 
@@ -29,6 +30,7 @@ namespace HananokiEditor {
 		public static void ForceReserializeAssets( object context ) {
 #if UNITY_2017_3_OR_NEWER
 			var value = context.ContextToAssetPath();
+
 			if( value.IsExistsFile() ) {
 				AssetDatabase.ForceReserializeAssets( new string[] { value } );
 			}

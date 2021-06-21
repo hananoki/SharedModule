@@ -125,3 +125,7 @@ The private field 'field' is assigned but its value is never used
 member' is obsolete: 'text'
 Field 'field' is never assigned to, and will always have its default value 'value'
 The local function 'function' is declared but never used
+Upgrade Selected Materials to UniversalRP Materials
+Upgrade Selected Materials to High Definition Materials
+Force Reserialize Assets
+Copy GUID To Clipboard

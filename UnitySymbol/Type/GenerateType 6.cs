@@ -37,5 +37,8 @@ namespace HananokiEditor {
 		static Type _UnityEditor_Web_WebScriptObject;
 		public static Type UnityEditor_Web_WebScriptObject => Get( ref _UnityEditor_Web_WebScriptObject, "UnityEditor.Web.WebScriptObject", "UnityEditor" );
 
+		static Type _UnityEditor_ShaderUtil;
+		public static Type UnityEditor_ShaderUtil => Get( ref _UnityEditor_ShaderUtil, "UnityEditor.ShaderUtil", "UnityEditor" );
+
 	}
 }

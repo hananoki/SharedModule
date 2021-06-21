@@ -127,8 +127,7 @@ namespace HananokiEditor.SharedModule {
 
 
 
-		protected override void SingleClickedItem( int id ) {
-			var item = ToItem( id );
+		protected override void OnSingleClickedItem( Item item ) {
 			if( item.settings == null ) return;
 			m_lastSelect.Value = item.settings.hashCode;
 		}

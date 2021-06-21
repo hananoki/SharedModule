@@ -385,7 +385,7 @@ namespace HananokiEditor {
 			}
 			catch( ExitGUIException ) {
 			}
-			return (T) obj;
+			return obj;
 		}
 
 		public static T ObjectField<T>( Rect position, T obj, bool allowSceneObjects = false ) where T : UnityObject {
@@ -393,6 +393,36 @@ namespace HananokiEditor {
 		}
 
 		#endregion
+
+
+		public static string FolderObjectField( Rect position, string guid, bool safeCheck = true ) {
+			UnityObject value = null;
+			var path = guid.ToAssetPath();
+			if( !path.IsEmpty() ) {
+				value = path.LoadAsset<UnityObject>();
+			}
+
+			using( new GUIBackgroundColorScope() ) {
+				if( safeCheck && value == null ) {
+					GUI.backgroundColor = HEditorStyles.fieldInvalidColor;
+				}
+
+				if( value == null && !guid.IsEmpty() ) {
+					var sz = guid.CalcSize( EditorStyles.miniLabel );
+					EditorGUI.DrawRect( position.W( sz.x ).AlignCenterH( sz.y ), HEditorStyles.fieldInvalidColor );
+					HEditorGUI.MiniLabel( position, guid );
+					//HEditorGUI.MiniLabelR( position, guid );
+					//value = ObjectField<T>( position.AlignR( 32 ), value );
+					EditorGUI.LabelField( position, value.name );
+				}
+				else {
+					value = (UnityObject) EditorGUI.ObjectField( position, value, typeof( DefaultAsset ), false );
+					EditorGUI.LabelField( position.TrimR(18), EditorHelper.TempContent( value.ToAssetPath(), EditorIcon.folder ), EditorStyles.objectField );
+				}
+				if( value == null ) return guid;
+			}
+			return value.ToGUID();
+		}
 
 
 

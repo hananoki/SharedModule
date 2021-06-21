@@ -47,7 +47,7 @@ namespace HananokiEditor.SharedModule {
 
 
 
-		[MenuItem( "Window/Hananoki/Settings", false, 190 )]
+		[MenuItem( "Window/Hananoki/Settings", false, 'S' * 10 )]
 		public static void Open() {
 			var window = GetWindow<SettingsWindow>();
 			window.SetTitle( new GUIContent( SS._Settings, EditorIcon.settings ) );

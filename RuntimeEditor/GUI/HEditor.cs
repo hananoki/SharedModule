@@ -14,9 +14,9 @@ namespace HananokiEditor {
 		Dictionary<string, bool> _foldLists;
 
 		void OnEnable() {
-			_reorderableLists = new Dictionary<string, HReorderableList>();
-			_editorLists = new Dictionary<string, Editor>();
-			_foldLists = new Dictionary<string, bool>();
+			//_reorderableLists = new Dictionary<string, HReorderableList>();
+			//_editorLists = new Dictionary<string, Editor>();
+			//_foldLists = new Dictionary<string, bool>();
 
 			OnEnableOveride();
 		}
@@ -74,6 +74,10 @@ namespace HananokiEditor {
 		}
 
 		public void DrawPropertys() {
+			if( _reorderableLists ==null) _reorderableLists = new Dictionary<string, HReorderableList>();
+			if( _editorLists == null) _editorLists = new Dictionary<string, Editor>();
+			if( _foldLists == null) _foldLists = new Dictionary<string, bool>();
+
 			using( new SerializedObjectScope( serializedObject ) ) {
 				var it = serializedObject.GetIterator();
 

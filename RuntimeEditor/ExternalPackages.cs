@@ -19,16 +19,8 @@ namespace HananokiEditor {
 		public const string menuScriptableObjectManager = "Window/Hananoki/Scriptable Object Manager";
 		public const string menuRenderPipeline = "Window/Hananoki/Render Pipeline";
 
-		public static bool hasAsmdefEditor {
-			get {
-				var t = EditorHelper.GetTypeFromString( "HananokiEditor.AsmdefEditorWindow" );
-				return t == null ? false : true;
-			}
-		}
-		public static void ExecuteAsmdefEditor( string asmdefName ) {
-			var t = EditorHelper.GetTypeFromString( "HananokiEditor.AsmdefEditorWindow" );
-			t.MethodInvoke( "OpenAsName", new object[] { asmdefName } );
-		}
+		
+		
 
 
 		public static void ExecuteScriptableObjectManager() {
@@ -50,6 +42,19 @@ namespace HananokiEditor {
 			return (bool) item;
 		}
 
+
+		#region AsmdefGraph 
+		public class AsmdefGraph {
+			public static bool enabled => check( "2510bf44735f1aa419689bbb7ebf6400" );
+
+			public static void ExecuteAsmdefEditor( string asmdefName ) {
+				var t = EditorHelper.GetTypeFromString( "HananokiEditor.AsmdefEditorWindow" );
+				t.MethodInvoke( "OpenAsName", new object[] { asmdefName } );
+			}
+		}
+		#endregion
+
+
 		#region ScriptableObjectManager 
 
 		public class ScriptableObjectManager {
@@ -64,6 +69,26 @@ namespace HananokiEditor {
 
 
 		#endregion
+
+
+		#region ToolbarExtension 
+
+		public class ToolbarExtension {
+
+			public static bool enabled => check( "a4b88bda276254649b633a17904a96db" );
+
+			public static void AddGUI( Action action ) {
+				var t = EditorHelper.GetTypeFromString( "ToolbarExtension.Core" );
+				if( t == null ) {
+					Debug.Log("nullt ");
+					return;
+				}
+				t.MethodInvoke( "AddGUI", new object[] { action } );
+			}
+		}
+
+		#endregion
+
 
 		public static bool ManifestJsonUtility => check( "91a50302e95aae445aa204c762274bfb" );
 

@@ -52,9 +52,13 @@ namespace HananokiRuntime.Extensions {
 			i &= ~chk;
 		}
 
-		public static void Toggle( ref this int i, int chk, bool b ) {
-			if( b ) i |= chk;
-			else i &= ~chk;
+		public static void Toggle( ref this int i, int flag, bool b ) {
+			if( b ) i |= flag;
+			else i &= ~flag;
+		}
+
+		public static void Invert( ref this int i, int flag ) {
+			Toggle( ref i, flag, !i.Has( flag ) );
 		}
 
 		public static int NumderOfBits( this int i ) {

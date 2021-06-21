@@ -102,20 +102,21 @@ namespace HananokiEditor.Extensions {
 		/// </summary>
 		/// <param name="guid">GUID</param>
 		/// <returns></returns>
-		public static string ToAssetPath( this string guid ) {
-			if( guid.IsEmpty() ) return string.Empty;
-			if( guid.StartWithAssets() ) return guid;
-			return AssetDatabase.GUIDToAssetPath( guid );
+		public static string ToAssetPath( this string guid_or_path ) {
+			if( guid_or_path.IsEmpty() ) return string.Empty;
+			if( guid_or_path.StartWithAssets() ) return guid_or_path;
+			return AssetDatabase.GUIDToAssetPath( guid_or_path );
 		}
 
 
-		public static string ToGUID( this string path ) {
-			if( path.IsEmpty() ) return string.Empty;
-			if( path.StartWithAssets() ) return AssetDatabase.AssetPathToGUID( path );
-			return path;
+		public static string ToGUID( this string guid_or_path ) {
+			if( guid_or_path.IsEmpty() ) return string.Empty;
+			if( guid_or_path.StartWithAssets() ) return AssetDatabase.AssetPathToGUID( guid_or_path );
+			return guid_or_path;
 		}
 
 		public static string ToFullPath( this string path ) => Path.GetFullPath( path );
+
 
 
 		public static string[] GetFilesFromAssetPath( this string assetPath ) {
@@ -129,22 +130,39 @@ namespace HananokiEditor.Extensions {
 		}
 
 
-		public static bool StartWithAssets( this string p ) {
-			if( p.IsEmpty() ) return false;
-			if( p[ 1 ] == 's' || p[ 1 ] == 'S' ) return true; // Assets
-			if( p[ 0 ] == 'P' || p[ 0 ] == 'p' ) return true; // Package
+		/////////////////////////////////////////
+		public static bool StartWithAssets( this string assetPath ) {
+			if( assetPath.IsEmpty() ) return false;
+			if( assetPath[ 1 ] == 's' || assetPath[ 1 ] == 'S' ) return true; // Assets
+			if( assetPath[ 0 ] == 'P' || assetPath[ 0 ] == 'p' ) return true; // Package
 			return false;
 		}
-		public static bool StartWithResource( this string p ) {
-			if( p.IsEmpty() ) return false;
-			if( p[ 0 ] == 'R' || p[ 0 ] == 'r' ) return true; // Resource
+
+		/////////////////////////////////////////
+		public static bool StartWithResource( this string assetPath ) {
+			if( assetPath.IsEmpty() ) return false;
+			if( assetPath[ 0 ] == 'R' || assetPath[ 0 ] == 'r' ) return true; // Resource
 			return false;
 		}
-		public static bool StartWithPackage( this string p ) {
-			if( p.IsEmpty() ) return false;
-			if( p[ 0 ] == 'P' || p[ 0 ] == 'p' ) return true; // Package
+
+		/////////////////////////////////////////
+		public static bool StartWithPackage( this string assetPath ) {
+			if( assetPath.IsEmpty() ) return false;
+			if( assetPath[ 0 ] == 'P' || assetPath[ 0 ] == 'p' ) return true; // Package
 			return false;
 		}
+
+
+		/////////////////////////////////////////
+		public static Type GetAssetType( this string guid_or_path )  {
+			var assetPath = guid_or_path.ToAssetPath();
+			if( assetPath.IsEmpty() ) return null;
+			return AssetDatabase.GetMainAssetTypeAtPath( assetPath );
+		}
+
+
+		/////////////////////////////////////////
+		public static UnityObject LoadAsset( this string s ) => LoadAsset<UnityObject>( s );
 
 		public static T LoadAsset<T>( this string s ) where T : UnityObject {
 			return (T) LoadAsset( s, typeof( T ) );
@@ -157,10 +175,9 @@ namespace HananokiEditor.Extensions {
 			return AssetDatabaseUtils.LoadAssetAtGUID( s, t );
 		}
 
-		public static UnityObject LoadAsset( this string s ) => LoadAsset<UnityObject>( s );
 
 
-
+		/////////////////////////////////////////
 		public static UnityObject[] LoadAllAssets( this string s ) {
 			if( s.StartWithAssets() ) return AssetDatabase.LoadAllAssetsAtPath( s );
 
