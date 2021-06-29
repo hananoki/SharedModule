@@ -1,5 +1,46 @@
 # Shared Module
 
+## [1.11.0] - 2021-06-29
+
+### Added
+- Added `AssetDatabaseCache`
+- Added `AssetDatabaseUtils.LoadAssetAtGUIDAndLocalID`
+- Added `ProjectBrowserUtils.isSearching`
+- Added `ProjectBrowserUtils.isPinging`
+- Added `TreeViewItem` extension method
+- Added `EditorExtensions.指定クラスを含む`
+- Added `ExternalPackages.AsmdefGraph.OpenAsName`
+- Added `ExternalPackages.CustomProjectBrowser.DrawProjectItemCallback`
+- Added `ExternalPackages.ScriptableObjectManager.GetRegistTypes`
+- Added `ExternalPackages.ScriptableObjectManager.SetShow`
+- Added `ExternalPackages.FavoriteAssets.SetShow`
+- Added method to `HTreeView`
+  - `GetAllItems`
+  - `GetTreeItems`
+  - `UpdateAllDepth`
+  - `UpdateDepth`
+  - `SetExpanded`
+
+### Changed
+- Changed the automatic output name of `UnitySymbol`
+- Changed the return value of `HEditorGUI.MiniLabelR` to `Rect`
+- Changed the argument of `HTreeView.OnRowGUI`
+- Changed the argument of `HTreeView.OnContextClickedItem`
+- Changed `HTreeView.DoubleClickedItem` to sealed
+Do `HTreeView.OnDoubleClickedItem` instead
+- Changed `HTreeView.SetupDragAndDrop` to sealed
+Do `HTreeView.OnSetupDragAndDrop` instead
+- Changed `HTreeView.CanStartDrag` to sealed
+Do `HTreeView.OnCanStartDrag` instead
+- Removed `HTreeView.FindItem`
+- Removed `HTreeViewContextMenu`
+
+### Fixed
+- `EditorExtensions.GetIcon`
+  - Fixed the acquisition result of `ScriptableObject`
+- `HEditorGUI.FolderObjectField`
+  - Fixed display being distorted before 2019.2.
+
 ## [1.10.0] - 2021-06-21
 
 ### Added
@@ -30,8 +71,8 @@ Do `HTreeView.OnSelectionChanged` instead
 
 ### Changed
 - `fs.WriteFile` is now `fs.WriteFileAll`
--  `EditorHelper.GetTypeFromString`: Added arguments for inner class
-- 
+- `EditorHelper.GetTypeFromString`: Added arguments for inner class
+
 ### Fixed
 - `EditorHelper.ShowNewInspectorWindow`: Fixed to return the state of Selection
 - Fixed p4 icons for 2020_1

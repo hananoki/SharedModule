@@ -1,4 +1,5 @@
 ﻿//using Hananoki.Reflection;
+using HananokiEditor.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,6 +52,48 @@ namespace HananokiEditor {
 
 
 		/////////////////////////////////////////
+
+		/// <summary>
+		/// m_rootを含む全てのアイテムをリストで取得する
+		/// </summary>
+		/// <param name="item"></param>
+		/// <param name="results"></param>
+		public List<T> GetAllItems() {
+			var results = new List<T>();
+			GetTreeItems( m_root, ref results );
+			return results;
+		}
+
+		/// <summary>
+		/// 指定アイテムを含む全てのアイテムをリストで取得する
+		/// </summary>
+		/// <param name="item"></param>
+		/// <param name="results"></param>
+		public void GetTreeItems( T item, ref List<T> results ) {
+			results.Add( item );
+
+			foreach( var p in item.children.OrEmptyIfNull() ) {
+				GetTreeItems( (T) p, ref results );
+			}
+		}
+
+		public void UpdateAllDepth() {
+			UpdateDepth( m_root, -1 );
+		}
+
+		public void UpdateDepth( T item, int depth ) {
+			item.depth = depth;
+			foreach( var p in item.children.OrEmptyIfNull() ) {
+				UpdateDepth( (T) p, depth + 1 );
+			}
+		}
+
+
+		public bool SetExpanded( T item, bool expanded ) {
+			return SetExpanded( item.id, expanded );
+		}
+
+		/////////////////////////////////////////
 		public T ToItem( int id ) {
 			return (T) FindItem( id, rootItem );
 		}
@@ -69,9 +112,9 @@ namespace HananokiEditor {
 
 
 		/////////////////////////////////////////
-		public T FindItem( int id ) {
-			return (T) FindItem( id, rootItem );
-		}
+		//public T FindItem( int id ) {
+		//	return (T) FindItem( id, rootItem );
+		//}
 
 
 		/////////////////////////////////////////
@@ -235,13 +278,13 @@ namespace HananokiEditor {
 		sealed protected override void RowGUI( RowGUIArgs args ) {
 			if( args.item.id == -1 ) return;
 
-			OnRowGUI( args );
+			OnRowGUI( (T) args.item, args );
 		}
 
 
 
 		/////////////////////////////////////////
-		protected virtual void OnRowGUI( RowGUIArgs args ) { }
+		protected virtual void OnRowGUI( T item, RowGUIArgs args ) { }
 
 
 		/////////////////////////////////////////
@@ -270,7 +313,18 @@ namespace HananokiEditor {
 			if( item == null ) return;
 			OnSingleClickedItem( item );
 		}
+
 		protected virtual void OnSingleClickedItem( T item ) { }
+
+
+		/////////////////////////////////////////
+		sealed protected override void DoubleClickedItem( int id ) {
+			var item = ToItem( id );
+			if( item == null ) return;
+			OnDoubleClickedItem( item );
+		}
+
+		protected virtual void OnDoubleClickedItem( T item ) { }
 
 
 		/////////////////////////////////////////
@@ -282,6 +336,23 @@ namespace HananokiEditor {
 
 		protected virtual void OnExpandedStateChanged() { }
 
+		/////////////////////////////////////////
+		sealed protected override void SetupDragAndDrop( SetupDragAndDropArgs args ) {
+			if( args.draggedItemIDs == null ) return;
+			OnSetupDragAndDrop( ToItems( args.draggedItemIDs ) );
+		}
+
+		protected virtual void OnSetupDragAndDrop( T[] items ) {
+		}
+
+		/////////////////////////////////////////
+		sealed protected override bool CanStartDrag( CanStartDragArgs args ) {
+			return OnCanStartDrag( (T) args.draggedItem, args );
+		}
+
+		protected virtual bool OnCanStartDrag( T item, CanStartDragArgs args ) {
+			return false;
+		}
 
 		//////////////////////////////////////////////////////////////////////////////////
 		#region m_ContextOnItem
@@ -289,7 +360,8 @@ namespace HananokiEditor {
 		bool _ContextOnItem = false;
 
 		protected virtual void OnContextClicked() { }
-		protected virtual void OnContextClickedItem( int id ) { }
+
+
 
 		sealed protected override void ContextClicked() {
 			if( _ContextOnItem ) {
@@ -303,8 +375,10 @@ namespace HananokiEditor {
 		sealed protected override void ContextClickedItem( int id ) {
 			_ContextOnItem = true;
 			base.ContextClickedItem( id );
-			OnContextClickedItem( id );
+			OnContextClickedItem( ToItem( id ) );
 		}
+
+		protected virtual void OnContextClickedItem( T Item ) { }
 
 		#endregion
 
@@ -351,18 +425,18 @@ namespace HananokiEditor {
 
 
 
-	public abstract class HTreeViewContextMenu<T> where T : TreeViewItem {
-		protected Action<T[]> m_action;
-		protected GenericMenu m;
+	//public abstract class HTreeViewContextMenu<T> where T : TreeViewItem {
+	//	protected Action<T[]> m_action;
+	//	protected GenericMenu m;
 
-		public void Invoke( T[] item ) {
-			m = new GenericMenu();
-			m_action?.Invoke( item );
-			//m.DropDownAtMousePosition();
-			m.DropDown( new Rect( Event.current.mousePosition, new Vector2( 0, 0 ) ) );
-			Event.current.Use();
-			//m.ShowAsContext();
-			//Event.current.Use();
-		}
-	}
+	//	public void Invoke( T[] item ) {
+	//		m = new GenericMenu();
+	//		m_action?.Invoke( item );
+	//		//m.DropDownAtMousePosition();
+	//		m.DropDown( new Rect( Event.current.mousePosition, new Vector2( 0, 0 ) ) );
+	//		Event.current.Use();
+	//		//m.ShowAsContext();
+	//		//Event.current.Use();
+	//	}
+	//}
 }

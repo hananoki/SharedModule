@@ -1,6 +1,5 @@
 ﻿using HananokiEditor.Extensions;
 using HananokiRuntime;
-using HananokiRuntime.Extensions;
 using System;
 using System.Collections;
 using UnityEditor;
@@ -14,29 +13,13 @@ namespace HananokiEditor {
 
 	public static class ExternalPackages {
 
-		public const string menuBuildAssist = "Window/Hananoki/Build Assist";
-		public const string menuManifestJsonUtility = "Window/Hananoki/Manifest Json Utility";
-		public const string menuScriptableObjectManager = "Window/Hananoki/Scriptable Object Manager";
-		public const string menuRenderPipeline = "Window/Hananoki/Render Pipeline";
-
-		
-		
-
-
-		public static void ExecuteScriptableObjectManager() {
-			var t = EditorHelper.GetTypeFromString( "HananokiEditor.ScriptableObjectManager.MainWindow" );
-			var m = t.GetMethod( "Open", R.AllMembers );
-			t.MethodInvoke( "Open", null );
-		}
-
-
-		public static Hashtable m_enables;
-		public static bool check( string guid ) {
+		static Hashtable m_enables;
+		static bool check( string guid ) {
 			if( m_enables == null ) m_enables = new Hashtable();
 
 			var item = m_enables[ guid ];
 			if( item == null ) {
-				m_enables[ guid ] = !guid.ToAssetPath().IsEmpty();
+				m_enables[ guid ] = guid.ToAssetPath().IsExistsFile();
 				item = m_enables[ guid ];
 			}
 			return (bool) item;
@@ -44,29 +27,90 @@ namespace HananokiEditor {
 
 
 		#region AsmdefGraph 
+
 		public class AsmdefGraph {
+
 			public static bool enabled => check( "2510bf44735f1aa419689bbb7ebf6400" );
 
-			public static void ExecuteAsmdefEditor( string asmdefName ) {
+			public static void OpenAsName( UnityObject unityObject ) {
 				var t = EditorHelper.GetTypeFromString( "HananokiEditor.AsmdefEditorWindow" );
-				t.MethodInvoke( "OpenAsName", new object[] { asmdefName } );
+				t.MethodInvoke( "OpenAsName", new Type[] { typeof( UnityObject ) }, new object[] { unityObject } );
+			}
+
+			public static void OpenAsName( string assetPath ) {
+				var t = EditorHelper.GetTypeFromString( "HananokiEditor.AsmdefEditorWindow" );
+				t.MethodInvoke( "OpenAsName", new Type[] { typeof( string ) }, new object[] { assetPath } );
 			}
 		}
+
+		#endregion
+
+
+		#region CustomProjectBrowser 
+
+		public class CustomProjectBrowser {
+			public static bool enabled => check( "68cd53ef6b462bc48a6292d6e84fdfa4" );
+
+			static Action<string, long, Rect> __DrawProjectItemCallback;
+
+			public static void DrawProjectItemCallback( string guid, long localID, Rect selectionRect ) {
+				if( !enabled ) return;
+
+				if( __DrawProjectItemCallback == null ) {
+					var t = EditorHelper.GetTypeFromString( $"HananokiEditor.CustomProjectBrowser.CustomProjectBrowser" );
+					__DrawProjectItemCallback = (Action<string, long, Rect>) Delegate.CreateDelegate( typeof( Action<string, long, Rect> ), null, t.GetMethod( "DrawProjectItemCallback", R.StaticMembers ) );
+				}
+				__DrawProjectItemCallback( guid, localID, selectionRect );
+			}
+		}
+
 		#endregion
 
 
 		#region ScriptableObjectManager 
 
 		public class ScriptableObjectManager {
+			public const string nameSpace = "HananokiEditor.ScriptableObjectManager";
 			public static bool enabled => check( "885435c0eb7180a4aad886bc82f9aea3" );
 
 			public static void ShowCreateMenu() {
-				var t = EditorHelper.GetTypeFromString( "HananokiEditor.ScriptableObjectManager.Utils" );
+				if( !enabled ) return;
+				var t = EditorHelper.GetTypeFromString( $"{nameSpace}.Utils" );
 				t.MethodInvoke( "ShowMenu", null );
 			}
+
+			public static Type[] GetRegistTypes() {
+				if( !enabled ) return null;
+				var t = EditorHelper.GetTypeFromString( $"{nameSpace}.Utils" );
+				var types = t.MethodInvoke<Type[]>( "GetRegistTypes", null );
+
+				return types;
+			}
+
+			public static void SetShow( bool flag ) {
+				if( !enabled ) return;
+				var t = EditorHelper.GetTypeFromString( $"{nameSpace}.Utils" );
+				t.MethodInvoke( "SetShow", new object[] { flag } );
+			}
+
 		}
 
+		#endregion
 
+
+		#region FavoriteAssets
+
+		public class FavoriteAssets {
+			public const string nameSpace = "HananokiEditor.FavoriteAssets";
+			public static bool enabled => check( "d5e70998d915c354a9c0d7b6ce57a2c1" );
+
+			public static void SetShow( bool flag ) {
+				if( !enabled ) return;
+				var t = EditorHelper.GetTypeFromString( $"{nameSpace}.Utils" );
+				t.MethodInvoke( "SetShow", new object[] { flag } );
+			}
+
+		}
 
 		#endregion
 
@@ -80,7 +124,7 @@ namespace HananokiEditor {
 			public static void AddGUI( Action action ) {
 				var t = EditorHelper.GetTypeFromString( "ToolbarExtension.Core" );
 				if( t == null ) {
-					Debug.Log("nullt ");
+					Debug.Log( "nullt " );
 					return;
 				}
 				t.MethodInvoke( "AddGUI", new object[] { action } );

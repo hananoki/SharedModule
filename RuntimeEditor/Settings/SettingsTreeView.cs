@@ -66,7 +66,7 @@ namespace HananokiEditor.SharedModule {
 		public void SelectAndExpand( string itemName, int mode ) {
 			if( itemName.IsEmpty() ) return;
 
-			var item = FindItem( itemName.GetHashCode() + mode );
+			var item = ToItem( itemName.GetHashCode() + mode );
 
 			//var item = m_registerItems.Find( x => x.displayName == itemName );
 			if( item == null ) return;
@@ -133,8 +133,7 @@ namespace HananokiEditor.SharedModule {
 		}
 
 
-		protected override void OnRowGUI( RowGUIArgs args ) {
-			var item = (Item) args.item;
+		protected override void OnRowGUI( Item item, RowGUIArgs args ) {
 			if( item.root && !args.selected ) {
 				HEditorStyles.sceneTopBarBg.Draw( args.rowRect );
 			}

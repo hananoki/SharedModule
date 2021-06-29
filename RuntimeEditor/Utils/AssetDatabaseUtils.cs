@@ -71,6 +71,16 @@ namespace HananokiEditor {
 		#endregion
 
 
+		public static UnityObject LoadAssetAtGUIDAndLocalID( string guid, long localID ) {
+			foreach( var p in AssetDatabase.LoadAllAssetsAtPath( guid.ToAssetPath() ) ) {
+				string _guid = "";
+				long _localId;
+				AssetDatabase.TryGetGUIDAndLocalFileIdentifier( p, out _guid, out _localId );
+				if( _localId == localID ) return p;
+			}
+			return null;
+		}
+
 
 		#region LoadAllSubAssetsAtPath
 
@@ -80,6 +90,12 @@ namespace HananokiEditor {
 
 		public static UnityObject[] LoadAllSubAssets( object obj ) {
 			var assetPath = obj.ContextToAssetPath();
+			
+			// Do not use ReadObjectThreaded on scene objects!が発生
+			// シーンはサブアセットは無いので空配列を返す
+			if( assetPath.Extension() == ".unity" ) {
+				return new UnityObject[ 0 ];
+			}
 			return AssetDatabase.LoadAllAssetsAtPath( assetPath )
 				.Where( x => x != null )
 				.Where( x => !x.IsMainAsset() )

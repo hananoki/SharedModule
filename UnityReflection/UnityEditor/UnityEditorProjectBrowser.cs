@@ -2,6 +2,7 @@
 
 using HananokiEditor;
 using System;
+using System.Reflection;
 
 namespace UnityReflection {
   public sealed partial class UnityEditorProjectBrowser {
@@ -18,6 +19,66 @@ namespace UnityReflection {
 			//m_instance = Activator.CreateInstance( UnityTypes.UnityEditor_ProjectBrowser, new object[] {} );
    // }
     
+
+		public object m_SearchFilter {
+			get {
+				if( __m_SearchFilter == null ) {
+					__m_SearchFilter = UnityTypes.UnityEditor_ProjectBrowser.GetField( "m_SearchFilter", R.InstanceMembers );
+				}
+				return (object) __m_SearchFilter.GetValue( m_instance );
+			}
+			set {
+				if( __m_SearchFilter == null ) {
+					__m_SearchFilter = UnityTypes.UnityEditor_ProjectBrowser.GetField( "m_SearchFilter", R.InstanceMembers );
+				}
+				__m_SearchFilter.SetValue( m_instance, value );
+			}
+		}
+
+		public object m_AssetTree {
+			get {
+				if( __m_AssetTree == null ) {
+					__m_AssetTree = UnityTypes.UnityEditor_ProjectBrowser.GetField( "m_AssetTree", R.InstanceMembers );
+				}
+				return (object) __m_AssetTree.GetValue( m_instance );
+			}
+			set {
+				if( __m_AssetTree == null ) {
+					__m_AssetTree = UnityTypes.UnityEditor_ProjectBrowser.GetField( "m_AssetTree", R.InstanceMembers );
+				}
+				__m_AssetTree.SetValue( m_instance, value );
+			}
+		}
+
+		public object m_FolderTree {
+			get {
+				if( __m_FolderTree == null ) {
+					__m_FolderTree = UnityTypes.UnityEditor_ProjectBrowser.GetField( "m_FolderTree", R.InstanceMembers );
+				}
+				return (object) __m_FolderTree.GetValue( m_instance );
+			}
+			set {
+				if( __m_FolderTree == null ) {
+					__m_FolderTree = UnityTypes.UnityEditor_ProjectBrowser.GetField( "m_FolderTree", R.InstanceMembers );
+				}
+				__m_FolderTree.SetValue( m_instance, value );
+			}
+		}
+
+		public object m_ListArea {
+			get {
+				if( __m_ListArea == null ) {
+					__m_ListArea = UnityTypes.UnityEditor_ProjectBrowser.GetField( "m_ListArea", R.InstanceMembers );
+				}
+				return (object) __m_ListArea.GetValue( m_instance );
+			}
+			set {
+				if( __m_ListArea == null ) {
+					__m_ListArea = UnityTypes.UnityEditor_ProjectBrowser.GetField( "m_ListArea", R.InstanceMembers );
+				}
+				__m_ListArea.SetValue( m_instance, value );
+			}
+		}
 
 		public bool isLocked {
 			get {
@@ -76,12 +137,12 @@ namespace UnityReflection {
 			__SetSearch_0_1( searchString );
 		}
 		
-		//public void SetSearch( UnityEditor.SearchFilter searchFilter ) {
-		//	if( __SetSearch_1_1 == null ) {
-		//		__SetSearch_1_1 = (Action<UnityEditor.SearchFilter>) Delegate.CreateDelegate( typeof( Action<UnityEditor.SearchFilter> ), m_instance, UnityTypes.UnityEditor_ProjectBrowser.GetMethod( "SetSearch", R.InstanceMembers, null, new Type[]{ typeof( UnityEditor.SearchFilter ) }, null ) );
-		//	}
-		//	__SetSearch_1_1( searchFilter );
-		//}
+		public void SetSearch( object searchFilter ) {
+			if( __SetSearch_1_1 == null ) {
+				__SetSearch_1_1 = (Action<object>) Delegate.CreateDelegate( typeof( Action<object> ), m_instance, UnityTypes.UnityEditor_ProjectBrowser.GetMethod( "SetSearch", R.InstanceMembers, null, new Type[]{ typeof( object ) }, null ) );
+			}
+			__SetSearch_1_1( searchFilter );
+		}
 		
 		public void SetFolderSelection( int[] selectedInstanceIDs, bool revealSelectionAndFrameLastSelected ) {
 			if( __SetFolderSelection_0_2 == null ) {
@@ -92,6 +153,10 @@ namespace UnityReflection {
 		
 		
 		
+		FieldInfo __m_SearchFilter;
+		FieldInfo __m_AssetTree;
+		FieldInfo __m_FolderTree;
+		FieldInfo __m_ListArea;
 		Func<bool> __getter_isLocked;
 		Action<bool> __setter_isLocked;
 		static Func<string> __GetSelectedPath_0_0;
@@ -100,7 +165,7 @@ namespace UnityReflection {
 		Func<string> __GetActiveFolderPath_0_0;
 		Func<bool> __IsTwoColumns_0_0;
 		Action<string> __SetSearch_0_1;
-		//Action<UnityEditor.SearchFilter> __SetSearch_1_1;
+		Action<object> __SetSearch_1_1;
 		Action<int[],bool> __SetFolderSelection_0_2;
 	}
 }

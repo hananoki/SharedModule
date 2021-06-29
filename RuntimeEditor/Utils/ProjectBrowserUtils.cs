@@ -10,6 +10,12 @@ namespace HananokiEditor {
 	public static partial class ProjectBrowserUtils {
 
 		static UnityEditorProjectBrowser s_projectBrowser;
+		static UnityEditorSearchFilter s_searchFilter;
+		static UnityEditorObjectListArea s_objectListArea;
+
+		static UnityEditorPingData s_objectListAreaPing;
+		static UnityEditorPingData s_AssetTreePing;
+
 		static PropertyInfo s_ProjectBrowser_isLocked;
 		static FieldInfo s_ProjectBrowser_m_IsLocked;
 
@@ -24,6 +30,19 @@ namespace HananokiEditor {
 			}
 			if( Helper.IsNull( s_projectBrowser.m_instance ) ) {
 				s_projectBrowser = null;
+			}
+
+			if( s_projectBrowser != null ) {
+				s_searchFilter = new UnityEditorSearchFilter( s_projectBrowser.m_SearchFilter );
+				s_objectListArea = new UnityEditorObjectListArea( s_projectBrowser.m_ListArea );
+				s_objectListAreaPing = new UnityEditorPingData( s_objectListArea.m_Ping );
+
+				if( s_projectBrowser.m_AssetTree != null ) {
+					var cont = new UnityEditorIMGUIControlsTreeViewController( s_projectBrowser.m_AssetTree );
+					var gui = new UnityEditorAssetsTreeViewGUI( cont.gui );
+					s_AssetTreePing = new UnityEditorPingData( gui.m_Ping );
+				}
+				//s_AssetTreePing = new UnityEditorPingData( s_projectBrowser.m_AssetTree );
 			}
 
 			if( UnitySymbol.Has( "UNITY_2018_1_OR_NEWER" ) ) {
@@ -59,7 +78,7 @@ namespace HananokiEditor {
 		}
 
 
-		public static void CreateScriptAssetFromTemplateFile( string templatePath, string createFolderPath ="" ) {
+		public static void CreateScriptAssetFromTemplateFile( string templatePath, string createFolderPath = "" ) {
 			if( createFolderPath.IsEmpty() ) {
 				createFolderPath = activeFolderPath;
 			}
@@ -100,13 +119,39 @@ namespace HananokiEditor {
 		}
 
 
-		public static bool IsTwoColumns() {
-			if( !init() ) return false;
+		public static bool isTwoColumns {
+			get {
+				if( !init() ) return false;
 
-			return s_projectBrowser.IsTwoColumns();
+				return s_projectBrowser.IsTwoColumns();
+			}
 		}
 
+		public static bool isSearching {
+			get {
+				if( !init() ) return false;
 
+				return s_searchFilter.IsSearching();
+			}
+		}
+
+		public static bool pingUsed;
+
+		public static bool isPinging {
+			get {
+				if( !init() ) return false;
+
+				var ping = isTwoColumns ? s_objectListAreaPing : s_AssetTreePing;
+
+				if( pingUsed ) {
+					if( !ping.isPinging ) {
+						pingUsed = false;
+					}
+					return false;
+				}
+				return ping.isPinging;
+			}
+		}
 
 		static bool m_IsLocked {
 			get {
@@ -147,23 +192,22 @@ namespace HananokiEditor {
 		}
 
 
+		public static void SelectionChangedLockProjectWindow( string path ) {
+			if( path.IsEmpty() ) return;
+
+			SelectionChangedLockProjectWindow( path.LoadAsset() );
+		}
+
 		/// <summary>
 		/// プロジェクトブラウザの表示状態を維持してオブジェクトの選択を行います
 		/// </summary>
 		/// <param name="obj"></param>
 		public static void SelectionChangedLockProjectWindow( UnityEngine.Object obj ) {
 			if( obj == null ) return;
-			SelectionChangedLockProjectWindow( AssetDatabase.GetAssetPath( obj ) );
-		}
-
-
-		public static void SelectionChangedLockProjectWindow( string path ) {
-			if( string.IsNullOrEmpty( path ) ) return;
 
 			m_IsLocked = true;
 			Selection.selectionChanged += unlock;
-
-			Selection.activeObject = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>( path );
+			Selection.activeObject = obj;
 		}
 
 

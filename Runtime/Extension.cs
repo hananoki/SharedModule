@@ -203,6 +203,14 @@ namespace HananokiRuntime.Extensions {
 		}
 
 
+		public static void FindRemove<T>( this List<T> lst, Predicate<T> match ) {
+		loop:
+			var index = lst.FindIndex( match );
+			if( index < 0 ) return;
+			lst.RemoveAt( index );
+			goto loop;
+		}
+
 
 		public static Vector3 PositionToBottomSphre( this CharacterController cc ) {
 			var ofs = cc.center;

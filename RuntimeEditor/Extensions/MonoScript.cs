@@ -20,9 +20,7 @@ namespace HananokiEditor.Extensions {
 			output = null;
 
 			// 標準で返ってくるならそれを返す
-			if( result != null ) {
-				return result;
-			}
+			if( result != null ) return result;
 
 			// ファイル名==クラス名になるはず、名前一致したものから検索
 			output = AssemblieUtils.loadedTypes

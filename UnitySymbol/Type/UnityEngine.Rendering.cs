@@ -4,6 +4,9 @@ using System;
 namespace HananokiEditor {
 	public static partial class UnityTypes {
 
+		static Type _UnityEngine_Rendering_GraphicsSettings;
+		public static Type UnityEngine_Rendering_GraphicsSettings => Get( ref _UnityEngine_Rendering_GraphicsSettings, "UnityEngine.Rendering.GraphicsSettings", "UnityEngine" );
+
 		static Type _UnityEngine_Rendering_Universal_UniversalRenderPipelineAsset;
 		public static Type UnityEngine_Rendering_Universal_UniversalRenderPipelineAsset => Get( ref _UnityEngine_Rendering_Universal_UniversalRenderPipelineAsset, "UnityEngine.Rendering.Universal.UniversalRenderPipelineAsset", "Unity.RenderPipelines.Universal.Runtime" );
 

@@ -54,7 +54,7 @@ namespace HananokiEditor {
 
 		#region MiniLabelR
 
-		public static void MiniLabelR( Rect position, string title ) {
+		public static Rect MiniLabelR( Rect position, string title ) {
 			var lrc = position;
 			var cont = EditorHelper.TempContent( $"{title}" );
 			var size = HEditorStyles.versionLabel.CalcSize( cont );
@@ -65,6 +65,8 @@ namespace HananokiEditor {
 			EditorGUI.DrawRect( lrc, SharedModule.SettingsEditor.i.versionBackColor );
 			HEditorStyles.versionLabel.normal.textColor = SharedModule.SettingsEditor.i.versionTextColor;
 			GUI.Label( lrc, $"{title}", HEditorStyles.versionLabel );
+
+			return lrc;
 		}
 
 		#endregion
@@ -417,7 +419,10 @@ namespace HananokiEditor {
 				}
 				else {
 					value = (UnityObject) EditorGUI.ObjectField( position, value, typeof( DefaultAsset ), false );
-					EditorGUI.LabelField( position.TrimR(18), EditorHelper.TempContent( value.ToAssetPath(), EditorIcon.folder ), EditorStyles.objectField );
+					if(!UnitySymbol.UNITY_2019_3_OR_NEWER) {
+						EditorGUI.DrawRect( position.TrimR( 18 ), HEditorStyles.backGroundColor );
+					}
+					EditorGUI.LabelField( position.TrimR(18), EditorHelper.TempContent( value.ToAssetPath(), EditorIcon.folder ), EditorStyles.textField );
 				}
 				if( value == null ) return guid;
 			}

@@ -29,21 +29,25 @@ namespace HananokiEditor.Extensions {
 
 		/// <summary>
 		/// アセットがプロジェクトウインドウでメインのアセットかどうか
+		/// objがnullの場合はfalseなのでサブアセット判定するならIsSubAssetを使う
 		/// </summary>
 		/// <param name="obj"></param>
 		/// <returns></returns>
 		public static bool IsMainAsset( this UnityObject obj ) {
+			if( obj == null ) return false;
 			return AssetDatabase.IsMainAsset( obj );
 		}
 
 
 		/// <summary>
 		/// このアセットが他のアセットの一部かどうか
+		/// objがnullの場合はfalseなのでメインアセット判定するならIsMainAssetを使う
 		/// </summary>
 		/// <param name="obj"></param>
 		/// <returns></returns>
 		public static bool IsSubAsset( this UnityObject obj ) {
 			// ??? AssetDatabase.IsSubAssetの結果がおかしい、バグ? 2019.4.5f1
+			if( obj == null ) return false;
 			return !AssetDatabase.IsMainAsset( obj );
 		}
 
@@ -114,6 +118,11 @@ namespace HananokiEditor.Extensions {
 			if( target == null ) return false;
 			Assert.IsTrue( t != null );
 			return t.IsAssignableFrom( target.GetType() );
+		}
+
+		public static Type GetTypeSafe( this UnityObject target ) {
+			if( target == null ) return null;
+			return target.GetType();
 		}
 	}
 }

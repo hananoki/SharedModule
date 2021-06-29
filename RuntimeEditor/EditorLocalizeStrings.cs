@@ -143,6 +143,8 @@ namespace HananokiEditor.SharedModule {
 		public static string _UpgradeSelectedMaterialstoHighDefinitionMaterials => L.Tr( 128 );
 		public static string _ForceReserializeAssets => L.Tr( 129 );
 		public static string _CopyGUIDToClipboard => L.Tr( 130 );
+		public static string _SearchPath => L.Tr( 131 );
+		public static string _AssetType => L.Tr( 132 );
 	}
 
 #if UNITY_EDITOR
