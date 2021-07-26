@@ -203,8 +203,14 @@ namespace HananokiRuntime.Extensions {
 		}
 
 
+		public static T FindSafe<T>( this List<T> lst, Predicate<T> match ) where T : class {
+			if( lst == null ) return null;
+			return lst.Find( match );
+		}
+
 		public static void FindRemove<T>( this List<T> lst, Predicate<T> match ) {
-		loop:
+			if( lst == null ) return;
+			loop:
 			var index = lst.FindIndex( match );
 			if( index < 0 ) return;
 			lst.RemoveAt( index );

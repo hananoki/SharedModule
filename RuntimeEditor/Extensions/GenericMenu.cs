@@ -71,7 +71,7 @@ namespace HananokiEditor.Extensions {
 		public static void DropDownPopupRect( this GenericMenu menu, Rect rect ) {
 			menu.DropDown( rect );
 			GUI.FocusControl( "" );
-			Event.current.Use();
+			Event.current?.Use();
 		}
 
 	}

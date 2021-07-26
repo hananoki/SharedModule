@@ -15,6 +15,7 @@ using UnityEditor;
 using UnityEngine;
 using E = HananokiEditor.SharedModule.SettingsEditor;
 
+
 namespace HananokiEditor.SharedModule {
 	[InitializeOnLoad]
 	[Serializable]
@@ -59,8 +60,11 @@ namespace HananokiEditor.SharedModule {
 		public List<UtilityWindowSettingsData> utilityWindowSettingsData;
 		public CSPFileData m_CSPFileData;
 
+		public List<int> m_enableOnOpen;
+
 		public static E i;
 		static List<MethodInfo> s_localizeEvent;
+
 
 #if UNITY_2019_1_OR_NEWER
 		static EditorWindow s_focusedWindow;

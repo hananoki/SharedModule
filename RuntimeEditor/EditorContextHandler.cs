@@ -62,7 +62,7 @@ namespace HananokiEditor {
 				ProjectBrowserUtils.CreateScriptAssetFromTemplateFile( filePath );
 			}
 			else {
-				EditorUtility.DisplayDialog( SS._Info, SS._Templatefilenotfound, SS._OK );
+				HEditorDialog.Info( SS._Templatefilenotfound );
 				//ScriptTemplatesWindow.Open();
 			}
 		}

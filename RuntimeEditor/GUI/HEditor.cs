@@ -2,6 +2,7 @@
 using HananokiRuntime;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using ScriptAttributeUtility = UnityReflection.UnityEditorScriptAttributeUtility;
@@ -12,6 +13,10 @@ namespace HananokiEditor {
 		Dictionary<string, HReorderableList> _reorderableLists;
 		Dictionary<string, Editor> _editorLists;
 		Dictionary<string, bool> _foldLists;
+
+		Type[] m_managedReferenceTypes;
+		GUIContent[] m_managedReferencePopup;
+		string[] m_managedReferenceFullnames;
 
 		void OnEnable() {
 			//_reorderableLists = new Dictionary<string, HReorderableList>();
@@ -73,10 +78,11 @@ namespace HananokiEditor {
 			return null;
 		}
 
+
 		public void DrawPropertys() {
-			if( _reorderableLists ==null) _reorderableLists = new Dictionary<string, HReorderableList>();
-			if( _editorLists == null) _editorLists = new Dictionary<string, Editor>();
-			if( _foldLists == null) _foldLists = new Dictionary<string, bool>();
+			if( _reorderableLists == null ) _reorderableLists = new Dictionary<string, HReorderableList>();
+			if( _editorLists == null ) _editorLists = new Dictionary<string, Editor>();
+			if( _foldLists == null ) _foldLists = new Dictionary<string, bool>();
 
 			using( new SerializedObjectScope( serializedObject ) ) {
 				var it = serializedObject.GetIterator();
@@ -99,11 +105,13 @@ namespace HananokiEditor {
 			}
 		}
 
+
 		void _Draw( SerializedProperty it, ref bool fold ) {
-			System.Type type = null;
+			Type type = null;
 			var field = ScriptAttributeUtility.GetFieldInfoFromProperty( it, ref type );
 			var attrs = ScriptAttributeUtility.GetFieldAttributes( field );
 			//Debug.Log(it.displayName);
+
 			if( GetHas( attrs, typeof( GroupAttribute ) ) ) {
 				if( !_foldLists.ContainsKey( it.displayName ) ) {
 					_foldLists.Add( it.displayName, true );
@@ -158,6 +166,12 @@ namespace HananokiEditor {
 			//	hander.MethodInvoke<bool>( "OnGUI", new object[] { } );
 			//}
 			//OnGUI( Rect position, SerializedProperty property, GUIContent label, bool includeChildren )
+#if UNITY_2019_3_OR_NEWER
+			if( it.propertyType == SerializedPropertyType.ManagedReference ) {
+				DrawSerializeReference( it  );
+			}
+			else
+#endif
 			if( it.propertyType == SerializedPropertyType.ObjectReference && !GetHas( attrs, typeof( PropertyAttribute ) ) ) {
 				if( it.objectReferenceValue == null ) {
 					//EditorGUILayout.PropertyField( it, true );
@@ -220,7 +234,8 @@ namespace HananokiEditor {
 				else {
 					//HGUIScope.Horizontal(_);
 					//void _() {
-					it.objectReferenceValue = EditorGUILayout.ObjectField( it.displayName, it.objectReferenceValue, type, true );
+					//it.objectReferenceValue = EditorGUILayout.ObjectField( it.displayName, it.objectReferenceValue, type, true );
+					EditorGUILayout.PropertyField( it, EditorHelper.TempContent( L10n.Tr( it.displayName ) ), true );
 					//	GUILayout.Button("aaaa");
 					//}
 				}
@@ -230,6 +245,41 @@ namespace HananokiEditor {
 				EditorGUILayout.PropertyField( it, EditorHelper.TempContent( L10n.Tr( it.displayName ) ), true );
 			}
 		}
+
+#if UNITY_2019_3_OR_NEWER
+		void DrawSerializeReference( SerializedProperty property ) {
+			var cont = EditorHelper.TempContent( L10n.Tr( property.displayName ) );
+			var rect = GUILayoutUtility.GetRect( cont , EditorStyles.numberField, GUILayout.Height( property.GetPropertyHeight( true ) ) );
+			
+			var rectR = EditorGUI.PrefixLabel( rect, cont );
+			rectR.height = EditorGUIUtility.singleLineHeight;
+
+			if( m_managedReferenceTypes == null ) {
+				InitSubClass( property );
+			}
+
+			ScopeChange.Begin();
+			var index = Array.IndexOf( m_managedReferenceFullnames, property.managedReferenceFullTypename );
+			index = EditorGUI.Popup( rectR, index, m_managedReferencePopup );
+			if( ScopeChange.End() ) {
+				property.SetManagedReferenceValue( m_managedReferenceTypes[ index ] );
+			}
+
+			//GUI.Button( rectR , "DrawSerializeReference" );
+			//HEditorGUI.DrawDebugRect( rectR );
+			;
+			EditorGUI.PropertyField( rect, property, GUIContent.none, true );
+
+			void InitSubClass( SerializedProperty p ) {
+				var lst = AssemblieUtils.SubclassesOf( property.GetManagedReferenceFieldType() ).ToList();
+				lst.Insert( 0, null );
+				m_managedReferenceTypes = lst.ToArray();
+				m_managedReferencePopup = m_managedReferenceTypes.Select( t => t == null ? new GUIContent( "None", EditorIcon.warning ) : new GUIContent( t.ToString(), EditorIcon.icons_processed_boo_script_icon_asset ) ).ToArray();
+				m_managedReferenceFullnames = m_managedReferenceTypes.Select( t => t == null ? "" : $"{t.Assembly.ToString().Split( ',' )[ 0 ]} {t.FullName}" ).ToArray();
+			}
+		}
+#endif
+
 	}
 
 }

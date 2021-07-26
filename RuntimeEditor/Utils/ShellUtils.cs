@@ -48,7 +48,7 @@ namespace HananokiEditor {
 
 				if( !path.IsExistsDirectory() ) {
 					UnityDebug.LogWarning( $"ShellOpenDirectory: Not Found: {path}" );
-					EditorUtility.DisplayDialog( SS._Warning, $"Not Found Directory\n{path}", "OK" );
+					HEditorDialog.Warning( $"Not Found Directory\n{path}" );
 					return;
 				}
 

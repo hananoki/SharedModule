@@ -154,10 +154,17 @@ namespace HananokiEditor.Extensions {
 
 
 		/////////////////////////////////////////
-		public static Type GetAssetType( this string guid_or_path )  {
+		public static Type GetAssetType( this string guid_or_path ) {
 			var assetPath = guid_or_path.ToAssetPath();
 			if( assetPath.IsEmpty() ) return null;
-			return AssetDatabase.GetMainAssetTypeAtPath( assetPath );
+			try {
+				return AssetDatabase.GetMainAssetTypeAtPath( assetPath );
+			}
+			catch( Exception e ) {
+				Debug.LogException( e );
+				Debug.Log( assetPath );
+			}
+			return null;
 		}
 
 

@@ -2,6 +2,7 @@
 using HananokiRuntime;
 using System;
 using System.Linq;
+using System.Threading;
 using UnityEditor;
 using UnityEngine;
 
@@ -124,7 +125,7 @@ namespace HananokiEditor {
 		public ProgressBarScope( string name, int max ) {
 			m_name = name;
 			m_fval = 0.00f;
-			m_fadd = 1.00f / (float) max;
+			m_fadd = 1.00f / max;
 		}
 
 		public void Next( string message ) {
@@ -146,6 +147,18 @@ namespace HananokiEditor {
 		}
 		protected override void CloseScope() {
 			EditorGUI.indentLevel = indentLevel;
+		}
+	}
+
+
+	public struct WriteLock : IDisposable {
+		ReaderWriterLockSlim obj;
+		public WriteLock( ReaderWriterLockSlim lockObj ) {
+			obj = lockObj;
+			lockObj.EnterWriteLock();
+		}
+		public void Dispose() {
+			obj.ExitWriteLock();
 		}
 	}
 }

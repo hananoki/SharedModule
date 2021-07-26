@@ -16,5 +16,11 @@ namespace HananokiEditor {
 		static Type _TMPro_TMP_FontAsset;
 		public static Type TMPro_TMP_FontAsset => Get( ref _TMPro_TMP_FontAsset, "TMPro.TMP_FontAsset", "Unity.TextMeshPro" );
 
+		static Type _TMPro_EditorUtilities_TMP_UiEditorPanel;
+		public static Type TMPro_EditorUtilities_TMP_UiEditorPanel => Get( ref _TMPro_EditorUtilities_TMP_UiEditorPanel, "TMPro.EditorUtilities.TMP_UiEditorPanel", "Unity.TextMeshPro" );
+
+		static Type _TMPro_TMP_SpriteAsset;
+		public static Type TMPro_TMP_SpriteAsset => Get( ref _TMPro_TMP_SpriteAsset, "TMPro.TMP_SpriteAsset", "Unity.TextMeshPro" );
+
 	}
 }

@@ -16,6 +16,9 @@ namespace HananokiEditor {
 		static Type _UnityEditor_EditorAssemblies;
 		public static Type UnityEditor_EditorAssemblies => Get( ref _UnityEditor_EditorAssemblies, "UnityEditor.EditorAssemblies", "UnityEditor" );
 
+		static Type _UnityEditor_EditorUtility;
+		public static Type UnityEditor_EditorUtility => Get( ref _UnityEditor_EditorUtility, "UnityEditor.EditorUtility", "UnityEditor" );
+
 		static Type _UnityEditor_GameObjectUtility;
 		public static Type UnityEditor_GameObjectUtility => Get( ref _UnityEditor_GameObjectUtility, "UnityEditor.GameObjectUtility", "UnityEditor" );
 

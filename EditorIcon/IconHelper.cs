@@ -1,6 +1,4 @@
-﻿
-using HananokiRuntime.Extensions;
-using System;
+﻿using HananokiRuntime.Extensions;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,16 +6,17 @@ using UnityEditor;
 using UnityEngine;
 using UnityReflection;
 
+
 namespace HananokiEditor {
-	/// <summary>
-	/// 
-	/// </summary>
+
 	public static class Icon {
+
 		static Dictionary<string, Texture2D> s_iconCache;
 
-		/// <summary>
-		/// 
-		/// </summary>
+		public static Texture2D iconFailed => AssetDatabase.LoadAssetAtPath<Texture2D>( AssetDatabase.GUIDToAssetPath( "39bd12b4c648ffa45b5dcbe9874af5d4" ) );
+
+
+
 		static Icon() {
 			s_iconCache = new Dictionary<string, Texture2D>();
 		}
@@ -51,13 +50,16 @@ namespace HananokiEditor {
 
 			return Get( $"icons/packagemanager/light/{name}.png" );
 		}
+
+
 		public static Texture2D GetBuiltinSKins( string name ) {
 			if( EditorGUIUtility.isProSkin ) {
-				return Get( $"builtin skins/darkskin/images/{name}.png" );
+				return GetOrLoadFromBuiltin( $"builtin skins/darkskin/images/{name}.png" );
 			}
 
-			return Get( $"builtin skins/lightskin/images/{name}.png" );
+			return GetOrLoadFromBuiltin( $"builtin skins/lightskin/images/{name}.png" );
 		}
+
 
 		public static string GetBuiltinPath( string path ) {
 			var paths = path.Split( '/' );
@@ -86,48 +88,48 @@ namespace HananokiEditor {
 
 			Texture2D icon;
 
-			try {
-				icon = EditorGUIUtility.FindTexture( name ) as Texture2D;
-				if( icon != null ) {
-					s_iconCache.Add( name, icon );
-					return icon;
-				}
-			}
-			catch( Exception ) {
-			}
+			//try {
+			//	icon = EditorGUIUtility.FindTexture( name ) as Texture2D;
+			//	if( icon != null ) {
+			//		s_iconCache.Add( name, icon );
+			//		return icon;
+			//	}
+			//}
+			//catch( Exception ) {
+			//}
 
-			try {
-				Texture2D iconz = EditorGUIUtility.Load( name ) as Texture2D;
-				//var iconz = EditorGUIUtility.IconContent( name ).image as Texture2D;
-				if( iconz != null ) {
-					s_iconCache.Add( name, iconz );
-					return iconz;
-				}
-			}
-			catch( Exception ) {
-			}
+			//try {
+			//	Texture2D iconz = EditorGUIUtility.Load( name ) as Texture2D;
+			//	//var iconz = EditorGUIUtility.IconContent( name ).image as Texture2D;
+			//	if( iconz != null ) {
+			//		s_iconCache.Add( name, iconz );
+			//		return iconz;
+			//	}
+			//}
+			//catch( Exception ) {
+			//}
 
-			try {
-				Texture2D iconz = EditorGUIUtility.Load( "icons/" + name + ".png" ) as Texture2D;
-				//var iconz = EditorGUIUtility.IconContent( name ).image as Texture2D;
-				if( iconz != null ) {
-					s_iconCache.Add( name, iconz );
-					return iconz;
-				}
-			}
-			catch( Exception ) {
-			}
+			//try {
+			//	Texture2D iconz = EditorGUIUtility.Load( "icons/" + name + ".png" ) as Texture2D;
+			//	//var iconz = EditorGUIUtility.IconContent( name ).image as Texture2D;
+			//	if( iconz != null ) {
+			//		s_iconCache.Add( name, iconz );
+			//		return iconz;
+			//	}
+			//}
+			//catch( Exception ) {
+			//}
 
-			try {
-				Texture2D iconz = EditorGUIUtility.Load( name ) as Texture2D;
-				//var iconz = EditorGUIUtility.IconContent( name ).image as Texture2D;
-				if( iconz != null ) {
-					s_iconCache.Add( name, iconz );
-					return iconz;
-				}
-			}
-			catch( Exception ) {
-			}
+			//try {
+			//	Texture2D iconz = EditorGUIUtility.Load( name ) as Texture2D;
+			//	//var iconz = EditorGUIUtility.IconContent( name ).image as Texture2D;
+			//	if( iconz != null ) {
+			//		s_iconCache.Add( name, iconz );
+			//		return iconz;
+			//	}
+			//}
+			//catch( Exception ) {
+			//}
 
 			var a = AssetDatabase.FindAssets( "Icons" );
 			foreach( var b in a ) {
@@ -150,8 +152,17 @@ namespace HananokiEditor {
 					return lst[ 0 ];
 				}
 			}
+
+			if( s_iconCache.ContainsKey( "icon_failed" ) ) {
+				return s_iconCache[ "icon_failed" ];
+			}
+			s_iconCache.Add( name, iconFailed );
+#if HANANOKI_DEBUG
+			Debug.Log( $"icon not found {name}." );
+#endif
 			return null;
 		}
+
 	}
 
 }

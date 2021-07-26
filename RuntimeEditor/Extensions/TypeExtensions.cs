@@ -1,4 +1,6 @@
-﻿using System;
+﻿using HananokiRuntime;
+using System;
+using System.Collections;
 using UnityEditor;
 using UnityEngine;
 using UnityReflection;
@@ -24,35 +26,62 @@ namespace HananokiEditor.Extensions {
 		}
 
 
+		static Hashtable s_iconCache;
+
 		/// <summary>
 		/// Typeからアイコンを取得します
 		/// 注意点、ObjectContentから取得できない場合、MonoScript検索が行われるため重いです
 		/// 20210624 ScriptableObject系のものがObjectContentだと変な結果になるので専用の対応をする
-		/// @todo キャッシュ化
+		/// 20210716 キャッシュ対応と存在しないアイコンの時の対応を追加
 		/// </summary>
-		/// <param name="t"></param>
-		/// <returns></returns>
+		/// <param name="t">アセットorコンポーネントの型</param>
+		/// <returns>アイコン</returns>
 		public static Texture2D GetIcon( this Type t ) {
+			Helper.New( ref s_iconCache );
+			Texture2D icon = null;
+
+			if( t == null ) {
+				return HananokiEditor.Icon.iconFailed;
+			}
+			icon = (Texture2D) s_iconCache[ t ];
+
+			// キャッシュが見つかったらそれを返す
+			if( icon != null ) return icon;
+
+			// 見つからない時はいろいろと探す
+			// それでも見つからない場合はマゼンタなエラーアイコンになる
+
 			if( t.指定クラスを含む( typeof( ScriptableObject ) ) ) {
 				var mn = EditorHelper.GetMonoScriptFromType( t );
 				if( mn != null ) {
 					var ic = mn.GetCachedIcon();
-					
+
 					// スクリプトに割り付けられたアイコンがあるなら、それを返す
-					if( EditorIcon.cs_script != ic ) return ic;
+					if( EditorIcon.cs_script != ic ) {
+						icon = ic;
+						goto find;
+					}
 				}
 				// ObjectContentではdefaultアイコンなので直接指定アイコンを返す
-				return EditorIcon.scriptableobject;
+				icon = EditorIcon.scriptableobject;
+				goto find;
 			}
 
-			// 2020.3、ScriptableObjectだとDefaultアイコンが返ってくるので↑で専用判定で回避
-			var ico = (Texture2D) EditorGUIUtility.ObjectContent( null, t ).image;
-			if( ico != null ) return ico;
+			icon = (Texture2D) EditorGUIUtility.ObjectContent( null, t ).image;
+			if( icon != null ) {
+				goto find;
+			}
 
 			var mono = EditorHelper.GetMonoScriptFromType( t );
-			if( mono == null ) return null;
-			ico = mono.GetCachedIcon();
-			return ico;
+			if( mono == null ) {
+				icon = HananokiEditor.Icon.iconFailed;
+				goto find;
+			}
+			icon = mono.GetCachedIcon();
+
+		find:
+			s_iconCache.Add( t, icon );
+			return icon;
 		}
 
 

@@ -193,6 +193,10 @@ namespace HananokiEditor {
 		public static string[] FindAssets( Type type ) {
 			return AssetDatabase.FindAssets( $"t:{type.Name}" );
 		}
+		
+		public static string[] FindAssets( Type type, params string[] searchInFolders ) {
+			return AssetDatabase.FindAssets( $"t:{type.Name}", searchInFolders );
+		}
 
 		public static IEnumerable<T> FindAssetsAndLoad<T>() {
 			return FindAssetsAndLoad( typeof( T ) ).OfType<T>();

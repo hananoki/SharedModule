@@ -80,6 +80,36 @@ namespace UnityReflection {
 			}
 		}
 
+		public string m_SearchFieldText {
+			get {
+				if( __m_SearchFieldText == null ) {
+					__m_SearchFieldText = UnityTypes.UnityEditor_ProjectBrowser.GetField( "m_SearchFieldText", R.InstanceMembers );
+				}
+				return (string) __m_SearchFieldText.GetValue( m_instance );
+			}
+			set {
+				if( __m_SearchFieldText == null ) {
+					__m_SearchFieldText = UnityTypes.UnityEditor_ProjectBrowser.GetField( "m_SearchFieldText", R.InstanceMembers );
+				}
+				__m_SearchFieldText.SetValue( m_instance, value );
+			}
+		}
+
+		public double m_NextSearch {
+			get {
+				if( __m_NextSearch == null ) {
+					__m_NextSearch = UnityTypes.UnityEditor_ProjectBrowser.GetField( "m_NextSearch", R.InstanceMembers );
+				}
+				return (double) __m_NextSearch.GetValue( m_instance );
+			}
+			set {
+				if( __m_NextSearch == null ) {
+					__m_NextSearch = UnityTypes.UnityEditor_ProjectBrowser.GetField( "m_NextSearch", R.InstanceMembers );
+				}
+				__m_NextSearch.SetValue( m_instance, value );
+			}
+		}
+
 		public bool isLocked {
 			get {
 				if( __getter_isLocked == null ) {
@@ -116,20 +146,6 @@ namespace UnityReflection {
 			return __GetFolderInstanceIDs_0_1( folders );
 		}
 		
-		public string GetActiveFolderPath() {
-			if( __GetActiveFolderPath_0_0 == null ) {
-				__GetActiveFolderPath_0_0 = (Func<string>) Delegate.CreateDelegate( typeof( Func<string> ), m_instance, UnityTypes.UnityEditor_ProjectBrowser.GetMethod( "GetActiveFolderPath", R.InstanceMembers, null, new Type[]{  }, null ) );
-			}
-			return __GetActiveFolderPath_0_0();
-		}
-		
-		public bool IsTwoColumns() {
-			if( __IsTwoColumns_0_0 == null ) {
-				__IsTwoColumns_0_0 = (Func<bool>) Delegate.CreateDelegate( typeof( Func<bool> ), m_instance, UnityTypes.UnityEditor_ProjectBrowser.GetMethod( "IsTwoColumns", R.InstanceMembers, null, new Type[]{  }, null ) );
-			}
-			return __IsTwoColumns_0_0();
-		}
-		
 		public void SetSearch( string searchString ) {
 			if( __SetSearch_0_1 == null ) {
 				__SetSearch_0_1 = (Action<string>) Delegate.CreateDelegate( typeof( Action<string> ), m_instance, UnityTypes.UnityEditor_ProjectBrowser.GetMethod( "SetSearch", R.InstanceMembers, null, new Type[]{ typeof( string ) }, null ) );
@@ -142,6 +158,20 @@ namespace UnityReflection {
 				__SetSearch_1_1 = (Action<object>) Delegate.CreateDelegate( typeof( Action<object> ), m_instance, UnityTypes.UnityEditor_ProjectBrowser.GetMethod( "SetSearch", R.InstanceMembers, null, new Type[]{ typeof( object ) }, null ) );
 			}
 			__SetSearch_1_1( searchFilter );
+		}
+		
+		public string GetActiveFolderPath() {
+			if( __GetActiveFolderPath_0_0 == null ) {
+				__GetActiveFolderPath_0_0 = (Func<string>) Delegate.CreateDelegate( typeof( Func<string> ), m_instance, UnityTypes.UnityEditor_ProjectBrowser.GetMethod( "GetActiveFolderPath", R.InstanceMembers, null, new Type[]{  }, null ) );
+			}
+			return __GetActiveFolderPath_0_0();
+		}
+		
+		public bool IsTwoColumns() {
+			if( __IsTwoColumns_0_0 == null ) {
+				__IsTwoColumns_0_0 = (Func<bool>) Delegate.CreateDelegate( typeof( Func<bool> ), m_instance, UnityTypes.UnityEditor_ProjectBrowser.GetMethod( "IsTwoColumns", R.InstanceMembers, null, new Type[]{  }, null ) );
+			}
+			return __IsTwoColumns_0_0();
 		}
 		
 		public void SetFolderSelection( int[] selectedInstanceIDs, bool revealSelectionAndFrameLastSelected ) {
@@ -157,15 +187,17 @@ namespace UnityReflection {
 		FieldInfo __m_AssetTree;
 		FieldInfo __m_FolderTree;
 		FieldInfo __m_ListArea;
+		FieldInfo __m_SearchFieldText;
+		FieldInfo __m_NextSearch;
 		Func<bool> __getter_isLocked;
 		Action<bool> __setter_isLocked;
 		static Func<string> __GetSelectedPath_0_0;
 		static Func<System.Collections.IList> __GetAllProjectBrowsers_0_0;
 		static Func<string[], int[]> __GetFolderInstanceIDs_0_1;
-		Func<string> __GetActiveFolderPath_0_0;
-		Func<bool> __IsTwoColumns_0_0;
 		Action<string> __SetSearch_0_1;
 		Action<object> __SetSearch_1_1;
+		Func<string> __GetActiveFolderPath_0_0;
+		Func<bool> __IsTwoColumns_0_0;
 		Action<int[],bool> __SetFolderSelection_0_2;
 	}
 }

@@ -35,14 +35,25 @@ namespace HananokiEditor {
 
 		//public static Texture2D playButton => EditorIcon.playbutton;
 
-		public static Texture2D allowUp             => SharedModule.Icon.AllowUp_;
-		public static Texture2D allowDown           => SharedModule.Icon.AllowDown_;
-		public static Texture2D minus               => IconDictionary.GetSelect( SharedModule.Icon.ol_minus_, SharedModule.Icon.d_ol_minus_ );
-		public static Texture2D plus                => IconDictionary.GetSelect( SharedModule.Icon.ol_plus_, SharedModule.Icon.d_ol_plus_ );
-		public static Texture2D burger              => IconDictionary.GetSelect( SharedModule.Icon.burger_, SharedModule.Icon.d_burger_ );
-		public static Texture2D dopesheetBackground => SharedModule.Icon.DopesheetBackground_;
+		public static Texture2D allowUp                          => SharedModule.Icon.AllowUp_;
+		public static Texture2D allowDown                        => SharedModule.Icon.AllowDown_;
+		public static Texture2D minus                            => IconDictionary.GetSelect( SharedModule.Icon.ol_minus_, SharedModule.Icon.d_ol_minus_ );
+		public static Texture2D plus                             => IconDictionary.GetSelect( SharedModule.Icon.ol_plus_, SharedModule.Icon.d_ol_plus_ );
+		public static Texture2D burger                           => IconDictionary.GetSelect( SharedModule.Icon.burger_, SharedModule.Icon.d_burger_ );
+		public static Texture2D dopesheetBackground              => SharedModule.Icon.DopesheetBackground_;
+		public static Texture2D VisualEffectAsset                => Icon.Get( "light/VisualEffectAsset Icon", "dark/d_VisualEffectAsset Icon" );
+		public static Texture2D RayTracingShader                 => Icon.Get( "light/RayTracingShader Icon", "dark/d_RayTracingShader Icon" );
+		public static Texture2D AssemblyDefinitionReferenceAsset => Icon.Get( "light/AssemblyDefinitionReferenceAsset Icon", "dark/d_AssemblyDefinitionReferenceAsset Icon" );
+		public static Texture2D LightingSettings                 => Icon.Get( "light/LightingSettings Icon", "dark/d_LightingSettings Icon" );
+		public static Texture2D Texture2D                        => Icon.Get( "light/Texture2D Icon", "dark/d_Texture2D Icon" );
+		public static Texture2D VisualEffectSubgraphBlock        => Icon.Get( "light/VisualEffectSubgraphBlock Icon", "dark/d_VisualEffectSubgraphBlock Icon" );
+		public static Texture2D VisualEffectSubgraphOperator     => Icon.Get( "light/VisualEffectSubgraphOperator Icon", "dark/d_VisualEffectSubgraphOperator Icon" );
+		public static Texture2D AnimationFilterBySelection       => Icon.Get( "light/Animation.FilterBySelection", "dark/d_Animation.FilterBySelection" );
+		public static Texture2D CustomTool                       => Icon.Get( "light/CustomTool", "dark/d_CustomTool" );
 
 		//public static Texture2D installed => Icon.GetPackageManagerIcon( "installed" );
+		public static Texture2D CH_T => IconDictionary.GetSelect( SharedModule.Icon.CH_T, SharedModule.Icon.d_CH_T );
+		public static Texture2D CH_I => IconDictionary.GetSelect( SharedModule.Icon.CH_I, SharedModule.Icon.d_CH_I );
 
 		public static Texture2D[] s_waitspin;
 		public static Texture2D[] waitspin {

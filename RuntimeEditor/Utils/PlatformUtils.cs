@@ -53,12 +53,9 @@ namespace HananokiEditor {
 		/// <param name="target"></param>
 		/// <returns></returns>
 		public static bool SwitchActiveBuildTarget( BuildTargetGroup group, BuildTarget target ) {
-
-			bool result = EditorUtility.DisplayDialog( S._Confirm, $"{ S._RequiresSwitchActiveBuildTarget}\n{S._IsitOK_}", S._OK, S._Cancel );
-			if( !result ) return false;
-
-			EditorUserBuildSettings.SwitchActiveBuildTarget( group, target );
-			return true;
+			return HEditorDialog.Confirm( $"{ S._RequiresSwitchActiveBuildTarget}\n{S._IsitOK_}", () => {
+				EditorUserBuildSettings.SwitchActiveBuildTarget( group, target );
+			} );
 		}
 
 

@@ -80,7 +80,7 @@ namespace HananokiEditor.SharedModule {
 			GUILayout.FlexibleSpace();
 			ScopeDisable.Begin( !exist );
 			if( GUILayout.Button( S._DisplayContents ) ) {
-				EditorUtility.DisplayDialog( S._Confirm, fs.ReadAllText( kAssetPath ), S._OK );
+				HEditorDialog.Confirm( fs.ReadAllText( kAssetPath ) );
 			}
 			if( GUILayout.Button( S._Delete ) ) {
 				fs.rm( kAssetPath );

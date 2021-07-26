@@ -78,65 +78,101 @@ namespace HananokiEditor {
 		/// シリアライズされたSerializeReferenceデータを書き換えます
 		/// "typeId"は今まで自分が設定していた名前がそれだったから、特に意味はなし
 		/// </summary>
-		/// <param name="self"></param>
-		public static void FixSerializeReference( UnityObject self ) {
-			FixSerializeReference( self, "typeId" );
+		/// <param name="self">書換えたいオブジェクト</param>
+		/// <returns>書換えが発生した回数</returns>
+		public static int FixSerializeReference( UnityObject self ) {
+			return FixSerializeReference( self, "typeId" );
+		}
+		public static int FixSerializeReference( string filePath ) {
+			return FixSerializeReference( filePath, "typeId" );
 		}
 
+		public static int FixSerializeReference( UnityObject self, string typeIdName ) {
+			return FixSerializeReference( self.ToAssetPath(), typeIdName );
+		}
+
+		static Dictionary<int, string> s_repDic;
 
 		/// <summary>
 		/// シリアライズされたSerializeReferenceデータを書き換えます
 		/// </summary>
-		/// <param name="self"></param>
-		/// <param name="typeIdName"></param>
-		public static void FixSerializeReference( UnityObject self, string typeIdName ) {
+		/// <param name="self">書換えたいオブジェクト</param>
+		/// <param name="typeIdName">型IDのフィールド名</param>
+		/// <returns>書換えが発生した回数</returns>
+		public static int FixSerializeReference( string filePath, string typeIdName ) {
+			InternalMakeSerializeReferenceAttrName();
 			using( new AssetEditingScope() ) {
-				var meta = $"{self.ToAssetPath()}";
-				var aa = meta.ReadAllText().Split( '\n' );
-				var dic = new Dictionary<int, string>();
+				return InternalFixSerializeReference( filePath, typeIdName );
+			}
+		}
 
-				// 差し替え用の文字列を作成しておく
-				foreach( var p in UnityEditorEditorAssemblies.GetAllTypesWithAttribute<TypeIDAttribute>() ) {
-					var attr = p.GetCustomAttributes( typeof( TypeIDAttribute ), false );
-					var cls = $"class: {p.Name}, ns: {p.Namespace}, asm: {p.Assembly.FullName.Split( ',' )[ 0 ]}";
-					dic.Add( ( (TypeIDAttribute) attr[ 0 ] ).id, cls );
-				}
+		public static void InternalMakeSerializeReferenceAttrName() {
+			if( s_repDic != null ) return;
 
-				var b = new StringBuilder();
-				for( int i = 0; i < aa.Length; i++ ) {
-					var p = aa[ i ];
-					if( p.IsEmpty() ) continue;
+			s_repDic = new Dictionary<int, string>();
 
-					// SerializeReferenceが格納するデータ形式で判定
-					// 2020.1の単一行シリアライズについては動作未確認
-					if( p.Contains( "type: {class" ) ) {
-						bool find = false;
-						for( int j = 0; j < 10; j++ ) {
-							var s = aa[ i + 2 + j ];
-							if( !s.Contains( typeIdName ) ) continue;
-
-							var p2 = s.Split( ':' )[ 1 ].TrimStart().toInt();
-							b.AppendLine( $"      type: {{{dic[ p2 ]}}}" );
-							find = true;
-							break;
-						}
-						if( !find ) {
-							// 書換え対象が見つからないのでそのまま出力
-							b.AppendLine( p );
-						}
-					}
-					else {
-						b.AppendLine( p );
-					}
-				}
-
-				fs.WriteAllText( self.ToAssetPath(), b.ToString().Replace( "\r\n", "\n" ) );
+			// 差し替え用の文字列を作成しておく
+			foreach( var p in UnityEditorEditorAssemblies.GetAllTypesWithAttribute<TypeIDAttribute>() ) {
+				var attr = p.GetCustomAttributes( typeof( TypeIDAttribute ), false );
+				var cls = $"class: {p.Name}, ns: {p.Namespace}, asm: {p.Assembly.FullName.Split( ',' )[ 0 ]}";
+				s_repDic.Add( ( (TypeIDAttribute) attr[ 0 ] ).id, cls );
 			}
 		}
 
 
+		public static int InternalFixSerializeReference( string filePath, string typeIdName ) {
+			var meta = $"{filePath}";
+			var aa = meta.ReadAllText().Split( '\n' );
+			int count = 0;
 
-		public static void SyncCSProject( AssemblyDefinitionAsset asset ) {
+			var b = new StringBuilder();
+			for( int i = 0; i < aa.Length; i++ ) {
+				var p = aa[ i ];
+				if( p.IsEmpty() ) continue;
+
+				// SerializeReferenceが格納するデータ形式で判定
+				// 2020.1の単一行シリアライズについては動作未確認
+				if( p.Contains( "type: {class" ) ) {
+					bool find = false;
+
+					for( int j = 0; j < 10; j++ ) {
+						var idx = i + 2 + j;
+						if( aa.Length <= idx ) break;
+
+						var s = aa[ idx ];
+						
+						if( !s.Contains( typeIdName ) ) continue;
+
+						var p2 = s.Split( ':' )[ 1 ].TrimStart().toInt();
+						var output = string.Empty;
+						s_repDic.TryGetValue( p2, out output );
+						if( !output.IsEmpty() ) {
+							var str = $"      type: {{{s_repDic[ p2 ]}}}";
+							if( str != p ) {
+								count++;
+							}
+							b.AppendLine( str );
+							find = true;
+						}
+						break;
+					}
+					if( !find ) {
+						// 書換え対象が見つからないのでそのまま出力
+						b.AppendLine( p );
+					}
+				}
+				else {
+					b.AppendLine( p );
+				}
+			}
+
+			fs.WriteAllText( filePath, b.ToString().Replace( "\r\n", "\n" ) );
+			return count;
+		}
+
+
+
+			public static void SyncCSProject( AssemblyDefinitionAsset asset ) {
 			var m_data = (Dictionary<string, object>) EditorJson.Deserialize( asset.text );
 			var aname = (string) m_data[ "name" ];
 			var aa = UnityEditor.Compilation.CompilationPipeline.GetAssemblies().Where( x => x.name == aname ).ToArray();
@@ -1216,9 +1252,6 @@ namespace HananokiEditor {
 		}
 #endif
 	}
-
-
-
 
 
 

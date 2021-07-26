@@ -1,5 +1,4 @@
 ﻿using System;
-using UnityEngine;
 
 
 namespace HananokiEditor {
@@ -10,11 +9,29 @@ namespace HananokiEditor {
 	[AttributeUsage( AttributeTargets.Method )]
 	public class HananokiSettingsRegister : Attribute { }
 
-	[AttributeUsage( AttributeTargets.Method )]
-	public class HananokiDebugMonitor : Attribute { }
+	//[AttributeUsage( AttributeTargets.Method )]
+	//public class HananokiDebugMonitor : Attribute { }
 
 	[AttributeUsage( AttributeTargets.Method )]
 	public class HananokiEditorMDViewerRegister : Attribute { }
+
+
+	[AttributeUsage( AttributeTargets.Method )]
+	public class Hananoki_OnOpenAsset : Attribute {
+		public Type type;
+		public Type subClass;
+		public Hananoki_OnOpenAsset( Type type, Type subClass = null ) {
+			this.type = type;
+			this.subClass = subClass;
+		}
+
+		public string GetName() {
+			var s1 = type != null ? type.Name : string.Empty;
+			var s2 = subClass != null ? subClass.Name : string.Empty;
+			return $"{s1},{s2}";
+		}
+	}
+
 
 	#region SceneViewTools
 

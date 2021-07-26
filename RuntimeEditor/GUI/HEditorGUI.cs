@@ -252,28 +252,31 @@ namespace HananokiEditor {
 
 		#region IconButton
 
-		public static bool IconButton( Rect position, Texture2D image, float heighOffset = 0 ) {
+		public static bool IconButton( Rect position, Texture2D image, float heighOffset = 0, bool mouseUp = false ) {
 			return IconButton( position, image, string.Empty, heighOffset );
 		}
-		public static bool IconButton( Rect position, Texture2D image, string tooltip, float heighOffset = 0 ) {
+		public static bool IconButton( Rect position, Texture2D image, string tooltip, float heighOffset = 0, bool mouseUp = false ) {
 			return IconButton( position, EditorHelper.TempContent( image, tooltip ), HEditorStyles.iconButton, heighOffset );
 		}
-		public static bool IconButton( Rect position, GUIContent content, GUIStyle style, float heighOffset = 0 ) {
+		public static bool IconButton( Rect position, GUIContent content, GUIStyle style, float heighOffset = 0, bool mouseUp = false ) {
 			bool result = false;
 			position.y += heighOffset;
 			HEditorGUI.lastRect = position;
-			//if( EditorHelper.HasMouseClick( position ) ) {
-			//	//Event.current.Use();
-			//	result = true;
-			//}
+			if( !mouseUp && EditorHelper.HasMouseClick( position ) ) {
+				Event.current.Use();
+				result = true;
+			}
 			//else if( EditorHelper.HasMouseClick( position, EventMouseButton.R ) ) {
 			//	//Event.current.Use();
 			//	result = true;
 			//}
-
+			if( !mouseUp ) {
+				GUI.Button( position, content, style );
+				return result;
+			}
 			// ドッキングボタンの対応
 			// MouseUpでボタン押したことにする
-			GUI.changed = false;
+				GUI.changed = false;
 			result = GUI.Button( position, content, style );
 			GUI.changed = result;
 			return result;
@@ -418,11 +421,11 @@ namespace HananokiEditor {
 					EditorGUI.LabelField( position, value.name );
 				}
 				else {
-					value = (UnityObject) EditorGUI.ObjectField( position, value, typeof( DefaultAsset ), false );
-					if(!UnitySymbol.UNITY_2019_3_OR_NEWER) {
+					value = EditorGUI.ObjectField( position, value, typeof( DefaultAsset ), false );
+					if( !UnitySymbol.UNITY_2019_3_OR_NEWER ) {
 						EditorGUI.DrawRect( position.TrimR( 18 ), HEditorStyles.backGroundColor );
 					}
-					EditorGUI.LabelField( position.TrimR(18), EditorHelper.TempContent( value.ToAssetPath(), EditorIcon.folder ), EditorStyles.textField );
+					EditorGUI.LabelField( position.TrimR( 18 ), EditorHelper.TempContent( value.ToAssetPath(), EditorIcon.folder ), EditorStyles.textField );
 				}
 				if( value == null ) return guid;
 			}

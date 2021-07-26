@@ -119,8 +119,13 @@ namespace HananokiEditor {
 
 		/////////////////////////////////////////
 		public void SelectItem( int id ) {
-			SetSelection( new int[] { id }, TreeViewSelectionOptions.FireSelectionChanged );
-			SetFocusAndEnsureSelectedItem();
+			try {
+				SetSelection( new int[] { id }, TreeViewSelectionOptions.FireSelectionChanged );
+				SetFocusAndEnsureSelectedItem();
+			}
+			catch( Exception e ) {
+				Debug.LogException( e );
+			}
 		}
 
 

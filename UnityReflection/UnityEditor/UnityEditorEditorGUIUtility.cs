@@ -1,4 +1,4 @@
-﻿/// UnityEditor.EditorGUIUtility : 2019.4.5f1
+﻿/// UnityEditor.EditorGUIUtility : 2020.3.8f1
 
 using HananokiEditor;
 using System;
@@ -95,6 +95,13 @@ namespace UnityReflection {
 			return __GetBuiltinExtraResource_0_2( type, path );
 		}
 		
+		public static object[] GetBuiltinResourceList( int classID ) {
+			if( __GetBuiltinResourceList_0_1 == null ) {
+				__GetBuiltinResourceList_0_1 = (Func<int, object[]>) Delegate.CreateDelegate( typeof( Func<int, object[]> ), null, UnityTypes.UnityEditor_EditorGUIUtility.GetMethod( "GetBuiltinResourceList", R.StaticMembers, null, new Type[]{ typeof( int ) }, null ) );
+			}
+			return __GetBuiltinResourceList_0_1( classID );
+		}
+		
 		
 		
 		static Func<int> __getter_skinIndex;
@@ -109,6 +116,7 @@ namespace UnityReflection {
 		static Func<UnityEngine.Color> __GetDefaultBackgroundColor_0_0;
 		static Action<UnityEngine.SystemLanguage> __NotifyLanguageChanged_0_1;
 		static Func<System.Type,string, UnityEngine.Object> __GetBuiltinExtraResource_0_2;
+		static Func<int, object[]> __GetBuiltinResourceList_0_1;
 	}
 }
 

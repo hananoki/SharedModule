@@ -55,5 +55,8 @@ namespace HananokiEditor {
 		static Type _Unity_MPE_ProcessService;
 		public static Type Unity_MPE_ProcessService => Get( ref _Unity_MPE_ProcessService, "Unity.MPE.ProcessService", "UnityEditor" );
 
+		static Type _UnityEngine_Video_VideoClip;
+		public static Type UnityEngine_Video_VideoClip => Get( ref _UnityEngine_Video_VideoClip, "UnityEngine.Video.VideoClip", "UnityEngine" );
+
 	}
 }

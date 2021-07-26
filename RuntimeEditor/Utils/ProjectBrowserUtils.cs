@@ -110,12 +110,28 @@ namespace HananokiEditor {
 
 		/// <summary>
 		/// プロジェクトブラウザの検索文字列を指定します
+		/// 内部的にサーチ結果表示するために現在の選択フォルダがクリアされる
+		/// つまり空文字でリセットしようとするとフォルダ位置がAssetsになる
 		/// </summary>
 		/// <param name="searchString"></param>
 		public static void SetSearch( string searchString ) {
 			if( !init() ) return;
 
-			s_projectBrowser.SetSearch( searchString );
+			if( searchString.IsEmpty() ) {
+				ClearSearchFieldText();
+			}
+			else {
+				s_projectBrowser.SetSearch( searchString );
+			}
+		}
+
+		/// <summary>
+		/// サーチ横の×押した時の処理
+		/// メソッド化されていない処理なので、バージョンによって差が出る可能性がある
+		/// </summary>
+		public static void ClearSearchFieldText() {
+			s_projectBrowser.m_SearchFieldText = string.Empty;
+			s_projectBrowser.m_NextSearch = EditorApplication.timeSinceStartup + 0.25;
 		}
 
 
@@ -130,8 +146,14 @@ namespace HananokiEditor {
 		public static bool isSearching {
 			get {
 				if( !init() ) return false;
-
-				return s_searchFilter.IsSearching();
+				if( s_searchFilter.IsSearching() ) {
+					// ClearSearchFieldText()でクリアして内部保持のもサーチフィルターはすぐ反応しない
+					// サーチフィルターにセット予定の文字を追加でチェック
+					if( s_projectBrowser.m_SearchFieldText != string.Empty ) {
+						return true;
+					}
+				}
+				return false;
 			}
 		}
 

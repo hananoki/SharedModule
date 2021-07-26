@@ -1,5 +1,35 @@
 # Shared Module
 
+## [1.12.0] - 2021-07-27
+
+### Added
+- Added the icon extracted from EditorAssetBundle
+- Added HananokiEditor.SharedModule.Association
+- Added HananokiEditor.HEditorDialog
+- Added HananokiEditor.Hananoki_OnOpenAsset
+- Added HananokiEditor.Extensions.EditorExtensions
+  - HasHideFlags
+  - EnableHideFlags
+  - DisableHideFlags
+  - GetParentRoot
+  - GetGameObjects
+  - displayNameで探す
+  - displayNameでアルファベット順にする
+- Added HananokiEditor.SelectionHistory
+- Added HananokiEditor.ProjectBrowserUtils.ClearSearchFieldText
+
+### Changed
+- EditorIcon
+  - Changed to get a dummy when icon acquisition fails
+- EditorIcon.Get
+  - Organized read methods
+- EditorHelper.FixSerializeReference
+  - Decomposed the process so that it can be processed in multiple threads
+- HananokiEditor.Extensions.EditorExtensions.GetIcon
+  - Changed to cache loaded icons
+- HananokiEditor.HEditor
+  - Changed to handle Managed Reference
+
 ## [1.11.0] - 2021-06-29
 
 ### Added

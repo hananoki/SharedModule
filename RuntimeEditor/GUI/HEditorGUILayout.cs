@@ -107,10 +107,10 @@ namespace HananokiEditor {
 		public static GUIStyle m_LinkStyle;
 
 		public static bool LinkLabel( string label, params GUILayoutOption[] options ) {
-			return LinkLabel(EditorHelper.TempContent( label ), options );
+			return LinkLabel( EditorHelper.TempContent( label ), options );
 		}
 		public static bool LinkLabel( GUIContent label, params GUILayoutOption[] options ) {
-			var position = GUILayoutUtility.GetRect(label, LinkStyle, options);
+			var position = GUILayoutUtility.GetRect( label, LinkStyle, options );
 
 			Handles.BeginGUI();
 			Handles.color = LinkStyle.normal.textColor;
@@ -330,17 +330,17 @@ namespace HananokiEditor {
 
 		#region IconButton
 
-		public static bool IconButton( Texture2D image, int marginHeighOffset = 0 ) {
+		public static bool IconButton( Texture2D image, int marginHeighOffset = 0, bool mouseUp = false ) {
 			var style = new GUIStyle( HEditorStyles.iconButton );
 			style.margin = new RectOffset( 0, 0, marginHeighOffset, 0 );
 			var r = EditorHelper.GetLayout( image, style );
-			return HEditorGUI.IconButton( r, EditorHelper.TempContent( image ), style, 0 );
+			return HEditorGUI.IconButton( r, EditorHelper.TempContent( image ), style, 0, mouseUp );
 		}
-		public static bool IconButton( Texture2D image, string tooltip, int marginHeighOffset = 0 ) {
+		public static bool IconButton( Texture2D image, string tooltip, int marginHeighOffset = 0, bool mouseUp = false ) {
 			var style = new GUIStyle( HEditorStyles.iconButton );
 			style.margin = new RectOffset( 0, 0, marginHeighOffset, 0 );
 			var r = EditorHelper.GetLayout( image, style );
-			return HEditorGUI.IconButton( r, EditorHelper.TempContent( image, tooltip ), style, 0 );
+			return HEditorGUI.IconButton( r, EditorHelper.TempContent( image, tooltip ), style, 0 , mouseUp );
 		}
 
 		#endregion
@@ -457,11 +457,11 @@ namespace HananokiEditor {
 		#region ObjectFieldAndAction<T>
 
 		public static T ObjectField<T>( T obj, bool allowSceneObjects = false, bool safeCheck = true, params GUILayoutOption[] options ) where T : UnityObject {
-			return (T) ObjectField<T>( GUIContent.none, obj, allowSceneObjects, safeCheck, options );
+			return ObjectField<T>( GUIContent.none, obj, allowSceneObjects, safeCheck, options );
 		}
 
 		public static T ObjectField<T>( UnityObject obj, bool allowSceneObjects = false, bool safeCheck = true, params GUILayoutOption[] options ) where T : UnityObject {
-			return (T) ObjectField<T>( GUIContent.none, obj, allowSceneObjects, safeCheck, options );
+			return ObjectField<T>( GUIContent.none, obj, allowSceneObjects, safeCheck, options );
 		}
 
 		public static T ObjectField<T>( string label, UnityObject obj, bool allowSceneObjects = false, bool safeCheck = true, params GUILayoutOption[] options ) where T : UnityObject {

@@ -104,10 +104,9 @@ namespace HananokiEditor {
 			public const string nameSpace = "HananokiEditor.FavoriteAssets";
 			public static bool enabled => check( "d5e70998d915c354a9c0d7b6ce57a2c1" );
 
-			public static void SetShow( bool flag ) {
+			public static void SetShow( Rect rect ) {
 				if( !enabled ) return;
-				var t = EditorHelper.GetTypeFromString( $"{nameSpace}.Utils" );
-				t.MethodInvoke( "SetShow", new object[] { flag } );
+				HananokiEditorFavoriteAssetsUtils.ShowMenu( rect );
 			}
 
 		}
@@ -133,6 +132,32 @@ namespace HananokiEditor {
 
 		#endregion
 
+
+
+		#region SelectionHistory 
+
+		public class SelectionHistory {
+			public static bool enabled => check( "4975516fd0fc85747adde403861d9716" );
+
+			public static bool hasPrev {
+				get {
+					return HananokiEditorSelectionHistoryMain.HasPrev();
+				}
+			}
+			public static bool hasNext {
+				get {
+					return HananokiEditorSelectionHistoryMain.HasNext();
+				}
+			}
+			public static void Prev() {
+				HananokiEditorSelectionHistoryMain.Prev();
+			}
+			public static void Next() {
+				HananokiEditorSelectionHistoryMain.Next();
+			}
+		}
+
+		#endregion
 
 		public static bool ManifestJsonUtility => check( "91a50302e95aae445aa204c762274bfb" );
 
@@ -233,5 +258,6 @@ namespace HananokiEditor {
 				} );
 			}
 		}
+
 	}
 }
