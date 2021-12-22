@@ -24,10 +24,10 @@ namespace HananokiEditor.Extensions {
 			}
 		}
 
-		public static TreeViewItem displayNameで探す( this TreeViewItem item, string displayName, bool 再帰処理をする = true ) {
+		public static TreeViewItem SearchByDisplayName( this TreeViewItem item, string displayName, bool 再帰処理をする = true ) {
 			if( !item.IsEmptyChild() && 再帰処理をする ) {
 				foreach( var p in item.children ) {
-					var result = p.displayNameで探す( displayName, true );
+					var result = p.SearchByDisplayName( displayName, true );
 					if( result != null ) return result;
 				}
 			}
@@ -35,8 +35,8 @@ namespace HananokiEditor.Extensions {
 			if( item.displayName == displayName ) return item;
 			return null;
 		}
-
-		public static void displayNameでアルファベット順にする( this TreeViewItem item, bool 再帰処理をする = true ) {
+		
+		public static void AlphabetOrderByDisplayName( this TreeViewItem item, bool 再帰処理をする = true ) {
 			if( item.IsEmptyChild() ) return;
 
 			item.children = item.children.OrderBy( x => x.displayName ).ToList();
@@ -44,7 +44,7 @@ namespace HananokiEditor.Extensions {
 			if( !再帰処理をする ) return;
 
 			foreach( var p in item.children ) {
-				p.displayNameでアルファベット順にする( true );
+				p.AlphabetOrderByDisplayName( true );
 			}
 		}
 

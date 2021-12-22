@@ -1,5 +1,10 @@
 # Shared Module
 
+## [1.12.1] - 2021-12-22
+
+### Fixed
+- Method names are now in English.
+
 ## [1.12.0] - 2021-07-27
 
 ### Added

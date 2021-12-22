@@ -21,9 +21,9 @@ namespace HananokiEditor {
 			//#endif
 			//			}
 		}
+		
 
-
-		public static void 選択中のマテリアルをアップグレードする() {
+		public static void UpgradeSelectedMaterial() {
 			if( UnityProject.URP ) {
 				EditorApplication.ExecuteMenuItem( "Edit/Render Pipeline/Universal Render Pipeline/Upgrade Selected Materials to UniversalRP Materials" );
 			}

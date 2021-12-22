@@ -8,14 +8,14 @@ using UnityEngine.UIElements;
 
 namespace HananokiEditor.Extensions {
 	public static partial class EditorExtensions {
-		public static VisualElement 名前から検索する( this VisualElement target, string name ) {
+		public static VisualElement SearchByName( this VisualElement target, string name ) {
 			if( target == null ) return null;
 
 			if( target.name == name ) return target;
 
 			if( 0 < target.childCount ) {
 				foreach( var p in target.Children() ) {
-					var pp = 名前から検索する( p, name );
+					var pp = SearchByName( p, name );
 					if( pp != null ) return pp;
 				}
 			}

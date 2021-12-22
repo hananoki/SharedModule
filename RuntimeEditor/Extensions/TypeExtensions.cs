@@ -51,7 +51,7 @@ namespace HananokiEditor.Extensions {
 			// 見つからない時はいろいろと探す
 			// それでも見つからない場合はマゼンタなエラーアイコンになる
 
-			if( t.指定クラスを含む( typeof( ScriptableObject ) ) ) {
+			if( t.IncludesSpecifiedClass( typeof( ScriptableObject ) ) ) {
 				var mn = EditorHelper.GetMonoScriptFromType( t );
 				if( mn != null ) {
 					var ic = mn.GetCachedIcon();
@@ -85,8 +85,8 @@ namespace HananokiEditor.Extensions {
 		}
 
 
-
-		public static bool 指定クラスを含む( this Type t, Type subClass ) {
+		
+		public static bool IncludesSpecifiedClass( this Type t, Type subClass ) {
 			if( t == null ) return false;
 			if( t == subClass ) return true;
 			return t.IsSubclassOf( subClass );

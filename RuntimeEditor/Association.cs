@@ -61,7 +61,7 @@ namespace HananokiEditor.SharedModule {
 
 			if( m == null ) {
 				foreach( var p in s_methodsOr.Keys ) {
-					if( type.Žw’èƒNƒ‰ƒX‚ðŠÜ‚Þ( (Type) p ) ) {
+					if( type.IncludesSpecifiedClass( (Type) p ) ) {
 						m = (MethodInfo) s_methodsOr[ p ];
 					}
 				}
