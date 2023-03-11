@@ -27,10 +27,17 @@ namespace HananokiEditor {
 
 			foreach( var p in instance.buildPlatforms ) {
 				var buildPlatform = new UnityEditorBuildBuildPlatform( p );
+#if UNITY_2021_2_OR_NEWER
+				if( buildPlatform.targetGroup == BuildTargetGroup.Standalone || !buildPlatform.hideInUi ) {
+					lst.Add( buildPlatform );
+				}
+#else
 				if( buildPlatform.forceShowTarget ) {
 					lst.Add( buildPlatform );
 				}
+#endif
 			}
+
 			s_buildTargetGroup = lst.OrderBy( x => x.targetGroup ).ToList();
 		}
 
@@ -53,7 +60,7 @@ namespace HananokiEditor {
 		/// <param name="target"></param>
 		/// <returns></returns>
 		public static bool SwitchActiveBuildTarget( BuildTargetGroup group, BuildTarget target ) {
-			return HEditorDialog.Confirm( $"{ S._RequiresSwitchActiveBuildTarget}\n{S._IsitOK_}", () => {
+			return HEditorDialog.Confirm( $"{S._RequiresSwitchActiveBuildTarget}\n{S._IsitOK_}", () => {
 				EditorUserBuildSettings.SwitchActiveBuildTarget( group, target );
 			} );
 		}
@@ -67,12 +74,11 @@ namespace HananokiEditor {
 			try {
 				var buildTarget = s_buildTargetGroup.Find( x => x.targetGroup == platform );
 				if( buildTarget == null ) return null;
-				if( UnitySymbol.UNITY_2019_3_OR_NEWER ) {
-					return (Texture2D) buildTarget.title.image;
-				}
-				else {
-					return (Texture2D) buildTarget.m_instance.GetField<GUIContent>( "title" ).image;
-				}
+#if UNITY_2019_3_OR_NEWER
+				return (Texture2D) buildTarget.title.image;
+#else
+				return (Texture2D) buildTarget.m_instance.GetField<GUIContent>( "title" ).image;
+#endif
 			}
 			catch( System.Exception e ) {
 				Debug.LogException( e );

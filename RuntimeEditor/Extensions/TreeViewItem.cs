@@ -24,8 +24,8 @@ namespace HananokiEditor.Extensions {
 			}
 		}
 
-		public static TreeViewItem SearchByDisplayName( this TreeViewItem item, string displayName, bool 再帰処理をする = true ) {
-			if( !item.IsEmptyChild() && 再帰処理をする ) {
+		public static TreeViewItem SearchByDisplayName( this TreeViewItem item, string displayName, bool RecursiveProcessing = true ) {
+			if( !item.IsEmptyChild() && RecursiveProcessing ) {
 				foreach( var p in item.children ) {
 					var result = p.SearchByDisplayName( displayName, true );
 					if( result != null ) return result;
@@ -36,12 +36,12 @@ namespace HananokiEditor.Extensions {
 			return null;
 		}
 		
-		public static void AlphabetOrderByDisplayName( this TreeViewItem item, bool 再帰処理をする = true ) {
+		public static void AlphabetOrderByDisplayName( this TreeViewItem item, bool RecursiveProcessing = true ) {
 			if( item.IsEmptyChild() ) return;
 
 			item.children = item.children.OrderBy( x => x.displayName ).ToList();
 
-			if( !再帰処理をする ) return;
+			if( !RecursiveProcessing ) return;
 
 			foreach( var p in item.children ) {
 				p.AlphabetOrderByDisplayName( true );

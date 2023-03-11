@@ -95,6 +95,10 @@ namespace HananokiEditor {
 		public static void RepaintInspector() {
 			foreach( var p in FindArray( UnityTypes.UnityEditor_InspectorWindow ) ) p.Repaint();
 		}
+
+		/// <summary>
+		/// インスペクターにフォーカスを当てる
+		/// </summary>
 		public static void FocusInspector() {
 			foreach( var p in FindArray( UnityTypes.UnityEditor_InspectorWindow ).Select( x => new UnityEditorEditorWindow( x ) ) ) {
 				if( !p.hasFocus ) ( (EditorWindow) p.m_instance ).Focus();

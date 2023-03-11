@@ -1,6 +1,5 @@
-﻿/// UnityEditor.Build.BuildPlatform : 2022.2.8f1
-
-#if UNITY_2021_2_OR_NEWER
+﻿#if !UNITY_2021_2_OR_NEWER
+/// UnityEditor.Build.BuildPlatform : 2020.2.7f1
 
 using HananokiEditor;
 using System;
@@ -13,11 +12,11 @@ namespace UnityReflection {
     public UnityEditorBuildBuildPlatform( object instance ){
 			m_instance = instance;
     }
-    public UnityEditorBuildBuildPlatform( string locTitle, string iconId, UnityEditor.Build.NamedBuildTarget namedBuildTarget, UnityEditor.BuildTarget defaultTarget, bool hideInUi ) {
-			m_instance = Activator.CreateInstance( UnityTypes.UnityEditor_Build_BuildPlatform, new object[] { locTitle, iconId, namedBuildTarget, defaultTarget, hideInUi } );
+    public UnityEditorBuildBuildPlatform( string locTitle, string iconId, UnityEditor.BuildTargetGroup targetGroup, UnityEditor.BuildTarget defaultTarget, bool forceShowTarget ) {
+			m_instance = Activator.CreateInstance( UnityTypes.UnityEditor_Build_BuildPlatform, new object[] { locTitle, iconId, targetGroup, defaultTarget, forceShowTarget } );
     }
-    public UnityEditorBuildBuildPlatform( string locTitle, string tooltip, string iconId, UnityEditor.Build.NamedBuildTarget namedBuildTarget, UnityEditor.BuildTarget defaultTarget, bool hideInUi ) {
-			m_instance = Activator.CreateInstance( UnityTypes.UnityEditor_Build_BuildPlatform, new object[] { locTitle, tooltip, iconId, namedBuildTarget, defaultTarget, hideInUi } );
+    public UnityEditorBuildBuildPlatform( string locTitle, string tooltip, string iconId, UnityEditor.BuildTargetGroup targetGroup, UnityEditor.BuildTarget defaultTarget, bool forceShowTarget ) {
+			m_instance = Activator.CreateInstance( UnityTypes.UnityEditor_Build_BuildPlatform, new object[] { locTitle, tooltip, iconId, targetGroup, defaultTarget, forceShowTarget } );
     }
     
 
@@ -36,18 +35,33 @@ namespace UnityReflection {
 			}
 		}
 
-		public bool hideInUi {
+		public bool forceShowTarget {
 			get {
-				if( __hideInUi == null ) {
-					__hideInUi = UnityTypes.UnityEditor_Build_BuildPlatform.GetField( "hideInUi", R.InstanceMembers );
+				if( __forceShowTarget == null ) {
+					__forceShowTarget = UnityTypes.UnityEditor_Build_BuildPlatform.GetField( "forceShowTarget", R.InstanceMembers );
 				}
-				return (bool) __hideInUi.GetValue( m_instance );
+				return (bool) __forceShowTarget.GetValue( m_instance );
 			}
 			set {
-				if( __hideInUi == null ) {
-					__hideInUi = UnityTypes.UnityEditor_Build_BuildPlatform.GetField( "hideInUi", R.InstanceMembers );
+				if( __forceShowTarget == null ) {
+					__forceShowTarget = UnityTypes.UnityEditor_Build_BuildPlatform.GetField( "forceShowTarget", R.InstanceMembers );
 				}
-				__hideInUi.SetValue( m_instance, value );
+				__forceShowTarget.SetValue( m_instance, value );
+			}
+		}
+
+		public UnityEditor.BuildTargetGroup targetGroup {
+			get {
+				if( __targetGroup == null ) {
+					__targetGroup = UnityTypes.UnityEditor_Build_BuildPlatform.GetField( "targetGroup", R.InstanceMembers );
+				}
+				return (UnityEditor.BuildTargetGroup) __targetGroup.GetValue( m_instance );
+			}
+			set {
+				if( __targetGroup == null ) {
+					__targetGroup = UnityTypes.UnityEditor_Build_BuildPlatform.GetField( "targetGroup", R.InstanceMembers );
+				}
+				__targetGroup.SetValue( m_instance, value );
 			}
 		}
 
@@ -99,27 +113,16 @@ namespace UnityReflection {
 			}
 		}
 
-		public UnityEditor.BuildTargetGroup targetGroup {
-			get {
-				if( __getter_targetGroup == null ) {
-					__getter_targetGroup = (Func<UnityEditor.BuildTargetGroup>) Delegate.CreateDelegate( typeof( Func<UnityEditor.BuildTargetGroup> ), m_instance, UnityTypes.UnityEditor_Build_BuildPlatform.GetMethod( "get_targetGroup", R.InstanceMembers ) );
-				}
-				return __getter_targetGroup();
-			}
-		}
-
 		
 		
 		FieldInfo __name;
-		FieldInfo __hideInUi;
+		FieldInfo __forceShowTarget;
+		FieldInfo __targetGroup;
 		FieldInfo __tooltip;
 		FieldInfo __defaultTarget;
 		Func<UnityEngine.GUIContent> __getter_title;
 		Func<UnityEngine.Texture2D> __getter_smallIcon;
-		Func<UnityEditor.BuildTargetGroup> __getter_targetGroup;
 	}
 }
 
-#endif // UNITY_2021_1_OR_NEWER
-
-
+#endif

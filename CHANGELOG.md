@@ -1,5 +1,16 @@
 # Shared Module
 
+## [1.13.0] - 2021-03-11
+
+### Changed
+- Correspondence up to 2022.2
+
+## [1.12.2] - 2021-12-22
+
+### Fixed
+- Renamed to `_EditorAnimationClip.cs` because Git doesn't recognize it due to changes in `EditorAnimationClip.cs`
+- Argument name is changed to English
+
 ## [1.12.1] - 2021-12-22
 
 ### Fixed
